@@ -1,4 +1,5 @@
 .pio
 .vscode
 trash
+include/TTGO_TWatch_Library
 
