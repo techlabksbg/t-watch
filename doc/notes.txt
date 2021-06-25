@@ -1,0 +1,27 @@
+Init project: (according to https://docs.platformio.org/en/latest/core/quickstart.html)
+
+  pio project init --board ttgo-t-watch
+
+
+
+Link Libraries into include:
+
+  ln -si /home/ivo/Arduino/libraries/TTGO_TWatch_Library .
+
+
+
+
+
+menuBtn callback (part of mainBar)
+  if not exists, creates menuBars, aligns it to statusbar
+  otherwise simply unhides it
+
+menuBars callback:
+  hides menuBars elements (container and exit-button)
+  unhides mainBar
+
+
+https://lvgl.io/tools/imageconverter  
+
+ - before going to sleep, notify launcher to hide apps.
+ - allow app to prevent sleeping (or make time longer).

@@ -15,7 +15,6 @@ struct Styles {
         lv_obj_set_size(page, 240, 240);
         lv_page_set_scrlbar_mode(page, LV_SCRLBAR_MODE_OFF);
         lv_obj_add_style(page, LV_OBJ_PART_MAIN, &background);
-        lv_obj_set_size(page, 240, 240);
         lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
         return page;
     }
