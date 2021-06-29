@@ -18,12 +18,15 @@ struct Styles {
         lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
         return page;
     }
-    lv_obj_t* stdButton(lv_obj_t* parent, const char* text) {
+    lv_obj_t* stdButton(lv_obj_t* parent, const char* text, lv_event_cb_t callback=nullptr) {
         lv_obj_t* button = lv_btn_create(parent, NULL);
         lv_obj_add_style(button, LV_OBJ_PART_MAIN, &buttonBG);
         lv_obj_t* label = lv_label_create(button,NULL);
         lv_label_set_text(label, text);
         lv_obj_add_style(label, LV_OBJ_PART_MAIN, &buttonLabel);
+        if (callback!=nullptr) {
+            lv_obj_set_event_cb(button, callback);
+        }
         return button;
     }
     lv_obj_t* stdTitle(lv_obj_t* parent, const char* text) {
