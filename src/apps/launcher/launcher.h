@@ -10,6 +10,7 @@
 #include "../settingapps/wifimanager/wifimanager.h"
 #include "../webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
+#include "../motorapp/motorapp.h"
 
 
 // 
@@ -116,6 +117,7 @@ class Launcher : public App {
         Launcher::rootLauncher->registerApp(settings);
         Launcher::rootLauncher->registerApp(new TechLabWatch);
         Launcher::rootLauncher->registerApp(new WebFiles);
+        Launcher::rootLauncher->registerApp(new MotorApp);
         //showApp(rootLauncher);
         Serial.println("Launcher::setup() complete");
     }

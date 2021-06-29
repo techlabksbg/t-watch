@@ -60,6 +60,9 @@ void os_setup() {
     //Synchronize time to system time
     ttgo->rtc->syncToSystem();
 
+    // Initialize vibration Motor
+    ttgo->motor_begin();
+
 #ifdef LILYGO_WATCH_HAS_BUTTON
 
     /*
