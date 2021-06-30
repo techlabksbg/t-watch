@@ -17,7 +17,8 @@ class Brightness : public App {
 
     lv_obj_t* bg;
     lv_obj_t* slider;
-    lv_obj_t* label;
+    lv_obj_t* percentLabel;
+    lv_obj_t* pwmLabel;
     uint8_t pwm;
 
     private:
@@ -29,19 +30,22 @@ class Brightness : public App {
         return (int)(sqrt(p/255.0)*100);
     }
 
+    void setLabels(int percent) {
+        static char buf[12];
+        snprintf(buf, 12, "%u%%", percent);
+        lv_label_set_text(percentLabel, buf);
+        snprintf(buf, 12, "%.3f PWM", pwm/255.0);
+        lv_label_set_text(pwmLabel, buf);
+        lv_obj_align(percentLabel, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);
+        lv_obj_align(pwmLabel, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 30);
+    }
 
     static void slider_cb(lv_obj_t *obj, lv_event_t event) {
-        static char buf[12];
         if(event == LV_EVENT_VALUE_CHANGED) {
-            Serial.println("Brightness::slider_cb");
-            int p = lv_slider_get_value(obj);
+            int percent = lv_slider_get_value(obj);
             Brightness* brightness = (Brightness *) lv_obj_get_user_data(obj);
-            brightness->pwm = percent2pwm(p);
-            snprintf(buf, 12, "%u%% (%u)", p, brightness->pwm);
-            Serial.println(buf);
-            lv_label_set_text(brightness->label, buf);
-            
-            Serial.printf("pwm = %d\n", brightness->pwm);
+            brightness->pwm = percent2pwm(percent);
+            brightness->setLabels(percent);
             ttgo->bl->adjust(brightness->pwm);
         }
     }
