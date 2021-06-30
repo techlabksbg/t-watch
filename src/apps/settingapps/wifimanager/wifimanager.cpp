@@ -45,10 +45,15 @@ bool WifiManager::create() {
     scannedCont = new lv_obj_t*[WIFI_MAX_SCANNED];
     
     page = styles.stdPage(myScr);
+    lv_obj_t* quitButton = styles.stdButton(page, "Quit");
+    register_for_hide_on_click(quitButton);
+    lv_obj_align(quitButton, page, LV_ALIGN_IN_TOP_MID, 0, 5);
+
+
     bool conn = WiFi.isConnected();
     isOff = !conn;
     stateLabel = styles.stdTitle(page, "WiFi off");
-    lv_obj_align(stateLabel, page, LV_ALIGN_IN_TOP_LEFT, 15, 15);
+    lv_obj_align(stateLabel, page, LV_ALIGN_IN_TOP_LEFT, 15, 55);
     if (conn) {
         addToggle();
     }
