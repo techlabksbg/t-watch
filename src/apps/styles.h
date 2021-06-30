@@ -45,6 +45,18 @@ struct Styles {
     }
 
     /**
+     * Creates a default styled label.
+     * @param parent The parent of the label.
+     * @param text The text of the label
+     */
+    lv_obj_t* stdLabel(lv_obj_t* parent, const char* text) {
+        lv_obj_t* label = lv_label_create(parent, NULL);
+        lv_label_set_text(label, text);
+        lv_obj_add_style(label, LV_OBJ_PART_MAIN, &textLabel);
+        return label;
+    }
+
+    /**
      * Creates a default styled button with a given text and optionally sets the callback.
      * @param parent The parent of the button.
      * @param text The text of the button
@@ -61,6 +73,12 @@ struct Styles {
         }
         return button;
     }
+
+    /**
+     * Creates a default styled title label.
+     * @param parent The parent of the label.
+     * @param text The text of the label
+     */
     lv_obj_t* stdTitle(lv_obj_t* parent, const char* text) {
         lv_obj_t* title = lv_label_create(parent,NULL);
         lv_obj_add_style(title, LV_OBJ_PART_MAIN, &titleLabel);
@@ -118,7 +136,6 @@ struct Styles {
         lv_style_set_shadow_ofs_y(&buttonBG, LV_STATE_DEFAULT, 2);
 
 
-        lv_style_init(&textLabel);
         lv_style_init(&textLabel);
         lv_style_set_text_color(&textLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xff, 0xa0));
         lv_style_set_text_font(&textLabel, LV_STATE_DEFAULT, &lv_font_montserrat_22);
