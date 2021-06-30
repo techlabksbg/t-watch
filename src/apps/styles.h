@@ -2,14 +2,39 @@
 
 #include "../os/os.h"
 
+/**
+ * Collection of default styles and helper functions to create common GUI-Elements
+ */
 struct Styles {
+    /**
+     * Standard background style
+     */
     lv_style_t background;
+    /**
+     * Standard style for default text labels
+     */
     lv_style_t textLabel;
+    /**
+     * Standard style for title labels
+     */
     lv_style_t titleLabel;
+    /**
+     * Standard background style for buttons
+     */
     lv_style_t buttonBG;
+    /** 
+     * Standard style for button lables
+     */
     lv_style_t buttonLabel;
+    /**
+     * Spinner object, for internal use
+     */
     lv_obj_t* spinner = nullptr;
 
+    /**
+     * Creates a scrollable page with the standard background
+     * @param myScr Pointer to the current screen (normally just myScr of the app)
+     */
     lv_obj_t* stdPage(lv_obj_t* myScr) {
         lv_obj_t* page = lv_page_create(myScr,NULL);
         lv_obj_set_size(page, 240, 240);
@@ -18,6 +43,13 @@ struct Styles {
         lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
         return page;
     }
+
+    /**
+     * Creates a default styled button with a given text and optionally sets the callback.
+     * @param parent The parent of the button.
+     * @param text The text of the button
+     * @param callback The function called, when the button gets an event.
+     */
     lv_obj_t* stdButton(lv_obj_t* parent, const char* text, lv_event_cb_t callback=nullptr) {
         lv_obj_t* button = lv_btn_create(parent, NULL);
         lv_obj_add_style(button, LV_OBJ_PART_MAIN, &buttonBG);
@@ -35,6 +67,10 @@ struct Styles {
         lv_label_set_text(title, text);
         return title;
     }
+    /**
+     * Shows a spinner on top of a given object. It will be created if necessary.
+     * @param scr Typically the myScr screen of the app.
+     */
     void showSpinner(lv_obj_t* scr) {
         if (spinner==nullptr) {
             spinner = lv_spinner_create(scr, NULL);
@@ -42,12 +78,19 @@ struct Styles {
             lv_obj_align(spinner, NULL, LV_ALIGN_CENTER, 0, 0);
         }
     }
+    /** 
+     * Hides and destroys the spinner (if not already done).
+     */
     void hideSpinner() {
         if (spinner!=nullptr) {
             lv_obj_del(spinner);
             spinner = nullptr;
         }
     }
+
+    /**
+     * Initialize all styles, must be called on setup.
+     */
     void setup() {
         lv_style_init(&background);
         lv_style_set_bg_color(&background, LV_STATE_DEFAULT,  LV_COLOR_MAKE(0,0,100));
@@ -83,5 +126,7 @@ struct Styles {
 };
 
 
-
+/**
+ * Global Styles object
+ */
 extern Styles styles;
