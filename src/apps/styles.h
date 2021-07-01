@@ -27,9 +27,13 @@ struct Styles {
      */
     lv_style_t buttonLabel;
     /**
-     * Spinner object, for internal use
+     * Spinner object, for internal use only
      */
     lv_obj_t* spinner = nullptr;
+    /**
+     * Spinner label, for internal use only
+     */
+    lv_obj_t* spinnerLabel = nullptr;
 
     /**
      * Creates a scrollable page with the standard background
@@ -89,11 +93,17 @@ struct Styles {
      * Shows a spinner on top of a given object. It will be created if necessary.
      * @param scr Typically the myScr screen of the app.
      */
-    void showSpinner(lv_obj_t* scr) {
+    void showSpinner(lv_obj_t* scr, const char* text = nullptr) {
         if (spinner==nullptr) {
             spinner = lv_spinner_create(scr, NULL);
             lv_obj_set_size(spinner, 100, 100);
             lv_obj_align(spinner, NULL, LV_ALIGN_CENTER, 0, 0);
+            if (text!=nullptr) {
+                spinnerLabel = stdLabel(scr, text);
+                lv_obj_align(spinnerLabel, NULL, LV_ALIGN_CENTER, 0, 0);
+            } else {
+                spinnerLabel = nullptr;
+            }
         }
     }
     /** 
@@ -101,6 +111,10 @@ struct Styles {
      */
     void hideSpinner() {
         if (spinner!=nullptr) {
+            if (spinnerLabel!=nullptr) {
+                lv_obj_del(spinnerLabel);
+                spinnerLabel = nullptr;
+            }
             lv_obj_del(spinner);
             spinner = nullptr;
         }
