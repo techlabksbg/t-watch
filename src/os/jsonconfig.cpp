@@ -79,10 +79,11 @@ void saveJsonConfig() {
         if (!file) {
           Serial.println("There was an error opening the config.json file for writing");
         } else {
-            Serial.println("File config.json opened writing!");
-            (*configJson)["hello"] = "world";
+            Serial.println("File config.json opened for writing!");
             serializeJson(*configJson, file);
+            Serial.println("serializeJson done");
             file.close();
+            Serial.println("File closed");
             serializeJson(*configJson, Serial);
         }
     }

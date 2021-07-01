@@ -29,9 +29,9 @@ bool Brightness::show() {
 
 bool Brightness::hide() {
     (*configJson)["bl"] = (int)pwm;
-    int test = (*configJson)["bl"];
-    Serial.printf("test=configJson['bl']=%d\n", test);
+    Serial.printf("about to save configJson['bl']=%d\n", pwm);
     saveJsonConfig();
+    Serial.println("saving done");
     return true;
 }
 
