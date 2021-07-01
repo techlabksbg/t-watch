@@ -28,6 +28,8 @@ bool WebFiles::create() {
 
 void WebFiles::registerHandlers() {
 
+    // See https://github.com/me-no-dev/ESPAsyncWebServer for more examples etc.
+
     server->on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
         AsyncResponseStream *response = request->beginResponseStream("text/html");
