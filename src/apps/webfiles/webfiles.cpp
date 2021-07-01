@@ -27,7 +27,18 @@ bool WebFiles::create() {
 }
 
 void WebFiles::registerHandlers() {
+
     server->on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
+        AsyncResponseStream *response = request->beginResponseStream("text/html");
+        response->print("<!DOCTYPE html><html><head><title>WebFiles</title></head><body><ul>");
+        response->print("<li><a href=\"/files/\">Browse Files</a></li>");
+        response->print("<li>Upload Files:</li>");
+        response->print("</ul><form action=\"/upload\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"file\" id=\"myfile\" name=\"myfile\"><input type=\"submit\"></form>");
+        response->print("</body></html>\n");
+        request->send(response);
+    });
+    server->on("/files/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
         AsyncResponseStream *response = request->beginResponseStream("text/html");
         response->print("<!DOCTYPE html><html><head><title>WebFiles</title></head><body>");
@@ -35,7 +46,7 @@ void WebFiles::registerHandlers() {
         fs::File root = SPIFFS.open("/");
         fs::File file = root.openNextFile();
         while(file) {
-            response->print("<li><a href=\"");
+            response->print("<li><a href=\"/files");
             response->print(file.name());
             response->print("\">");
             response->print(file.name());
@@ -47,6 +58,43 @@ void WebFiles::registerHandlers() {
         response->print("</ul></body></html>\n");
         request->send(response);
     });
+    server->on("/upload", HTTP_POST, [](AsyncWebServerRequest *request) {}, [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
+        static fs::File file;
+        if (!index) {
+            Serial.print("Upoad URL = ");
+            Serial.println(request->url());
+            file = SPIFFS.open(String("/") + filename, FILE_WRITE);
+            if (!file) {
+                Serial.print("Could not open file ");
+                Serial.println(filename);
+            }
+            Serial.printf("UploadStart: %s\n", filename.c_str());
+        }
+        for (size_t i = 0; i < len; i++) {
+            if (file) {
+                Serial.print((char)data[i]);
+                file.write(data[i]);
+            }
+        }
+        if (final) {
+            if (file) {
+                file.close();
+                request->redirect("/");
+                //request->send(200, "text/plain", "Upload complete");
+                if (filename == "config.json") {
+                    loadJsonConfig();
+                    Serial.println("Please reboot...");
+                }
+            } else {
+                request->redirect("/");
+                //request->send(200, "text/plain", "Upload FAILED!");
+            }
+            Serial.printf("UploadEnd: %s, %u B\n", filename.c_str(), index + len);
+        }
+    });
+    
+    server->serveStatic("/files/", SPIFFS, "/");
+
 
 }
 
