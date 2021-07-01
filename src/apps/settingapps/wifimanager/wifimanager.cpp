@@ -201,6 +201,7 @@ void WifiManager::disconnect() {
     } else {
         Serial.println("WifiManager::disconnect() WiFi was already off, not turning it off again...");
     }
+    clearCheckedButtons();
     isOff = true;
 }
 
@@ -290,7 +291,11 @@ void WifiManager::connectionLost() {
     } else {
         if (!isOff) disconnect();
     }
+    clearCheckedButtons();
 }
 
 WifiManager wifiManager;
 WifiManager* WifiManager::self = &wifiManager;
+
+
+// TODO: when connected an switching to another wlan, wlan stopps completely first.

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../app.h"
+#include "../../styles.h"
 
 LV_IMG_DECLARE(wifiicon);
 
@@ -93,8 +94,19 @@ class WifiManager : public App {
 
     static void delete_cb(lv_obj_t *delButton, lv_event_t event) {
         if (event != LV_EVENT_SHORT_CLICKED) return;
-        self->removeSSID(delButton);
-        
+        lv_obj_t* button = (lv_obj_t*) lv_obj_get_user_data(delButton);
+        lv_obj_t* label = lv_obj_get_child(button,NULL);
+        char buf[120];
+        sprintf(buf, "Really remove\n%s?", lv_label_get_text(label));
+        Serial.printf("MsgBox: %s\n", buf);
+        static const char* btns[] = {"Cancel", "Ok", ""};  // Last string must be empty!
+        styles.messageBox.show(buf, btns, [delButton](uint16_t btnNr)->void{
+            Serial.printf("messageBox callback called with btn=%d\n", btnNr);
+            if (btnNr==1) { // Only when OK
+                self->removeSSID(delButton);
+            }
+        });
+        Serial.println("delete_cb finished.");
     }
 
     static void scan_cb(lv_obj_t *scanButton, lv_event_t event) {
