@@ -26,6 +26,8 @@ struct Styles {
      * Standard style for button lables
      */
     lv_style_t buttonLabel;
+
+    lv_style_t msgBox;
     /**
      * Spinner object, for internal use only
      */
@@ -121,6 +123,107 @@ struct Styles {
         }
     }
 
+
+    struct MessageBox {
+        lv_style_t bgStyle;
+        lv_obj_t* bg;
+        lv_obj_t* mbox=nullptr;
+        std::function<void(uint16_t)> callback;
+
+        void show(char* text, bool autoHide=true) {
+            if (mbox==nullptr) {
+                Serial.println("Styles::MessageBox::show(char *text, bool autoHide) start");
+                // From https://docs.lvgl.io/latest/en/html/widgets/msgbox.html
+                /* Create a base object for the modal background */
+                bg = lv_obj_create(lv_scr_act(), NULL);
+                lv_obj_reset_style_list(bg, LV_OBJ_PART_MAIN);
+                lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &bgStyle);
+                //lv_obj_set_style_local_bg_opa(bg, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_50);
+                lv_obj_set_pos(bg, 0, 0);
+                lv_obj_set_size(bg, LV_HOR_RES, LV_VER_RES);
+
+                mbox = lv_msgbox_create(bg, NULL);
+                lv_msgbox_set_text(mbox, text);
+                lv_obj_set_user_data(mbox, this);
+                lv_obj_set_event_cb(mbox, mbox_event_cb);
+                if (autoHide) {
+                    lv_obj_align(mbox, NULL, LV_ALIGN_CENTER, 0, 0);
+                    lv_msgbox_start_auto_close(mbox, 2000);
+                }
+                Serial.println("Styles::MessageBox::show(char *text, bool autoHide) end");
+            }
+        }
+
+        void show(char* text, const char** buttons, std::function<void (uint16_t )> cb) {
+            if (mbox==nullptr) {
+                Serial.println("void Styles::MessageBox::show(char *text, char **buttons, std::function<void (uint16_t)> &cb) start");
+                callback = cb;
+                show(text, false);
+                lv_msgbox_add_btns(mbox, buttons);
+                Serial.println("added buttons");
+                lv_obj_align(mbox, NULL, LV_ALIGN_CENTER, 0, 0);
+                
+
+                /* Fade the background in with an animation */
+                Serial.println("Starting animation...");
+                static lv_anim_t a;
+                lv_anim_init(&a);
+                lv_anim_set_var(&a, bg);
+                lv_anim_set_time(&a, 500);
+                lv_anim_set_values(&a, LV_OPA_TRANSP, LV_OPA_50);
+                lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)opa_anim);
+                lv_anim_start(&a);
+                Serial.println("void Styles::MessageBox::show(char *text, char **buttons, std::function<void (uint16_t)> &cb) end");
+            }
+        }
+
+        static void opa_anim(lv_obj_t * bg, lv_anim_value_t v) {
+            lv_obj_set_style_local_bg_opa(bg, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, v);
+        }
+
+        void static mbox_event_cb(lv_obj_t *obj, lv_event_t evt) {
+            MessageBox* mb = (MessageBox*) lv_obj_get_user_data(obj);
+            if (evt == LV_EVENT_VALUE_CHANGED) { // Button was clicked
+                lv_msgbox_start_auto_close(obj, 0);
+                Serial.println("mbox_event_cb Button pressed, start");
+                uint16_t btn = lv_msgbox_get_active_btn(obj);
+                Serial.printf("Button %d was pressed with mb=%p\n", btn, mb);
+                if (btn!=LV_BTNMATRIX_BTN_NONE) {
+                    if (mb->callback!=nullptr) {
+                        Serial.println("Calling callback");
+                        // Callback with Button number
+                        (mb->callback)(btn);
+                    }
+                }
+                Serial.printf("Starting delete of mbox, mb=%p\n", mb);
+                lv_obj_del(mb->mbox);
+                Serial.printf("Starting delete of background, mb=%p\n", mb);
+                lv_obj_del(mb->bg);
+                Serial.println("nullptr-izing stuff");
+                mb->mbox = nullptr;
+                mb->bg = nullptr;
+            } else  if (evt == LV_EVENT_DELETE) {
+                if (mb->mbox!=nullptr) {
+                    lv_obj_del(mb->mbox);
+                    mb->mbox=nullptr;
+                }
+                if (mb->bg!=nullptr) {
+                    lv_obj_del(mb->bg);
+                    mb->bg=nullptr;
+                }
+            }
+
+        }
+
+        void setup() {
+            Serial.println("Styles::MessageBox::setup() start");
+            lv_style_init(&bgStyle); 
+            lv_style_set_bg_color(&bgStyle, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+            Serial.println("Styles::MessageBox::setup() end");
+        }
+        
+    } messageBox;
+
     /**
      * Initialize all styles, must be called on setup.
      */
@@ -154,7 +257,13 @@ struct Styles {
         lv_style_init(&textLabel);
         lv_style_set_text_color(&textLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xff, 0xa0));
         lv_style_set_text_font(&textLabel, LV_STATE_DEFAULT, &lv_font_montserrat_22);
+
+        messageBox.setup();
+        
     }    
+
+    
+
 };
 
 
