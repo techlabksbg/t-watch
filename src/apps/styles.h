@@ -92,6 +92,7 @@ struct Styles {
     /**
      * Shows a spinner on top of a given object. It will be created if necessary.
      * @param scr Typically the myScr screen of the app.
+     * @param txt Optional Text to be displayed on top of the spinner
      */
     void showSpinner(lv_obj_t* scr, const char* text = nullptr) {
         if (spinner==nullptr) {
