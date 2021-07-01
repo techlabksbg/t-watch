@@ -52,6 +52,7 @@ class WifiManager : public App {
     void removeToggle();
     void addNewKnown();
     void addConnectionButtons(const char* name);
+    void clearCheckedButtons();
     void removeSSID(lv_obj_t* delButton);
 
     
@@ -134,6 +135,7 @@ class WifiManager : public App {
         if(e == LV_EVENT_VALUE_CHANGED) {
             WiFi.mode(WIFI_OFF);
             self->removeToggle();
+            self->closeOnConnect = nullptr;
         }
     }
 };

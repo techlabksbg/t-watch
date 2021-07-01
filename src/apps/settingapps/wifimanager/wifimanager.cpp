@@ -30,12 +30,20 @@ void WifiManager::removeToggle() {
     }
 }
 
+void WifiManager::clearCheckedButtons() {
+    for (int i=1; i<savedSSIDs; i++) {
+        if (lv_btn_get_state(savedCont[i])==LV_BTN_STATE_CHECKED_PRESSED || lv_btn_get_state(savedCont[i])==LV_BTN_STATE_CHECKED_RELEASED) {
+            lv_btn_toggle(savedCont[i]);
+        }
+    }
+}
 void WifiManager::addConnectionButtons(const char* name) {
     if (savedSSIDs>=WIFI_MAX_SAVED) return;
     lv_obj_t* button = styles.stdButton(page, name, connect_cb);
     savedCont[savedSSIDs++] = button;
     lv_obj_set_size(button, 155, 40);
     lv_obj_align(button, savedCont[savedSSIDs-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
+    lv_btn_set_checkable(button, true); // Make it checkable
 
     lv_obj_t* delButton = styles.stdButton(page, LV_SYMBOL_CLOSE, delete_cb);
     lv_obj_set_size(delButton, 40, 40);
@@ -174,13 +182,11 @@ void WifiManager::connect(App* callback) {
             
             WiFi.begin(ssid, password);
         } else {
-            Serial.println("Connection already stablished, call calling app or hide_myself");
+            Serial.println("Connection already stablished, call calling app if any");
             closeOnConnect = nullptr;
             if (callback!=nullptr) {
                 show_app(callback);
-            } else {
-                hide_myself();
-            }
+            } 
         }
     }
 }
@@ -188,6 +194,7 @@ void WifiManager::connect(App* callback) {
 void WifiManager::disconnect() {
     if (!isOff || WiFi.isConnected() || WiFi.getMode()!=WIFI_STA) {
         Serial.println("WifiManager::disconnect() Turning WiFi off...");
+        
         WiFi.disconnect();
         WiFi.mode(WIFI_OFF);
         removeToggle();
@@ -254,6 +261,7 @@ void WifiManager::connectionEstablished() {
     if (!(*configJson)["wifi"]["known"].containsKey(ssid)) {
         (*configJson)["wifi"]["known"][ssid]=password;
         addNewKnown();
+        lv_btn_toggle(savedCont[savedSSIDs-1]);
         save = true;
     }
     if (!(*configJson)["wifi"].containsKey("last") || strncmp(ssid, (*configJson)["wifi"]["last"],PW_MAX_LENGTH)!=0) {
