@@ -103,7 +103,7 @@ class WifiManager : public App {
         self->clearScanned();
         WiFi.disconnect();
         Serial.println("Start scan...");
-        styles.showSpinner(self->myScr);
+        styles.showSpinner(self->myScr, "Scanning...");
         WiFi.scanNetworks(true);
     }
 

@@ -160,7 +160,7 @@ void WifiManager::connect(App* callback) {
         Serial.println("No ssid defined, just using app, but with callback defined");
     } else {
         if ((!WiFi.isConnected()) || WiFi.SSID()!=String(ssid)) {
-            styles.showSpinner(myScr);
+            styles.showSpinner(myScr, ssid);
             Serial.printf("Connecting to ssid=%s with pw=%s\n",ssid, password);
             isConnecting = true;
             /*if (WiFi.isConnected()) {
