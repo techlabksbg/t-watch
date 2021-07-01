@@ -50,6 +50,10 @@ void WebFiles::registerHandlers() {
             response->print(file.name());
             response->print("\">");
             response->print(file.name());
+            // TODO: FIXME: correctly url-encode file names.
+            response->print("</a> &nbsp; <a href=\"/delete?filename=");
+            response->print(file.name());
+            response->print("\">delete</a>");
             response->print("</li>\n");
             Serial.println(file.name());        
             file = root.openNextFile();
@@ -92,7 +96,18 @@ void WebFiles::registerHandlers() {
             Serial.printf("UploadEnd: %s, %u B\n", filename.c_str(), index + len);
         }
     });
-    
+
+    server->on("/delete", HTTP_GET, [](AsyncWebServerRequest *request){
+        Serial.println("on /delete");
+        if(request->hasParam("filename")) {
+            // TODO: FIXME: correctly decode url-encoded file names
+            Serial.println(request->getParam("filename")->value());
+            SPIFFS.remove(request->getParam("filename")->value());
+        }
+        request->redirect("/files/");
+    });
+
+
     server->serveStatic("/files/", SPIFFS, "/");
 
 
@@ -108,7 +123,9 @@ bool WebFiles::show() {
         if (server==nullptr) {
             Serial.println("WebFile::show(), new AsyncWebServer");
             server = new AsyncWebServer(80);
+            Serial.println("register Handlers");
             registerHandlers();
+            Serial.println("server->begin()");
             server->begin();
             Serial.printf("Server started: http://%s\n",WiFi.localIP().toString().c_str());
         } else {
