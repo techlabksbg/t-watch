@@ -43,12 +43,18 @@ class WifiManager : public App {
     bool isOff=true;
     bool isConnecting=false;
     App* closeOnConnect = nullptr;
+    int savedSSIDs = 0;
 
 
     void clearScanned();
     void enterPw();
     void addToggle();
     void removeToggle();
+    void addNewKnown();
+    void addConnectionButtons(const char* name);
+    void removeSSID(lv_obj_t* delButton);
+
+    
 
     static WifiManager* self;
 
@@ -86,18 +92,8 @@ class WifiManager : public App {
 
     static void delete_cb(lv_obj_t *delButton, lv_event_t event) {
         if (event != LV_EVENT_SHORT_CLICKED) return;
-        Serial.println("WifiManager::delete_cb");
-        lv_obj_t* button = (lv_obj_t*) lv_obj_get_user_data(delButton);
-        lv_obj_t* label = lv_obj_get_child(button,NULL);
-        char* ssid = lv_label_get_text(label);
-        Serial.printf("About to delete %s\n", ssid);
-        (*configJson)["wifi"]["known"].remove(ssid);
-        if (strcmp((*configJson)["wifi"]["last"], ssid)==0) {
-            (*configJson)["wifi"]["last"] = "";
-        }
-        lv_obj_del(button);
-        lv_obj_del(delButton);
-        Serial.printf("Deleted %s \n",ssid);
+        self->removeSSID(delButton);
+        
     }
 
     static void scan_cb(lv_obj_t *scanButton, lv_event_t event) {
