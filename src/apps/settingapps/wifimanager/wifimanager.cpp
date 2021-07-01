@@ -171,10 +171,6 @@ void WifiManager::connect(App* callback) {
             styles.showSpinner(myScr, ssid);
             Serial.printf("Connecting to ssid=%s with pw=%s\n",ssid, password);
             isConnecting = true;
-            /*if (WiFi.isConnected()) {
-                Serial.println("Still connected, so disconnect...");
-                WiFi.disconnect();
-            }*/
             if (WiFi.getMode()!=WIFI_STA) {
                 WiFi.mode(WIFI_STA);
             }
@@ -285,8 +281,8 @@ void WifiManager::connectionEstablished() {
 void WifiManager::connectionLost() {
     Serial.println("WifiManager::connectionLost()");
     if (isConnecting) {
-        styles.hideSpinner();        
-        isConnecting=false;  
+        styles.hideSpinner();
+        isConnecting=false;
         WiFi.mode(WIFI_OFF);
     } else {
         if (!isOff) disconnect();
