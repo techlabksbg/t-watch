@@ -17,6 +17,7 @@
 // Converter at https://lvgl.io/tools/imageconverter
 LV_IMG_DECLARE(backicon);
 LV_IMG_DECLARE(settingsicon);
+LV_IMG_DECLARE(demoappsicon);
 
 
 
@@ -108,17 +109,22 @@ class Launcher : public App {
         return settings;
     }
 
+    static Launcher* setupDemoLauncher() {
+        Launcher* demos = new Launcher("Demos", rootLauncher);
+        demos->icon = (void*) &demoappsicon;
+        demos->registerApp(new MotorApp);
+        return demos;
+    }
+
     public:
 
     // Setup the whole Launcher structure
     static void setup() {
         App::hide_cb = &hideApp;
         App::show_cb = &showApp;
-        Launcher* settings = setupSettingsLauncher();
-        Launcher::rootLauncher->registerApp(settings);
+        Launcher::rootLauncher->registerApp(setupSettingsLauncher());
+        Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
-        Launcher::rootLauncher->registerApp(new MotorApp);
-        //showApp(rootLauncher);
         Serial.println("Launcher::setup() complete");
     }
 
