@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../app.h"
+#include "../../app.h"
 
 
 class TechLabWatch : public App {

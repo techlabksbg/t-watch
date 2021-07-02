@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../app.h"
+#include "../../app.h"
 
 LV_IMG_DECLARE(motorappicon);
 

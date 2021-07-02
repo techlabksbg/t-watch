@@ -2,7 +2,7 @@
 
 #include "../app.h"
 
-#include "../techlabwatch/techlabwatch.h"
+#include "../watches/techlabwatch/techlabwatch.h"
 #include "../settingapps/brightness/brightness.h"
 #include "../settingapps/reboot/reboot.h"
 #include "../settingapps/poweroff/poweroff.h"
@@ -10,7 +10,7 @@
 #include "../settingapps/wifimanager/wifimanager.h"
 #include "../webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
-#include "../motorapp/motorapp.h"
+#include "../demoapps/motorapp/motorapp.h"
 
 
 // 
