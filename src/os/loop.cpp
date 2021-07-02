@@ -59,7 +59,8 @@ void os_loop()
         }
     }
     // No screen Timeout when plugged in.
-    if (ttgo->bl->isOn() && (lv_disp_get_inactive_time(NULL) < DEFAULT_SCREEN_TIMEOUT || ttgo->power->isVBUSPlug())) {
+    if (ttgo->bl->isOn() && (lv_disp_get_inactive_time(NULL) < DEFAULT_SCREEN_TIMEOUT || 
+        (ttgo->power->isVBUSPlug() && lv_disp_get_inactive_time(NULL) < (DEFAULT_SCREEN_TIMEOUT)*10))) {
         lv_task_handler();
     } else {
         low_energy();
