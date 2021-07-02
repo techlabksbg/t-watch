@@ -8,7 +8,7 @@
 #include "../settingapps/poweroff/poweroff.h"
 #include "../settingapps/sysinfo/sysinfo.h"
 #include "../settingapps/wifimanager/wifimanager.h"
-#include "../webfiles/webfiles.h"
+#include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
 #include "../demoapps/motorapp/motorapp.h"
 
@@ -99,8 +99,9 @@ class Launcher : public App {
         Launcher* settings = new Launcher("Settings", rootLauncher);
         settings->icon = (void*) &settingsicon;
         settings->registerApp(new Brightness);
-        settings->registerApp(new NTP_Sync);
         settings->registerApp(&wifiManager);
+        settings->registerApp(new NTP_Sync);
+        settings->registerApp(new WebFiles);
         settings->registerApp(new SysInfo);
         settings->registerApp(new Reboot);
         settings->registerApp(new PowerOff);
@@ -116,7 +117,6 @@ class Launcher : public App {
         Launcher* settings = setupSettingsLauncher();
         Launcher::rootLauncher->registerApp(settings);
         Launcher::rootLauncher->registerApp(new TechLabWatch);
-        Launcher::rootLauncher->registerApp(new WebFiles);
         Launcher::rootLauncher->registerApp(new MotorApp);
         //showApp(rootLauncher);
         Serial.println("Launcher::setup() complete");

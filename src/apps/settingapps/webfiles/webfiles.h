@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../app.h"
+#include "../../app.h"
 #include "ESPAsyncWebServer.h"
-#include "../settingapps/wifimanager/wifimanager.h"
+#include "../wifimanager/wifimanager.h"
 
 
 LV_IMG_DECLARE(webfilesicon);
