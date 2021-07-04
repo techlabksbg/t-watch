@@ -38,19 +38,20 @@ void WifiManager::clearCheckedButtons() {
     }
 }
 void WifiManager::addConnectionButtons(const char* name) {
+    Serial.printf("WifiManager::addConnectionButtons(%s)\n", name);
     if (savedSSIDs>=WIFI_MAX_SAVED) return;
     lv_obj_t* button = styles.stdButton(page, name, connect_cb);
     savedCont[savedSSIDs++] = button;
     lv_obj_set_size(button, 155, 40);
     lv_obj_align(button, savedCont[savedSSIDs-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
     lv_btn_set_checkable(button, true); // Make it checkable
-
+    Serial.println("Added button, about to add deletebutton");
     lv_obj_t* delButton = styles.stdButton(page, LV_SYMBOL_CLOSE, delete_cb);
     lv_obj_set_size(delButton, 40, 40);
     lv_obj_align(delButton, button, LV_ALIGN_OUT_RIGHT_MID,5,0);
     lv_obj_set_user_data(delButton, button); // To get from the delButton to the button and the ssid
     lv_obj_set_user_data(button, delButton); // To get from the button to the delButton for realignment
-
+    Serial.println("WifiManager::addConnectionButtons done.");
 }
 
 bool WifiManager::create() {
@@ -114,12 +115,15 @@ bool WifiManager::destroy() {
 }
 
 void WifiManager::clearScanned() {
+    Serial.println("WifiManager::clearScanned()");
     int scanned = 2;
     while (scanned<WIFI_MAX_SCANNED && scannedCont[scanned]!=nullptr) {
+        Serial.printf("Trying to delete scan result %d\n", scanned);
         lv_obj_del(scannedCont[scanned]);
         scannedCont[scanned] = nullptr;
         scanned++;
     }
+    Serial.println("WifiManager::clearScanned() done");
 }
 
 void WifiManager::scanDone() {
@@ -129,6 +133,9 @@ void WifiManager::scanDone() {
     for (int i = 0; i < len; ++i) {
         lv_obj_t* button = styles.stdButton(page, WiFi.SSID(i).c_str());
         scannedCont[scanned++] = button;
+        if (scanned<WIFI_MAX_SCANNED) {
+            scannedCont[scanned]=nullptr;
+        }
         lv_obj_set_size(button,195,40);
         lv_obj_align(button, scannedCont[scanned-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
         lv_obj_set_event_cb(scannedCont[scanned-1], connect_new_cb);
@@ -203,9 +210,11 @@ void WifiManager::disconnect() {
 
 void WifiManager::addNewKnown() {
     addConnectionButtons(ssid);
+    Serial.println("WifiManager::addNewKnown() About to clear scanned...");
     clearScanned();
     lv_obj_align(scannedCont[0], savedCont[savedSSIDs-1], LV_ALIGN_OUT_BOTTOM_LEFT, 0, 15);
     lv_obj_align(scannedCont[1], scannedCont[0], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
+    Serial.println("WifiManager::addNewKnown() done.");
 }
 
 
@@ -251,17 +260,23 @@ void WifiManager::connectionEstablished() {
     isConnecting = false;
     Serial.println("Wifi connected!");
     bool save = false;
+    Serial.println("checking for wifi[known] entry...");
     if (!(*configJson)["wifi"].containsKey("known")) {
+        Serial.println("  ... adding entry");
         (*configJson)["wifi"]["known"] = JsonObject();
         save = true;
     }
+    Serial.println("Checking if ssid exists...");
     if (!(*configJson)["wifi"]["known"].containsKey(ssid)) {
         (*configJson)["wifi"]["known"][ssid]=password;
+        Serial.println("new ssid added to json, calling addNewKnown()");
         addNewKnown();
+        Serial.println("Toggle last button");
         lv_btn_toggle(savedCont[savedSSIDs-1]);
         save = true;
     }
     if (!(*configJson)["wifi"].containsKey("last") || strncmp(ssid, (*configJson)["wifi"]["last"],PW_MAX_LENGTH)!=0) {
+        Serial.println("Setting last connection");
         (*configJson)["wifi"]["last"]=ssid;
         save = true;
     } 
