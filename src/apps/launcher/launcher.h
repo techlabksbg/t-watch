@@ -11,6 +11,7 @@
 #include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
 #include "../demoapps/motorapp/motorapp.h"
+#include "../demoapps/webaudio/webaudio.h"
 
 
 // 
@@ -113,6 +114,7 @@ class Launcher : public App {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new MotorApp);
+        demos->registerApp(new WebAudio);
         return demos;
     }
 
