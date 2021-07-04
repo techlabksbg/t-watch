@@ -11,6 +11,7 @@
 #include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
 #include "../demoapps/motorapp/motorapp.h"
+#include "../shoppinglist/shoppinglist.h"
 
 
 // 
