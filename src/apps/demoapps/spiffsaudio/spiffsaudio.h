@@ -1,5 +1,8 @@
 #pragma once
 
+// Upload this file to SPIFFS (for example by using the webfiles app)
+#define SPIFFSAUDIO_MP3FILE "/tngchirp.mp3"
+
 #include <SPIFFS.h>
 
 #include "AudioOutputI2S.h"
@@ -45,7 +48,7 @@ class SpiffsAudio : public App {
         if (event != LV_EVENT_SHORT_CLICKED) return;
         if (self->audioMp3!=nullptr) {
             if (!self->audioMp3->isRunning()) {
-                self->audioSource->open("/tngchirp.mp3");
+                self->audioSource->open(SPIFFSAUDIO_MP3FILE);
                 self->audioMp3->begin(self->audioID3, self->audioI2S);
                 if (self->audioTask==nullptr) {
                     Serial.println("SpiffsAudio::show Creating task");
@@ -66,6 +69,7 @@ class SpiffsAudio : public App {
                 if (!self->audioMp3->loop()) {
                     self->audioSource->close();
                     self->audioMp3->stop();
+                    Serial.println("audioLoop(): Stopping task");
                     lv_task_del(self->audioTask);
                     self->audioTask = nullptr;
                 } else {
@@ -76,7 +80,7 @@ class SpiffsAudio : public App {
                 // self->hide_myself();
             }
         }
-        Serial.print('0'+n);
+        //Serial.print('0'+n);
     }
 
 

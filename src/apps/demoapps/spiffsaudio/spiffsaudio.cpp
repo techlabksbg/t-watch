@@ -14,7 +14,11 @@ bool SpiffsAudio::create() {
 }
 
 bool SpiffsAudio::show() {
-    if (audioSource==nullptr) {
+    if (!SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
+        lv_obj_t* label = styles.stdLabel(myScr, SPIFFSAUDIO_MP3FILE " not found.");
+        lv_label_set_text(buttonLabel, "Quit");
+        register_for_hide_on_click(connectButton);
+    } else if (audioSource==nullptr) {
         Serial.println("Building audio chain...");
         ttgo->enableLDO3();
         ttgo->enableAudio();
