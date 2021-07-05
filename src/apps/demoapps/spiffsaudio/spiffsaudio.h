@@ -61,11 +61,11 @@ class SpiffsAudio : public App {
 
 
     static void audioLoop(struct _lv_task_t *data) {
-        int n = 0;
+        //int n = 0;
         if (self->audioMp3!=nullptr) {
-            n = 1;
+           //n = 1;
             if (self->audioMp3->isRunning()) {
-                n = 2;
+                //n = 2;
                 if (!self->audioMp3->loop()) {
                     self->audioSource->close();
                     self->audioMp3->stop();
@@ -73,10 +73,10 @@ class SpiffsAudio : public App {
                     lv_task_del(self->audioTask);
                     self->audioTask = nullptr;
                 } else {
-                    n = 4;
+                    //n = 4;
                 }
             } else {
-                n = 5;
+                //n = 5;
                 // self->hide_myself();
             }
         }

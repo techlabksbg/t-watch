@@ -15,8 +15,9 @@ bool SpiffsAudio::create() {
 
 bool SpiffsAudio::show() {
     if (!SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
-        lv_obj_t* label = styles.stdLabel(myScr, SPIFFSAUDIO_MP3FILE " not found.");
+        lv_obj_t* label = styles.stdLabel(myScr, SPIFFSAUDIO_MP3FILE "\nnot found.");
         lv_label_set_text(buttonLabel, "Quit");
+        lv_obj_align(label, connectButton, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
         register_for_hide_on_click(connectButton);
     } else if (audioSource==nullptr) {
         Serial.println("Building audio chain...");
