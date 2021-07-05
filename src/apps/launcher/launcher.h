@@ -12,6 +12,7 @@
 #include "../settingapps/ntpsync/ntpsync.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
+#include "../demoapps/spiffsaudio/spiffsaudio.h"
 
 
 // 
@@ -115,6 +116,7 @@ class Launcher : public App {
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new MotorApp);
         demos->registerApp(new WebAudio);
+        demos->registerApp(new SpiffsAudio);
         return demos;
     }
 
