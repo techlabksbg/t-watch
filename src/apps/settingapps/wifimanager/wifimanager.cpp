@@ -162,6 +162,8 @@ void WifiManager::enterPw() {
     lv_keyboard_set_cursor_manage(kb, true);
     lv_obj_set_event_cb(kb, kb_event_cb);
     lv_keyboard_set_textarea(kb, textArea);
+    Serial.println("You can use your Serial connection to type in the password!");
+    serial_listener_task = lv_task_create(serial_listener, 50, LV_TASK_PRIO_LOWEST, NULL);
 
 }
 

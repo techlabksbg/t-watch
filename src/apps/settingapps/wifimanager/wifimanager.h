@@ -45,6 +45,7 @@ class WifiManager : public App {
     bool isConnecting=false;
     App* closeOnConnect = nullptr;
     int savedSSIDs = 0;
+    lv_task_t* serial_listener_task = nullptr;
 
 
     void clearScanned();
@@ -125,6 +126,8 @@ class WifiManager : public App {
         lv_keyboard_def_event_cb(keyboard, e);
         // special events
         if (e == LV_EVENT_CANCEL || e==LV_EVENT_APPLY) {
+            lv_task_del(self->serial_listener_task);
+            self->serial_listener_task = nullptr;
             Serial.print("KB event");
             if (e==LV_EVENT_APPLY) {
                 strlcpy(self->password, lv_textarea_get_text(self->textArea), PW_MAX_LENGTH+1);
@@ -150,6 +153,16 @@ class WifiManager : public App {
             self->closeOnConnect = nullptr;
         }
     }
+
+    static void serial_listener(struct _lv_task_t *data) {
+        while (Serial.available()) {
+            char c = Serial.read();
+            lv_textarea_add_char(self->textArea,c);
+            Serial.write(c);
+            Serial.flush();
+        }
+    }
+
 };
 
 extern WifiManager wifiManager;
