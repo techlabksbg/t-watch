@@ -23,9 +23,7 @@ void loadJsonConfig() {
     if (configJson==nullptr) {
         configJson = new DynamicJsonDocument(CONFIGJSONSIZE);
     }
-    if (!SPIFFS.begin()) {
-        Serial.println("Failed to mount SPIFFS");        
-    } else {
+    if (spiffs_initialized) {
         fs::File file = SPIFFS.open("/config.json", FILE_READ);
         if (!file) {
           Serial.println("There was an error opening the config.json file for reading");
@@ -72,9 +70,8 @@ void loadJsonConfig() {
 }
 
 void saveJsonConfig() {
-    if (!SPIFFS.begin()) {
-        Serial.println("Failed to mount SPIFFS");        
-    } else {
+    if (spiffs_initialized) {
+        Serial.println("saveJsonConfig() about to open file...");
         fs::File file = SPIFFS.open("/config.json", FILE_WRITE);
         if (!file) {
           Serial.println("There was an error opening the config.json file for writing");

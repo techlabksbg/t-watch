@@ -43,6 +43,7 @@ extern QueueHandle_t g_event_queue_handle;
 extern EventGroupHandle_t g_event_group;
 extern bool lenergy;
 extern TTGOClass *ttgo;
+extern bool spiffs_initialized;
 #define CONFIGJSONSIZE 65535
 
 #include "network.h"

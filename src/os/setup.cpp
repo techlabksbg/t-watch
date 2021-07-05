@@ -7,7 +7,6 @@ void os_setup() {
     Serial.begin(115200);
     
 
-
     //Create a program that allows the required message objects and group flags
     g_event_queue_handle = xQueueCreate(20, sizeof(uint8_t));
     g_event_group = xEventGroupCreate();
@@ -95,6 +94,10 @@ void os_setup() {
 
     //When the initialization is complete, turn on the backlight
     ttgo->openBL();
+    if (!(spiffs_initialized = SPIFFS.begin())) {
+        Serial.println("SPIFFS init failed!");
+    }
+
     loadJsonConfig();
 
     //Execute your own GUI interface
