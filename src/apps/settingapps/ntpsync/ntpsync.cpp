@@ -27,6 +27,7 @@ bool NTP_Sync::create() {
 
 bool NTP_Sync::show() {
     if (WiFi.isConnected()) {
+        sntp_set_time_sync_notification_cb(ntp_cb);
         configTzTime((*configJson)["tz"], "pool.ntp.org");
         lv_label_set_text(title,"NTP Sync\nDone!");
     } else {

@@ -25,6 +25,9 @@ class App {
     } app_type_t;
 
     typedef void app_cb_t(App*);
+    //typedef std::function<void(App*, std::function<void(void)>, int, int)> rtc_cb_t;
+    typedef void (rtc_cb_t)(App*, std::function<void()>, int, int);
+
 
     virtual bool create() = 0;
     virtual bool show() = 0;
@@ -47,12 +50,19 @@ class App {
     
     static app_cb_t* hide_cb;
     static app_cb_t* show_cb;
+    static rtc_cb_t* setAlarm_cb;
 
     // Call this method if you want to hide/terminate your app
     // Do not call the hide method yourself, it will be called this way.
     void hide_myself() {
         Serial.printf("App::hide_myself() with %s\n",getName());
         (*hide_cb)(this);
+    }
+
+    void setAlarm(std::function<void(void)> cb, int hours, int minutes) {
+        Serial.println("App::setAlarm(...) start");
+        (*setAlarm_cb)(this, cb, hours, minutes);
+        Serial.println("App::setAlarm(...) end");
     }
 
     static void show_app(App * app) {

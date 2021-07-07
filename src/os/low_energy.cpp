@@ -20,6 +20,7 @@ void low_energy()
         Serial.println("ENTER IN LIGHT SLEEEP MODE");
         gpio_wakeup_enable ((gpio_num_t)AXP202_INT, GPIO_INTR_LOW_LEVEL);
         gpio_wakeup_enable ((gpio_num_t)BMA423_INT1, GPIO_INTR_HIGH_LEVEL);
+        gpio_wakeup_enable ((gpio_num_t)RTC_INT_PIN, GPIO_INTR_LOW_LEVEL);
         esp_sleep_enable_gpio_wakeup ();
         esp_light_sleep_start();
     } else {

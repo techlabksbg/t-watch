@@ -25,7 +25,7 @@ class TechLabWatch : public App {
     static lv_obj_t* dateLabel;
     static lv_task_t* task;
 
-    static void loop(struct _lv_task_t *data) {
+    static void loop(lv_task_t * taskptr) {
         time_t now;
         struct tm  info;
         char buf[64];

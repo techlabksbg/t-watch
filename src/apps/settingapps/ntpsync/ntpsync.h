@@ -32,6 +32,11 @@ class NTP_Sync : public App {
         wifiManager.connect(self);
     }
 
+    static void ntp_cb(timeval *tv) {
+        Serial.println("NTP_Sync::ntp_cb() called, syncing to rtc");
+        ttgo->rtc->syncToRtc();
+    }
+
 
 };
 

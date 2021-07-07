@@ -96,3 +96,5 @@ App* Launcher::lastLauncher = nullptr;
 App* Launcher::lastWatch = nullptr;
 App* Launcher::lastApp = nullptr;
 App* Launcher::sleepyApp = nullptr;
+App* Launcher::alarmApp = nullptr;
+std::function<void(void)> Launcher::rtcCallback = nullptr;

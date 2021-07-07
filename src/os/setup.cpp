@@ -55,9 +55,19 @@ void os_setup() {
 
     //Check if the RTC clock matches, if not, use compile time
     ttgo->rtc->check();
-
     //Synchronize time to system time
     ttgo->rtc->syncToSystem();
+    // Set up interrupt for rtc (see https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/RTC/RTC.ino)
+    pinMode(RTC_INT_PIN, INPUT_PULLUP);
+    attachInterrupt(RTC_INT_PIN, [] {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        uint8_t data = Q_EVENT_RTC_INT;
+        xQueueSendFromISR(g_event_queue_handle, &data, &xHigherPriorityTaskWoken);
+        if (xHigherPriorityTaskWoken)
+        {
+            portYIELD_FROM_ISR ();
+        }
+    }, FALLING);
 
     // Initialize vibration Motor
     ttgo->motor_begin();

@@ -3,6 +3,7 @@
 #include "../app.h"
 
 #include "../watches/techlabwatch/techlabwatch.h"
+#include "../watches/simplealarm/simplealarm.h"
 #include "../settingapps/brightness/brightness.h"
 #include "../settingapps/reboot/reboot.h"
 #include "../settingapps/poweroff/poweroff.h"
@@ -13,6 +14,7 @@
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
 #include "../demoapps/spiffsaudio/spiffsaudio.h"
+
 
 
 // 
@@ -44,7 +46,6 @@ class Launcher : public App {
 
     static Launcher* rootLauncher;
 
-    
 
     private:
     lv_point_t* validPoints;
@@ -64,19 +65,7 @@ class Launcher : public App {
             Serial.printf("Registering %s into %s as AppNr %d\n", app->getName(), getName(), numberOfApps-1);
         }
     }
-    /*
-    void removeApp(App* app) { 
-        for (int i=0; i<numberOfApps; i++) {
-            if (apps[i]==app) {
-                for (int j=i+1; j<numberOfApps; j++) {
-                    apps[j-1] = apps[j];
-                }
-                numberOfApps--;
-                return;
-            }
-        }
-    } */
-
+    
 
     void static tile_event_cb(lv_obj_t *obj, lv_event_t event) {        
         if (event != LV_EVENT_SHORT_CLICKED) return;
@@ -122,13 +111,34 @@ class Launcher : public App {
 
     public:
 
+    static void setAlarm(App* app, std::function<void(void)> callback, int hours, int minutes) {
+        Serial.printf("Setting alarm to %02d:%02d to call App %s\n", hours, minutes, app->getName());
+        time_t now;
+        struct tm  info;
+        time(&now);
+        localtime_r(&now, &info);
+        if (info.tm_min+info.tm_hour*60 > hours*60+minutes) { // Alarm time has already pased today
+            Serial.printf("time smaller (now is %02d:%02d, day %d, wday %d\n", info.tm_hour, info.tm_min, info.tm_mday, info.tm_wday);
+            info.tm_mday++;
+            now = mktime(&info);
+            localtime_r(&now, &info);
+        }
+        ttgo->rtc->setAlarm(hours, minutes, info.tm_mday, info.tm_wday);
+        Serial.printf("Enabling alarm on day %d, wday %d\n", info.tm_mday, info.tm_wday);
+        ttgo->rtc->enableAlarm();
+        alarmApp = app;
+        rtcCallback = callback;
+    }
+
     // Setup the whole Launcher structure
     static void setup() {
         App::hide_cb = &hideApp;
         App::show_cb = &showApp;
+        App::setAlarm_cb = &setAlarm;
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
+        Launcher::rootLauncher->registerApp(new SimpleAlarm);
         Serial.println("Launcher::setup() complete");
     }
 
@@ -138,6 +148,8 @@ class Launcher : public App {
     static App* lastWatch;
     static App* lastApp;
     static App* sleepyApp;
+    static App* alarmApp;
+    static std::function<void(void)> rtcCallback;
 
     static void goToSleep() {
         if (activeApp!=nullptr && activeApp->state==STATE_SHOWN && activeApp->isNormal()) {
@@ -156,6 +168,19 @@ class Launcher : public App {
             sleepyApp = nullptr;
         }
     }
+
+    static void rtcAlarmFired() {
+        if (alarmApp!=nullptr) {
+            Serial.printf("Launcher::rtcAlarmFired(): Waking app %s back up\n", alarmApp->getName());
+            showApp(alarmApp);
+            if (rtcCallback!=nullptr) {
+                rtcCallback();
+            }
+            alarmApp = nullptr;
+        }
+    }
+
+   
 
     static void rememberApp(App* app) {
         lastApp = app;

@@ -54,6 +54,13 @@ void os_loop()
             wifiManager.scanDone();
             break;
         }
+        case Q_EVENT_RTC_INT:
+            Serial.println("rtc alarm has fired");
+            ttgo->rtc->resetAlarm();
+            ttgo->rtc->disableAlarm();
+            launcher.rtcAlarmFired();
+            break;
+        
         default:
             break;
         }
