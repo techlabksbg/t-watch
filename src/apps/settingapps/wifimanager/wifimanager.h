@@ -6,7 +6,7 @@
 LV_IMG_DECLARE(wifiicon);
 
 #define WIFI_MAX_SAVED 50
-#define WIFI_MAX_SCANNED 20
+#define WIFI_MAX_SCANNED 50
 #define PW_MAX_LENGTH 64
 
 class WifiManager : public App {
