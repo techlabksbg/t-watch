@@ -23,10 +23,6 @@ class MicDemo : public App {
         self->readData();
     }
 
-    static void motor_button_cb(lv_obj_t *obj, lv_event_t event) {        
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ttgo->motor->onec();
-    }
 
     private:
     int16_t* micBuffer = nullptr;

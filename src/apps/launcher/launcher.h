@@ -15,6 +15,7 @@
 #include "../demoapps/webaudio/webaudio.h"
 #include "../demoapps/spiffsaudio/spiffsaudio.h"
 #include "../demoapps/micdemo/micdemo.h"
+#include "../demoapps/acceldemo/acceldemo.h"
 
 
 
@@ -105,6 +106,7 @@ class Launcher : public App {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new MotorApp);
+        demos->registerApp(new AccelDemo);        
         demos->registerApp(new WebAudio);
         demos->registerApp(new SpiffsAudio);
         demos->registerApp(new MicDemo);
