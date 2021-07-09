@@ -14,6 +14,7 @@
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
 #include "../demoapps/spiffsaudio/spiffsaudio.h"
+#include "../demoapps/micdemo/micdemo.h"
 
 
 
@@ -106,6 +107,7 @@ class Launcher : public App {
         demos->registerApp(new MotorApp);
         demos->registerApp(new WebAudio);
         demos->registerApp(new SpiffsAudio);
+        demos->registerApp(new MicDemo);
         return demos;
     }
 
