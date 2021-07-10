@@ -15,4 +15,10 @@ class Tide : public App {
     
     void* getIcon() { return (void*) &tideicon; }
     const char * getName() { return "Tide"; }
+
+    lv_obj_t* itemsPage;
+    lv_obj_t* highTitle;
+    lv_obj_t* highLabel;
+    lv_obj_t* lowTitle;
+    lv_obj_t* lowLabel;
 };
