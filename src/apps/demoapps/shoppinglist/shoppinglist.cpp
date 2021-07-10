@@ -1,8 +1,7 @@
 #include "shoppinglist.h"
 
-static void uploadlist_cb(lv_obj_t *button, lv_event_t event) {
+static void addentry_cb(lv_obj_t *button, lv_event_t event) {
     if (event != LV_EVENT_SHORT_CLICKED) return;
-    Serial.println("Upload list");
 }
 
 bool ShoppingList::create() {
@@ -14,9 +13,9 @@ bool ShoppingList::create() {
     lv_label_set_align(firstShoppingItem, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(firstShoppingItem, NULL, LV_ALIGN_IN_TOP_MID, 0,15);
 
-    uploadListButton = styles.stdButton(myScr, "Upload List ", uploadlist_cb);
+    addEntryButton = styles.stdButton(myScr, "Add ", addentry_cb);
 
-    lv_obj_align(uploadListButton, firstShoppingItem, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
+    lv_obj_align(addEntryButton, firstShoppingItem, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
 
     Serial.println("Try log shop");
 

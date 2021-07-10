@@ -20,6 +20,6 @@ class ShoppingList : public App {
 
     private:
     lv_obj_t* firstShoppingItem=nullptr;
-    lv_obj_t* uploadListButton=nullptr;
+    lv_obj_t* addEntryButton=nullptr;
     AsyncWebServer* server=nullptr;
 };
