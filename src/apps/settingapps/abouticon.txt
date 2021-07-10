@@ -1,5 +1,7 @@
 settingsicon.png
 
+White shadow added by Ivo Blöchliger
+
 From https://openmoji.org/library/#search=tool&emoji=1F6E0
 
 CC-BY-SA 4.0
