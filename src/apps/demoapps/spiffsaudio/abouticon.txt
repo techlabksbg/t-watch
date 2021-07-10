@@ -1,0 +1,23 @@
+spiffsaudioicon.png
+
+Composite by Ivo Blöchliger of the following CC-BY-SA 4.0 icons:
+
+From: https://openmoji.org/library/#search=music&emoji=1F3B5
+musical note
+Unicode	1F3B5
+🎵
+Author	Sina Schulz
+Category	objects
+Subcategory	music
+
+
+and
+
+
+From: https://openmoji.org/library/#search=disk&emoji=1F4BE
+floppy disk
+Unicode	1F4BE
+💾
+Author	Jonas Roßner
+Category	objects
+Subcategory	computer

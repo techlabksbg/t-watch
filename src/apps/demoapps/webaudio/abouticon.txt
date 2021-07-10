@@ -1,0 +1,24 @@
+webaudioicon.png
+
+Composite by Ivo Blöchliger of the following CC-BY-SA 4.0 icons:
+
+From: https://openmoji.org/library/#search=music&emoji=1F3B5
+musical note
+Unicode	1F3B5
+🎵
+Author	Sina Schulz
+Category	objects
+Subcategory	music
+
+
+and
+
+
+From: https://openmoji.org/library/#search=world&emoji=1F30D
+globe showing Europe-Africa
+Unicode	1F30D
+🌍
+Author	Martin Wehl
+Category	travel-places
+Subcategory	place-map
+

@@ -4,7 +4,7 @@
 #include "../wifimanager/wifimanager.h"
 
 
-LV_IMG_DECLARE(ntsyncicon);
+LV_IMG_DECLARE(ntpsyncicon);
 
 
 
@@ -18,7 +18,7 @@ class NTP_Sync : public App {
     virtual bool hide() { return true;}
     virtual bool destroy() { return true;}
 
-    void* getIcon() { return (void*) &ntsyncicon; }
+    void* getIcon() { return (void*) &ntpsyncicon; }
     const char * getName() { return "NTP Sync"; }
 
     private:
