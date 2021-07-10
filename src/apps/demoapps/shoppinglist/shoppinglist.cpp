@@ -1,21 +1,13 @@
 #include "shoppinglist.h"
 
-static void addentry_cb(lv_obj_t *button, lv_event_t event) {
-    if (event != LV_EVENT_SHORT_CLICKED) return;
-}
-
 bool ShoppingList::create() {
     register_for_swipe_up(myScr);
     lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
 
-    firstShoppingItem = styles.stdLabel(myScr, "Porcini");
-
-    lv_label_set_align(firstShoppingItem, LV_LABEL_ALIGN_CENTER);
-    lv_obj_align(firstShoppingItem, NULL, LV_ALIGN_IN_TOP_MID, 0,15);
-
-    addEntryButton = styles.stdButton(myScr, "Add ", addentry_cb);
-
-    lv_obj_align(addEntryButton, firstShoppingItem, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
+    itemsPage = styles.stdPage(myScr);
+    firstShoppingItem = lv_label_create(itemsPage, NULL);    
+    lv_obj_add_style(firstShoppingItem, LV_OBJ_PART_MAIN, &styles.textLabel);
+    lv_label_set_text(firstShoppingItem, currentShoppingList.c_str());
 
     Serial.println("Try log shop");
 
