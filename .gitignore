@@ -2,5 +2,5 @@
 .vscode
 trash
 include/TTGO_TWatch_Library
-
+.swp
 .DS_Store
