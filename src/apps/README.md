@@ -79,3 +79,11 @@ a trace command for app creation and showing the app:
 
         return true;
     }
+
+Finally, we'll have to register our app in the launcher. In the file src/apps/launcher/launcher.h , include your header file:
+
+    #include "../demoapps/shoppinglist/shoppinglist.h"
+
+And in the correct directory (in our case demo apps, which corresponds to the method setupDemoLauncher), register your app:
+
+    demos->registerApp(new ShoppingList);
