@@ -1,0 +1,11 @@
+shoppinglisticon.png
+
+From: https://openmoji.org/library/#search=shopping&emoji=1F6D2
+
+CC-BY-SA 4.0
+
+Unicode	1F6D2
+🛒
+Author	Marius Schnabel
+Category	objects
+Subcategory	household
