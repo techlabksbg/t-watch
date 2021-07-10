@@ -24,5 +24,11 @@ Resize to 72 by 72 pixels in your favorite image editor / command line tool. For
 
     sips -Z 72 shoppinglist.png
 
-Add to git already, just in case you want to go back to it.
+But ImageMagick's convert works as well. Add to git already, just in case you want to go back to it.
+
+To convert to a .h file, use https://lvgl.io/tools/imageconverter - there is a small command line utility on the top level of our repository:
+
+    ./../../../imageconverter/lv_img_conv.bash shoppinglist.png
+
+This should have created a shoppinglist.c in the same directory.
 
