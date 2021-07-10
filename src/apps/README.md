@@ -92,3 +92,18 @@ Now build and deploy your app - in Visual Studio Code, click the right arrow on 
 
 ![Your watch showing the shopping list](screenshot_deployed.jpg)
 
+Once you're showing the app, click on the cable icon to see the terminal. It should show
+the trace message.
+
+## Add a user interface
+We would like to show the shopping list items as a list of text lines. Add the following code
+to the shoppinglist.h:
+
+    lv_obj_t* firstShoppingItem=nullptr;
+
+This will hold the reference to the label with the first shopping item.
+
+In the shoppinglist.cpp create method, initialize the label:
+
+    firstShoppingItem = styles.stdLabel(myScr, "Porcini");
+
