@@ -17,6 +17,7 @@
 #include "../demoapps/micdemo/micdemo.h"
 #include "../demoapps/acceldemo/acceldemo.h"
 #include "../demoapps/shoppinglist/shoppinglist.h"
+#include "../demoapps/tide/tide.h"
 
 
 // 
@@ -111,6 +112,7 @@ class Launcher : public App {
         demos->registerApp(new SpiffsAudio);
         demos->registerApp(new MicDemo);
         demos->registerApp(new ShoppingList);
+        demos->registerApp(new Tide);
         return demos;
     }
 
