@@ -17,8 +17,23 @@ void os_loop()
             } while (!rlst);
             //! setp counter
             if (ttgo->bma->isStepCounter()) {
+                Serial.println("loop.cpp: ttgo->bma->isStepCounter() == true");
                 //updateStepCounter(ttgo->bma->getCounter());
             }
+            if (ttgo->bma->isDoubleClick()) {
+                Serial.println("loop.cpp: ttgo->bma->isDoubleClick() == true");
+                Launcher::doubleTap();
+            }
+            if (ttgo->bma->isTilt()) {
+                Serial.println("loop.cpp: ttgo->bma->isTilt() == true");
+            }
+            if (ttgo->bma->isActivity()) {
+                Serial.println("loop.cpp: ttgo->bma->isActivity() == true");
+            }
+            if (ttgo->bma->isAnyNoMotion()) {
+                Serial.println("loop.cpp: ttgo->bma->isAnyNoMotion() == true");
+            }
+        
             break;
         case Q_EVENT_AXP_INT:
             ttgo->power->readIRQ();

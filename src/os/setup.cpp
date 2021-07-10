@@ -28,6 +28,12 @@ void os_setup() {
     // The default interrupt configuration,
     // you need to set the acceleration parameters, please refer to the BMA423_Accel example
     ttgo->bma->attachInterrupt();
+    ttgo->bma->enableActivityInterrupt();
+    ttgo->bma->enableAnyNoMotionInterrupt();
+    ttgo->bma->enableTiltInterrupt(false);
+    ttgo->bma->enableWakeupInterrupt();
+    ttgo->bma->enableStepCountInterrupt();
+    
 
     //Connection interrupted to the specified pin
     pinMode(BMA423_INT1, INPUT);

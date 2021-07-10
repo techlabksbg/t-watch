@@ -1,6 +1,18 @@
+/**
+ * @brief Central GUI-Class managing the life cycle of each app.
+ * 
+ * @author Ivo Blöchliger
+ */
+
 #pragma once
 
 #include "../app.h"
+
+/**
+ * Include all apps to be shown in the launcher.
+ * Dont't forget to register them below in the setup
+ * methods.
+ */
 
 #include "../watches/techlabwatch/techlabwatch.h"
 #include "../watches/simplealarm/simplealarm.h"
@@ -21,7 +33,6 @@
 
 // 
 // Converter at https://lvgl.io/tools/imageconverter
-LV_IMG_DECLARE(backicon);
 LV_IMG_DECLARE(settingsicon);
 LV_IMG_DECLARE(demoappsicon);
 
@@ -89,6 +100,10 @@ class Launcher : public App {
         showApp(launcher->apps[appNr]);
     }
 
+    /** 
+     * Build the Settings Launcher, as a child of the
+     * root launcher
+     */
     static Launcher* setupSettingsLauncher() {
         Launcher* settings = new Launcher("Settings", rootLauncher);
         settings->icon = (void*) &settingsicon;
@@ -102,6 +117,9 @@ class Launcher : public App {
         return settings;
     }
 
+    /**
+     * Build the demo launcher
+     */
     static Launcher* setupDemoLauncher() {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
@@ -115,6 +133,22 @@ class Launcher : public App {
     }
 
     public:
+    /**
+     * Setup the main launcher (rootLauncher) and
+     * all sub-launchers
+     */
+    static void setup() {
+        App::hide_cb = &hideApp;
+        App::show_cb = &showApp;
+        App::setAlarm_cb = &setAlarm;
+        Launcher::rootLauncher->registerApp(setupSettingsLauncher());
+        Launcher::rootLauncher->registerApp(setupDemoLauncher());
+        Launcher::rootLauncher->registerApp(new TechLabWatch);
+        Launcher::rootLauncher->registerApp(new SimpleAlarm);
+        Serial.println("Launcher::setup() complete");
+    }
+
+  
 
     static void setAlarm(App* app, std::function<void(void)> callback, int hours, int minutes) {
         Serial.printf("Setting alarm to %02d:%02d to call App %s\n", hours, minutes, app->getName());
@@ -135,17 +169,7 @@ class Launcher : public App {
         rtcCallback = callback;
     }
 
-    // Setup the whole Launcher structure
-    static void setup() {
-        App::hide_cb = &hideApp;
-        App::show_cb = &showApp;
-        App::setAlarm_cb = &setAlarm;
-        Launcher::rootLauncher->registerApp(setupSettingsLauncher());
-        Launcher::rootLauncher->registerApp(setupDemoLauncher());
-        Launcher::rootLauncher->registerApp(new TechLabWatch);
-        Launcher::rootLauncher->registerApp(new SimpleAlarm);
-        Serial.println("Launcher::setup() complete");
-    }
+   
 
 
     static App* activeApp;
@@ -185,6 +209,11 @@ class Launcher : public App {
         }
     }
 
+    static void doubleTap() {
+        if (activeApp->isLauncher() && activeApp!=rootLauncher) {
+            hideApp(activeApp);
+        }
+    }
    
 
     static void rememberApp(App* app) {
