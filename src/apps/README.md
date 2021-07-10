@@ -87,3 +87,8 @@ Finally, we'll have to register our app in the launcher. In the file src/apps/la
 And in the correct directory (in our case demo apps, which corresponds to the method setupDemoLauncher), register your app:
 
     demos->registerApp(new ShoppingList);
+
+Now build and deploy your app - in Visual Studio Code, click the right arrow on the bottom bar and you should see the log flow by. If everything's green, your new app is on the phone:
+
+![Your watch showing the shopping list](screenshot_deployed.jpg)
+
