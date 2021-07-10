@@ -25,3 +25,8 @@ https://lvgl.io/tools/imageconverter
 
  - before going to sleep, notify launcher to hide apps.
  - allow app to prevent sleeping (or make time longer).
+
+Free icon libraries:
+
+https://phosphoricons.com/
+https://fonts.google.com/icons
