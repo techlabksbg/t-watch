@@ -60,4 +60,22 @@ Note the following elements:
   - we are declaring the icon with the LV_IMG_DECLARE macro
   - we are returning the name of the app
 
+In your shoppinglist.cpp file, you're putting the actual behavior. Initially, it just contains
+a trace command for app creation and showing the app:
 
+    #include "shoppinglist.h"
+
+    bool ShoppingList::create() {
+        register_for_swipe_up(myScr);
+        lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
+
+        Serial.println("Creating shopping list");
+
+        return true;
+    }
+
+    bool ShoppingList::show() {
+        Serial.println("Showing shopping list");
+
+        return true;
+    }
