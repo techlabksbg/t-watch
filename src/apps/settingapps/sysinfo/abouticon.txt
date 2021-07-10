@@ -1,5 +1,7 @@
 sysinfoicon.png
 
+White shadow added by Ivo Blöchliger
+
 From: https://openmoji.org/library/#search=scroll&emoji=1F4DC
 
 CC-BY-SA 4.0

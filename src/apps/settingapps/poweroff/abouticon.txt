@@ -1,5 +1,7 @@
 powerofficon.png
 
+White shadow added by Ivo Blöchliger
+
 From: https://openmoji.org/library/#search=power%20off&emoji=23FB
 
 CC-BY-SA 4.0

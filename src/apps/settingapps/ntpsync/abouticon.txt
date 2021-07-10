@@ -1,5 +1,7 @@
 ntpsyncicon.png
 
+White shadow added by Ivo Blöchliger
+
 From https://openmoji.org/library/#search=watch&emoji=231A
 
 CC-BY-SA 4.0

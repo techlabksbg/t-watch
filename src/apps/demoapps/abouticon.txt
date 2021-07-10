@@ -1,5 +1,7 @@
 demoappsicon.png
 
+White shadow added by Ivo Blöchliger
+
 From: https://openmoji.org/library/#search=firework&emoji=1F386
 
 CC-BY-SA 4.0

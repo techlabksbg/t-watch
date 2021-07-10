@@ -1,5 +1,7 @@
 brightnessicon.png
 
+White shadow added by Ivo Blöchliger
+
 From https://openmoji.org/library/#search=1f506&emoji=1F506
 
 CC-BY-SA 4.0

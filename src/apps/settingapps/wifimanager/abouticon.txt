@@ -1,5 +1,7 @@
 wifimanagericon.png
 
+White shadow added by Ivo Blöchliger
+
 From:  https://openmoji.org/library/#search=wifi&emoji=E254
 
 wifi

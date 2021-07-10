@@ -1,5 +1,7 @@
 spiffsaudioicon.png
 
+White shadow added by Ivo Blöchliger
+
 Composite by Ivo Blöchliger of the following CC-BY-SA 4.0 icons:
 
 From: https://openmoji.org/library/#search=music&emoji=1F3B5

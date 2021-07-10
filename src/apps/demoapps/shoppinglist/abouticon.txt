@@ -1,5 +1,7 @@
 shoppinglisticon.png
 
+White shadow added by Ivo Blöchliger
+
 From: https://openmoji.org/library/#search=shopping&emoji=1F6D2
 
 CC-BY-SA 4.0

@@ -1,5 +1,7 @@
 webfilesicon.png
 
+White shadow added by Ivo Blöchliger
+
 Composite by Ivo Blöchliger of the two following icons (both CC-BY-SA 4.0)
 
 https://openmoji.org/library/#search=folder&emoji=1F4C2
