@@ -11,7 +11,7 @@ The easiest way to write your app is in C++. You will need:
  
     mkdir shoppinglist
 
- ## Find an icon and create a .h file out of it
+ ## Find an icon and create a icon.c file out of it
  For our shopping list app I'd like to have a shopping cart as icon. Luckily, there is this
  very nice site, https://openmoji.org which lets me use the icons if I give credit and share alike.
  That's fair for me!
@@ -33,5 +33,31 @@ To convert to a .h file, use https://lvgl.io/tools/imageconverter - there is a s
 This should have created a shoppinglisticon.c in the same directory. Add that file, and add an entry
 in about_icons.txt mentioning the author of the nice icon you're using.
 
+## Your main application code
+Create two files, shoppinglist.h and shoppinglist.cpp
+
+Your shoppinglist.h file contains the methods your app *should* implement, even if it doesn't yet:
+
+    #pragma once
+
+    #include "../../app.h"
+
+    LV_IMG_DECLARE(shoppinglisticon);
+
+
+    class ShoppingList : public App {
+
+        virtual bool create();
+        virtual bool show();
+        virtual bool hide() { return true;};
+        virtual bool destroy() { return true;}
+        
+        void* getIcon() { return (void*) &shoppinglisticon; }
+        const char * getName() { return "ShoppingList"; }
+    };
+
+Note the following elements:
+  - we are declaring the icon with the LV_IMG_DECLARE macro
+  - we are returning the name of the app
 
 
