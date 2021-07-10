@@ -26,8 +26,12 @@ void ShoppingList::printHomePage(AsyncResponseStream *response) {
     response->print("<!DOCTYPE html><html><head><title>Shopping List</title></head><body><ul>");
     response->print("<p>Type your shopping list here:</p>");
     response->print("<form method=\"post\" action=\"/\">");
-    response->print("<textarea name=\"list\"></textarea>");
-    response->print("<button type=\"submit\">Submit</button>");
+    response->print("<textarea name=\"list\">");
+    if (this->currentShoppingList != nullptr) {
+        response->print(this->currentShoppingList);
+    }
+    response->print("</textarea>");
+    response->print("<p><button type=\"submit\">Submit</button></p>");
     response->print("</form>");
     response->print("</body></html>\n");
 }
@@ -40,6 +44,9 @@ void ShoppingList::registerHandlers() {
         request->send(response);
     });
     server->on("/", HTTP_POST, [this](AsyncWebServerRequest *request) {
+        AsyncWebParameter* listParameter = request->getParam("list", true, false);
+        this->currentShoppingList = listParameter->value();
+
         AsyncResponseStream *response = request->beginResponseStream("text/html");
         this->printHomePage(response);
         request->send(response);
