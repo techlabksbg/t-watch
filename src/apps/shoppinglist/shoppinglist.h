@@ -8,7 +8,7 @@ LV_IMG_DECLARE(shoppinglisticon);
 class ShoppingList : public App {
 
     virtual bool create();
-    virtual bool show() { return true;};
+    virtual bool show();
     virtual bool hide() { return true;};
     virtual bool destroy() { return true;}
     
