@@ -37,8 +37,21 @@ bool Tide::show() {
     client.begin("http://tersetide.azurewebsites.net/api/tideinformation");
     client.GET();
 
-    String highLowString = client.getString();
-    Serial.print(highLowString);
+    String informationString = client.getString();
+
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, informationString);
+
+    const char* highString = doc["high"];
+    const char* lowString = doc["low"];
+
+    Serial.print("High ");
+    Serial.print(highString);
+    Serial.print("Low");
+    Serial.print(lowString);
+
+    lv_label_set_text(highLabel, highString);
+    lv_label_set_text(lowLabel, lowString);
 
     client.end();
 
