@@ -1,6 +1,9 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "launcher.h"
 
-LV_IMG_DECLARE(techlabwatchicon);
 
 bool Launcher::create() {
     Serial.printf("buildTileView for %s\n", getName());
@@ -13,12 +16,11 @@ bool Launcher::create() {
     lv_style_set_text_color(&mainStyle, LV_OBJ_PART_MAIN, LV_COLOR_WHITE);
     //lv_style_set_image_recolor(&mainStyle, LV_OBJ_PART_MAIN, LV_COLOR_WHITE);
 
-    int numTiles = numberOfApps + (hasParent ? 1 : 0);
-    Serial.printf("Number of tiles in %s is %d\n", getName(), numTiles);
-    validPoints = new lv_point_t[numTiles];
+    Serial.printf("Number of tiles in %s is %d\n", getName(), numberOfApps);
+    validPoints = new lv_point_t[numberOfApps];
     for (int i=0; i<numberOfApps; i++) {
-        validPoints[i].x = i%2;
-        validPoints[i].y = i/2;
+        validPoints[i].x = i/2;
+        validPoints[i].y = i%2;
     }
 
     tileView = lv_tileview_create(myScr, NULL);
@@ -38,8 +40,9 @@ bool Launcher::create() {
     lv_page_set_scrlbar_mode(tileView, LV_SCRLBAR_MODE_OFF);
 
 
-    tiles = new lv_obj_t*[numTiles];
-    for (int i=0; i<numTiles; i++) {
+
+    tiles = new lv_obj_t*[numberOfApps];
+    for (int i=0; i<numberOfApps; i++) {
         Serial.printf("Creating tile %d\n", i);
         tiles[i] =  lv_cont_create(tileView, NULL);
         lv_obj_add_style(tiles[i], LV_OBJ_PART_MAIN, &mainStyle);
@@ -47,18 +50,18 @@ bool Launcher::create() {
 
         lv_obj_t *img = lv_img_create(tiles[i], NULL);
         lv_obj_add_style(img, LV_OBJ_PART_MAIN, &mainStyle);
-        lv_img_set_src(img, i<numberOfApps ? apps[i]->getIcon() : (void*) &backicon);
+        lv_img_set_src(img, apps[i]->getIcon());
         lv_obj_align(img, tiles[i], LV_ALIGN_CENTER, 0, 0);
 
         lv_obj_t *label = lv_label_create(tiles[i],  NULL);
         lv_obj_add_style(label, LV_OBJ_PART_MAIN, &mainStyle);
-        lv_label_set_text(label, i<numberOfApps ? apps[i]->getName(): "Back");
+        lv_label_set_text(label, apps[i]->getName());
         lv_obj_align(label, img, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
 
         if (i%2==1) {
-            lv_obj_align(tiles[i], tiles[i-1], LV_ALIGN_OUT_RIGHT_MID, 0, 0);
+            lv_obj_align(tiles[i], tiles[i-1], LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
         } else if (i>0) {
-            lv_obj_align(tiles[i], tiles[i-2], LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+            lv_obj_align(tiles[i], tiles[i-2], LV_ALIGN_OUT_RIGHT_MID, 0, 0);
         }
 
         lv_tileview_add_element(tileView, tiles[i]);
