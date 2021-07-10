@@ -18,6 +18,7 @@ class ShoppingList : public App {
 
     void registerHandlers();
 
+    lv_obj_t* title=nullptr;
     lv_obj_t* itemsPage = nullptr;
     lv_obj_t* firstShoppingItem=nullptr;
 
