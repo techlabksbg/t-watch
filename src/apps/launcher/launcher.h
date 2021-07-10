@@ -16,7 +16,7 @@
 #include "../demoapps/spiffsaudio/spiffsaudio.h"
 #include "../demoapps/micdemo/micdemo.h"
 #include "../demoapps/acceldemo/acceldemo.h"
-#include "../shoppinglist/shoppinglist.h"
+#include "../demoapps/shoppinglist/shoppinglist.h"
 
 
 // 
