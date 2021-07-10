@@ -1,0 +1,12 @@
+brightnessicon.png
+
+From https://openmoji.org/library/#search=1f506&emoji=1F506
+
+CC-BY-SA 4.0
+
+bright button
+Unicode	1F506
+🔆
+Author	Jose Avila
+Category	symbols
+Subcategory	av-symbol

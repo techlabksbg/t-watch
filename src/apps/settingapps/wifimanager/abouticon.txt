@@ -1,0 +1,10 @@
+wifimanagericon.png
+
+From:  https://openmoji.org/library/#search=wifi&emoji=E254
+
+wifi
+Unicode	E254
+
+Author	Baris Camli
+Category	extras-openmoji
+Subcategory	ui-element

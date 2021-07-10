@@ -1,0 +1,12 @@
+rebooticon.png
+
+From: https://openmoji.org/library/#search=cycle&emoji=1F504
+
+CC-BY-SA 4.0
+
+counterclockwise arrows button
+Unicode	1F504
+🔄
+Author	Jose Avila
+Category	symbols
+Subcategory	arrow

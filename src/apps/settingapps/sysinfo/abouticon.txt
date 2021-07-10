@@ -1,0 +1,12 @@
+sysinfoicon.png
+
+From: https://openmoji.org/library/#search=scroll&emoji=1F4DC
+
+CC-BY-SA 4.0
+
+scroll
+Unicode	1F4DC
+📜
+Author	Jonas Roßner
+Category	objects
+Subcategory	book-paper

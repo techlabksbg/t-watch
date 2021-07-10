@@ -1,0 +1,12 @@
+motorappicon.png
+
+From: https://openmoji.org/library/#search=motor&emoji=E1C8
+
+CC-BY-SA 4.0
+
+motor
+Unicode	E1C8
+
+Author	Baris Camli
+Category	extras-openmoji
+Subcategory	technology

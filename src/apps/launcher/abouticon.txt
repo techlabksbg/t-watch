@@ -1,0 +1,10 @@
+settingsicon.png
+
+From https://openmoji.org/library/#search=tool&emoji=1F6E0
+
+CC-BY-SA 4.0
+Unicode	1F6E0
+🛠
+Author	Hilda Kalyoncu
+Category	objects
+Subcategory	tool

@@ -1,0 +1,12 @@
+ntpsyncicon.png
+
+From https://openmoji.org/library/#search=watch&emoji=231A
+
+CC-BY-SA 4.0
+
+watch
+Unicode	231A
+⌚
+Author	Rana Cakir
+Category	travel-places
+Subcategory	time

@@ -1,0 +1,12 @@
+powerofficon.png
+
+From: https://openmoji.org/library/#search=power%20off&emoji=23FB
+
+CC-BY-SA 4.0
+
+power symbol
+Unicode	23FB
+⏻
+Author	Alexander Müller
+Category	extras-unicode
+Subcategory	symbol-other

@@ -1,0 +1,12 @@
+demoappsicon.png
+
+From: https://openmoji.org/library/#search=firework&emoji=1F386
+
+CC-BY-SA 4.0
+
+fireworks
+Unicode	1F386
+🎆
+Author	Jonas Dunkel
+Category	activities
+Subcategory	event
