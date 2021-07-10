@@ -6,8 +6,13 @@ bool ShoppingList::create() {
     lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
 
     itemsPage = styles.stdPage(myScr);
+
+    lv_obj_t* quitButton = styles.stdButton(itemsPage, "Quit");
+    register_for_hide_on_click(quitButton);
+
     title = lv_label_create(itemsPage, NULL);
     lv_obj_add_style(title, LV_OBJ_PART_MAIN, &styles.textLabel);
+    lv_obj_align(title, quitButton, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 24);
     lv_label_set_text(title, "WiFi to Update");
 
     firstShoppingItem = lv_label_create(itemsPage, NULL); 
