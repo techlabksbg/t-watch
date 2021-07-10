@@ -22,16 +22,26 @@ bool ShoppingList::create() {
     return true;
 }
 
+void ShoppingList::printHomePage(AsyncResponseStream *response) {
+    response->print("<!DOCTYPE html><html><head><title>Shopping List</title></head><body><ul>");
+    response->print("<p>Type your shopping list here:</p>");
+    response->print("<form method=\"post\" action=\"/\">");
+    response->print("<textarea name=\"list\"></textarea>");
+    response->print("<button type=\"submit\">Submit</button>");
+    response->print("</form>");
+    response->print("</body></html>\n");
+}
+
 void ShoppingList::registerHandlers() {
-    server->on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server->on("/", HTTP_GET, [this](AsyncWebServerRequest *request) {
         // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
         AsyncResponseStream *response = request->beginResponseStream("text/html");
-        response->print("<!DOCTYPE html><html><head><title>Shopping List</title></head><body><ul>");
-        response->print("<p>Type your shopping list here:</p>");
-        response->print("<form method=\"post\" action=\"/\">");
-        response->print("<textarea name=\"list\"></textarea>");
-        response->print("</form>");
-        response->print("</body></html>\n");
+        this->printHomePage(response);
+        request->send(response);
+    });
+    server->on("/", HTTP_POST, [this](AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("text/html");
+        this->printHomePage(response);
         request->send(response);
     });
 }

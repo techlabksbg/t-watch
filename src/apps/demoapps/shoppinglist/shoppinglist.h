@@ -22,4 +22,5 @@ class ShoppingList : public App {
     lv_obj_t* firstShoppingItem=nullptr;
     lv_obj_t* addEntryButton=nullptr;
     AsyncWebServer* server=nullptr;
+    void printHomePage(AsyncResponseStream *response);
 };
