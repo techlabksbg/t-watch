@@ -18,8 +18,9 @@ class ShoppingList : public App {
 
     void registerHandlers();
 
-    private:
     lv_obj_t* firstShoppingItem=nullptr;
+
+    private:
     lv_obj_t* addEntryButton=nullptr;
     AsyncWebServer* server=nullptr;
     String currentShoppingList=String("");

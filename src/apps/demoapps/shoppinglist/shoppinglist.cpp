@@ -46,6 +46,7 @@ void ShoppingList::registerHandlers() {
     server->on("/", HTTP_POST, [this](AsyncWebServerRequest *request) {
         AsyncWebParameter* listParameter = request->getParam("list", true, false);
         this->currentShoppingList = listParameter->value();
+        lv_label_set_text(this->firstShoppingItem, this->currentShoppingList.c_str());
 
         AsyncResponseStream *response = request->beginResponseStream("text/html");
         this->printHomePage(response);
