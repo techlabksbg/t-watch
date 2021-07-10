@@ -1,0 +1,11 @@
+tideicon.png
+
+from https://openmoji.org/library/#search=wave&emoji=1F30A
+
+CC-BY-SA 4.0
+
+Unicode	1F30A
+🌊
+Author	Vanessa Boutzikoudi
+Category	travel-places
+Subcategory	sky-weather
