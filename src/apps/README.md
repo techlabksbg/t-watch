@@ -28,7 +28,7 @@ But ImageMagick's convert works as well. Add to git already, just in case you wa
 
 To convert to a .h file, use https://lvgl.io/tools/imageconverter - there is a small command line utility on the top level of our repository:
 
-    ./../../../imageconverter/lv_img_conv.bash shoppinglisticon.png
+    ./../../../../utils/lv_img_conv.bash shoppinglisticon.png
 
 This should have created a shoppinglisticon.c in the same directory. Add that file, and add an entry
 in about_icons.txt mentioning the author of the nice icon you're using.
