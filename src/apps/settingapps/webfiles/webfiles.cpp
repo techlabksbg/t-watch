@@ -6,18 +6,18 @@ bool WebFiles::create() {
     Serial.println("WebFiles::create() start");
     self = this;
 
-    lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
+    lv_obj_t* bg = styles.stdBgImage();
     title = styles.stdTitle(myScr, "WebFiles\nNot connected");
     lv_label_set_align(title, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(title, NULL, LV_ALIGN_IN_TOP_MID, 0,15);
 
     Serial.println("Title done");
-    connect = styles.stdButton(myScr, "Connect");
+    connect = styles.stdButton(bg, "Connect");
     lv_obj_align(connect, title, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
     lv_obj_set_event_cb(connect, connect_cb);
 
     Serial.println("Connect button done");
-    quit = styles.stdButton(myScr, "Quit");
+    quit = styles.stdButton(bg, "Quit");
     lv_obj_align(quit, connect, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
     App::register_for_hide_on_click(quit);
 
