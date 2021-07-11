@@ -4,4 +4,4 @@ trash
 include/TTGO_TWatch_Library
 .swp
 .DS_Store
-utils/backtrace.txt
+utils/backtrace.txtq

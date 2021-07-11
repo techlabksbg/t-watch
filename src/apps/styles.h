@@ -2,6 +2,9 @@
 
 #include "../os/os.h"
 
+LV_IMG_DECLARE(launcherbg);
+
+
 /**
  * Collection of default styles and helper functions to create common GUI-Elements
  */
@@ -44,12 +47,19 @@ struct Styles {
      * @param myScr Pointer to the current screen (normally just myScr of the app)
      */
     lv_obj_t* stdPage(lv_obj_t* myScr) {
-        lv_obj_t* page = lv_page_create(myScr,NULL);
+        lv_obj_t* page = lv_page_create(stdBgImage(), NULL);
         lv_obj_set_size(page, 240, 240);
         lv_page_set_scrlbar_mode(page, LV_SCRLBAR_MODE_OFF);
         lv_obj_add_style(page, LV_OBJ_PART_MAIN, &background);
         lv_obj_align(page, NULL, LV_ALIGN_CENTER, 0, 0);
         return page;
+    }
+
+    lv_obj_t* stdBgImage(lv_obj_t* myScr) {
+        lv_obj_t* bg = lv_img_create(myScr, NULL);  /*Create an image object*/
+        lv_img_set_src(bg, (void *) &launcherbg);
+        lv_obj_align(bg, NULL, LV_ALIGN_CENTER, 0, 0);
+        return bg;
     }
 
     /**
@@ -231,9 +241,10 @@ struct Styles {
      */
     void setup() {
         lv_style_init(&background);
-        lv_style_set_bg_color(&background, LV_STATE_DEFAULT,  LV_COLOR_MAKE(0,0,100));
+        /*lv_style_set_bg_color(&background, LV_STATE_DEFAULT,  LV_COLOR_MAKE(0,0,100));
         lv_style_set_bg_grad_color(&background, LV_STATE_DEFAULT,LV_COLOR_MAKE(100,0,0));
-        lv_style_set_bg_grad_dir(&background, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+        lv_style_set_bg_grad_dir(&background, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);*/
+        lv_style_set_bg_opa(&background, LV_OBJ_PART_MAIN, LV_OPA_0);
         lv_style_set_border_width(&background, LV_STATE_DEFAULT, 0);
         lv_style_set_pad_top(&background, LV_STATE_DEFAULT, 0);
         lv_style_set_pad_bottom(&background, LV_STATE_DEFAULT, 0);

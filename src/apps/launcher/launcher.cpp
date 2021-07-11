@@ -5,9 +5,11 @@
 #include "launcher.h"
 
 
-bool Launcher::create() {
-    page = styles.stdPage(myScr);
 
+bool Launcher::create() {
+    
+    page = styles.stdPage(myScr);
+    
     Serial.printf("Number of tiles in %s is %d\n", getName(), numberOfApps);
     
 
