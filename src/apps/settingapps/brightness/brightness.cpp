@@ -1,12 +1,11 @@
 #include "brightness.h"
 
 bool Brightness::create() {
-    lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
-    
+    lv_obj_t* bg = styles.stdBgImage(myScr);
 
-    slider = lv_slider_create(myScr, NULL);
+    slider = lv_slider_create(bg, NULL);
     lv_obj_set_width(slider, 200);
-    lv_obj_align(slider, myScr, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(slider, bg, LV_ALIGN_CENTER, 0, 0);
     lv_slider_set_range(slider, 0, 100);
 
     pwm = ttgo->bl->getLevel();
@@ -14,8 +13,8 @@ bool Brightness::create() {
     lv_slider_set_value(slider, percent, LV_ANIM_OFF);
     lv_obj_set_user_data(slider, this);
 
-    percentLabel = styles.stdTitle(myScr, "");
-    pwmLabel = styles.stdLabel(myScr, "");
+    percentLabel = styles.stdTitle(bg, "");
+    pwmLabel = styles.stdLabel(bg, "");
 
     setLabels(percent);
 
