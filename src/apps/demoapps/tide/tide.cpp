@@ -4,22 +4,21 @@ bool Tide::create() {
     register_for_swipe_up(myScr);
     lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
 
-    itemsPage = styles.stdPage(myScr);
-    highTitle = lv_label_create(itemsPage, NULL);
+    highTitle = lv_label_create(myScr, NULL);
     lv_obj_add_style(highTitle, LV_OBJ_PART_MAIN, &styles.titleLabel);
     lv_label_set_text(highTitle, "High Tide");
 
-    highLabel = lv_label_create(itemsPage, NULL);
+    highLabel = lv_label_create(myScr, NULL);
     lv_obj_add_style(highLabel, LV_OBJ_PART_MAIN, &styles.textLabel);
     lv_obj_align(highLabel, highTitle, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 24);
     lv_label_set_text(highLabel, " - ");
 
-    lowTitle = lv_label_create(itemsPage, NULL);
+    lowTitle = lv_label_create(myScr, NULL);
     lv_obj_add_style(lowTitle, LV_OBJ_PART_MAIN, &styles.titleLabel);
     lv_obj_align(lowTitle, highLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 24);
     lv_label_set_text(lowTitle, "Low Tide");
 
-    lowLabel = lv_label_create(itemsPage, NULL);
+    lowLabel = lv_label_create(myScr, NULL);
     lv_obj_add_style(lowLabel, LV_OBJ_PART_MAIN, &styles.textLabel);
     lv_obj_align(lowLabel, lowTitle, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 24);
     lv_label_set_text(lowLabel, " - ");
@@ -37,8 +36,21 @@ bool Tide::show() {
     client.begin("http://tersetide.azurewebsites.net/api/tideinformation");
     client.GET();
 
-    String highLowString = client.getString();
-    Serial.print(highLowString);
+    String informationString = client.getString();
+
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, informationString);
+
+    const char* highString = doc["high"];
+    const char* lowString = doc["low"];
+
+    Serial.print("High ");
+    Serial.print(highString);
+    Serial.print("Low");
+    Serial.print(lowString);
+
+    lv_label_set_text(highLabel, highString);
+    lv_label_set_text(lowLabel, lowString);
 
     client.end();
 
