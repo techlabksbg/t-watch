@@ -6,7 +6,7 @@ bool WebFiles::create() {
     Serial.println("WebFiles::create() start");
     self = this;
 
-    lv_obj_t* bg = styles.stdBgImage();
+    lv_obj_t* bg = styles.stdBgImage(myScr);
     title = styles.stdTitle(myScr, "WebFiles\nNot connected");
     lv_label_set_align(title, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(title, NULL, LV_ALIGN_IN_TOP_MID, 0,15);
