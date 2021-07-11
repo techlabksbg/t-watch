@@ -47,7 +47,7 @@ struct Styles {
      * @param myScr Pointer to the current screen (normally just myScr of the app)
      */
     lv_obj_t* stdPage(lv_obj_t* myScr) {
-        lv_obj_t* page = lv_page_create(stdBgImage(), NULL);
+        lv_obj_t* page = lv_page_create(stdBgImage(myScr), NULL);
         lv_obj_set_size(page, 240, 240);
         lv_page_set_scrlbar_mode(page, LV_SCRLBAR_MODE_OFF);
         lv_obj_add_style(page, LV_OBJ_PART_MAIN, &background);
