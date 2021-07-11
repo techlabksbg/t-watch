@@ -4,9 +4,10 @@
 
 bool WebAudio::create() {
     self = this;
-    register_for_swipe_up(myScr);
-    lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
-    connectButton = styles.stdButton(myScr, "Capt'n!", connect_cb);
+    lv_obj_t* bg = styles.stdBgImage(myScr);
+    register_for_swipe_up(bg);
+    lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &styles.background);
+    connectButton = styles.stdButton(bg, "Capt'n!", connect_cb);
     buttonLabel = lv_obj_get_child(connectButton, NULL);
     lv_obj_align(connectButton, myScr, LV_ALIGN_CENTER, 0,0);
 
