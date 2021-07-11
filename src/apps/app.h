@@ -97,7 +97,7 @@ class App {
 
 
     static void hide_on_swipe_up(lv_obj_t *obj, lv_event_t event) {
-        Serial.printf("hide_on_swipe_up start with event %d\n", event);
+        //Serial.printf("hide_on_swipe_up start with event %d\n", event);
         static enum {
             NICHTS,
             ABEN,
@@ -120,14 +120,14 @@ class App {
             }
             if (event==LV_EVENT_RELEASED) {
                 zustand = NICHTS;      
-                Serial.printf("start at %d, %d, end at %d, %d      %d < %d?\n", startx, starty, endx, endy, abs(endx-startx)*5+20 , starty-endy);
+                //Serial.printf("start at %d, %d, end at %d, %d      %d < %d?\n", startx, starty, endx, endy, abs(endx-startx)*5+20 , starty-endy);
                 if (abs(endx-startx)*5+20 < starty-endy) {
                     App* self = (App*) lv_obj_get_user_data(obj);
                     if (self!=nullptr && hide_cb!=nullptr) {
                         Serial.printf("hide_on_swipe: app %p will be hidden", self);
                         (*hide_cb)(self);
                     } else {
-                        Serial.printf("hide_on_swipe: app %p or hide_cb %p not defined...", self, hide_cb);
+                        //Serial.printf("hide_on_swipe: app %p or hide_cb %p not defined...", self, hide_cb);
                     }
                 }
             }
