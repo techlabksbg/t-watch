@@ -1,5 +1,7 @@
 # t-watch
 
+## Building your own app
+See [here](src/apps/README.md).
 
 ## Configurations
 The platformio file has two configurations, ttgo-t-watch and ttgo-t-watch-macos. You can
