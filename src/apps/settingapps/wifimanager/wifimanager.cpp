@@ -43,6 +43,7 @@ void WifiManager::addConnectionButtons(const char* name) {
     lv_obj_t* button = styles.stdButton(page, name, connect_cb);
     savedCont[savedSSIDs++] = button;
     lv_obj_set_size(button, 155, 40);
+    lv_page_glue_obj(button, true);
     lv_obj_align(button, savedCont[savedSSIDs-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
     lv_btn_set_checkable(button, true); // Make it checkable
     Serial.println("Added button, about to add deletebutton");
@@ -51,6 +52,7 @@ void WifiManager::addConnectionButtons(const char* name) {
     lv_obj_align(delButton, button, LV_ALIGN_OUT_RIGHT_MID,5,0);
     lv_obj_set_user_data(delButton, button); // To get from the delButton to the button and the ssid
     lv_obj_set_user_data(button, delButton); // To get from the button to the delButton for realignment
+    lv_page_glue_obj(delButton, true);
     Serial.println("WifiManager::addConnectionButtons done.");
 }
 
@@ -72,6 +74,7 @@ bool WifiManager::create() {
     page = styles.stdPage(myScr);
     lv_obj_t* quitButton = styles.stdButton(page, "Quit");
     register_for_hide_on_click(quitButton);
+    lv_page_glue_obj(quitButton, true);
     lv_obj_align(quitButton, page, LV_ALIGN_IN_TOP_MID, 0, 5);
 
 
@@ -95,6 +98,7 @@ bool WifiManager::create() {
     lv_obj_align(scannedCont[0], savedCont[savedSSIDs-1], LV_ALIGN_OUT_BOTTOM_LEFT, 0, 15);
 
     scannedCont[1] = styles.stdButton(page, "Scan!");
+    lv_page_glue_obj(scannedCont[1], true);
     lv_obj_align(scannedCont[1], scannedCont[0], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
     lv_obj_set_event_cb(scannedCont[1], scan_cb);
     scannedCont[2] = nullptr;
@@ -132,6 +136,7 @@ void WifiManager::scanDone() {
     styles.hideSpinner();
     for (int i = 0; i < len; ++i) {
         lv_obj_t* button = styles.stdButton(page, WiFi.SSID(i).c_str());
+        lv_page_glue_obj(button, true);
         scannedCont[scanned++] = button;
         if (scanned<WIFI_MAX_SCANNED) {
             scannedCont[scanned]=nullptr;
