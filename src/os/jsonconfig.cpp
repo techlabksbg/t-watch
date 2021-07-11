@@ -71,14 +71,19 @@ void loadJsonConfig() {
 
 void saveJsonConfig() {
     if (spiffs_initialized) {
+        Serial.println("saveJsonConfig() about to write the following...");
+        serializeJson(*configJson, Serial);
+        delay(3);
         Serial.println("saveJsonConfig() about to open file...");
         fs::File file = SPIFFS.open("/config.json", FILE_WRITE);
         if (!file) {
           Serial.println("There was an error opening the config.json file for writing");
         } else {
             Serial.println("File config.json opened for writing!");
+            delay(2);
             serializeJson(*configJson, file);
             Serial.println("serializeJson done");
+            delay(1);
             file.close();
             Serial.println("File closed");
             serializeJson(*configJson, Serial);

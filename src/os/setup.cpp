@@ -2,6 +2,32 @@
 
 #include "apps/launcher/launcher.h"
 
+// See https://docs.lvgl.io/latest/en/html/porting/log.html
+// Set Variables in library TTWatch/src/lvgl.conf
+#if LV_USE_LOG
+void my_log_cb(lv_log_level_t level, const char * file, uint32_t line, const char * fn_name, const char * dsc)
+{
+    if (line==129 && strcmp("_lv_indev_read_task", fn_name)==0) return;
+    if (line==192 && strcmp("lv_task_handler", fn_name)==0) return;
+    if (line==74 && strcmp("lv_task_handler", fn_name)==0) return;
+    if (line==77 && strcmp("_lv_indev_read_task", fn_name)==0) return;
+    if (line==153 && strcmp("_lv_indev_read", fn_name)==0) return;
+    if (line==155 && strcmp("_lv_indev_read", fn_name)==0) return;
+
+
+
+  /*Send the logs via serial port*/
+  if(level == LV_LOG_LEVEL_ERROR) Serial.print("ERROR: ");
+  if(level == LV_LOG_LEVEL_WARN)  Serial.print("WARNING: ");
+  if(level == LV_LOG_LEVEL_INFO)  Serial.print("INFO: ");
+  if(level == LV_LOG_LEVEL_TRACE) Serial.print("TRACE: ");
+
+  Serial.print("File: ");
+  Serial.print(file);
+
+  Serial.printf(":%d %s: %s\n", line, fn_name, dsc);
+}
+#endif
 
 void os_setup() {
     Serial.begin(115200);
@@ -100,6 +126,10 @@ void os_setup() {
 
     //Clear lvgl counter
     lv_disp_trig_activity(NULL);
+
+#if LV_USE_LOG
+    lv_log_register_print_cb(my_log_cb);
+#endif
 
 #ifdef LILYGO_WATCH_HAS_BUTTON
     //In lvgl we call the button processing regularly

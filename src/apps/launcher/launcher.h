@@ -62,8 +62,9 @@ class Launcher : public App {
 
 
     private:
-    lv_point_t* validPoints;
-    lv_obj_t* tileView;
+    //lv_point_t* validPoints;
+    //lv_obj_t* tileView;
+    lv_obj_t* page;
     lv_obj_t** tiles;
     Launcher* parent;
     bool hasParent;
@@ -82,21 +83,18 @@ class Launcher : public App {
     
 
     void static tile_event_cb(lv_obj_t *obj, lv_event_t event) {        
+        Serial.printf("Launcher::tile_event_cb() with event %d\n", event);
         if (event != LV_EVENT_SHORT_CLICKED) return;
         // Recover corresponding instance
         Launcher* launcher = (Launcher *) lv_obj_get_user_data(obj);
         // Should not happen...
         if (launcher==nullptr) return;
-        Serial.printf("Callback with event %d in laucher %s\n", event, launcher->getName());
+        Serial.printf("Callback with event %d in launcher %s\n", event, launcher->getName());
         int appNr=0;
         for (appNr=0; appNr < launcher->numberOfApps; appNr++) {
             if (launcher->tiles[appNr]==obj) break;
         }
-        if (appNr==launcher->numberOfApps + launcher->hasParent ? 1 : 0) return;
-        if (launcher->hasParent && appNr == launcher->numberOfApps) {
-            hideApp(launcher);
-            return;
-        }
+        if (appNr==launcher->numberOfApps) return;
         Serial.printf("Launching app nr %d with name %s\n", appNr, launcher->apps[appNr]->getName());
         showApp(launcher->apps[appNr]);
     }
@@ -232,6 +230,10 @@ class Launcher : public App {
         }
     }
 
+    static void showApp(void * app) {
+        showApp((App*) app);
+    }
+
     static void showApp(App* app) {
         Serial.printf("About to show app %s\n", app->getName());
         if (app->state == STATE_UNINITALIZED || app->state == STATE_DESTROYED) {
@@ -275,6 +277,9 @@ class Launcher : public App {
         }
     }
 
+    static void hideApp(void * app) {
+        hideApp((App*)app);
+    }
     static void hideApp(App* app) {
         Serial.printf("Request to hide app %s\n", app->getName());
         if (app->state == STATE_SHOWN) {
@@ -305,13 +310,13 @@ class Launcher : public App {
                     break;
                 }
                 activeApp=nullptr;                
-                showApp(nextApp);
+                lv_async_call(showApp, nextApp);
             } else {
                 Serial.println(" failed, about to destroy");
                 app->state = STATE_ERROR;
                 app->destroy();
                 activeApp=nullptr;                
-                showApp(rootLauncher);
+                lv_async_call(showApp, rootLauncher);
             }
         } else {
             Serial.println("  app not in STATE_SHOWN");

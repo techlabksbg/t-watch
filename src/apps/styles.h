@@ -37,6 +37,8 @@ struct Styles {
      */
     lv_obj_t* spinnerLabel = nullptr;
 
+    lv_style_t appTileStyle;
+
     /**
      * Creates a scrollable page with the standard background
      * @param myScr Pointer to the current screen (normally just myScr of the app)
@@ -233,7 +235,10 @@ struct Styles {
         lv_style_set_bg_grad_color(&background, LV_STATE_DEFAULT,LV_COLOR_MAKE(100,0,0));
         lv_style_set_bg_grad_dir(&background, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
         lv_style_set_border_width(&background, LV_STATE_DEFAULT, 0);
-
+        lv_style_set_pad_top(&background, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_bottom(&background, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_left(&background, LV_STATE_DEFAULT, 0);
+        lv_style_set_pad_right(&background, LV_STATE_DEFAULT, 0);
         lv_style_set_radius(&background, LV_OBJ_PART_MAIN, 0);
 
         lv_style_init(&titleLabel);
@@ -257,6 +262,12 @@ struct Styles {
         lv_style_init(&textLabel);
         lv_style_set_text_color(&textLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xff, 0xa0));
         lv_style_set_text_font(&textLabel, LV_STATE_DEFAULT, &lv_font_montserrat_22);
+
+        lv_style_init(&appTileStyle);
+        lv_style_set_radius(&appTileStyle, LV_OBJ_PART_MAIN, 0);
+        lv_style_set_bg_opa(&appTileStyle, LV_OBJ_PART_MAIN, LV_OPA_0);
+        lv_style_set_border_width(&appTileStyle, LV_OBJ_PART_MAIN, 0);
+        lv_style_set_text_color(&appTileStyle, LV_OBJ_PART_MAIN, LV_COLOR_WHITE);
 
         messageBox.setup();
         
