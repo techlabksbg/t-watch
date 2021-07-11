@@ -42,7 +42,7 @@ void WifiManager::addConnectionButtons(const char* name) {
     if (savedSSIDs>=WIFI_MAX_SAVED) return;
     lv_obj_t* button = styles.stdButton(page, name, connect_cb);
     savedCont[savedSSIDs++] = button;
-    lv_obj_set_size(button, 155, 40);
+    lv_obj_set_size(button, 195, 40);
     lv_page_glue_obj(button, true);
     lv_obj_align(button, savedCont[savedSSIDs-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
     lv_btn_set_checkable(button, true); // Make it checkable
@@ -81,12 +81,12 @@ bool WifiManager::create() {
     bool conn = WiFi.isConnected();
     isOff = !conn;
     stateLabel = styles.stdTitle(page, "WiFi off");
-    lv_obj_align(stateLabel, page, LV_ALIGN_IN_TOP_LEFT, 15, 55);
+    lv_obj_align(stateLabel, page, LV_ALIGN_IN_TOP_LEFT, 0, 55);
     if (conn) {
         addToggle();
     }
     savedCont[0] = styles.stdTitle(page, "Saved SSIDs");
-    lv_obj_align(savedCont[0], stateLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 15);
+    lv_obj_align(savedCont[0], stateLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
     savedSSIDs=1;
     for (JsonPair kv : (JsonObject)((*configJson)["wifi"]["known"])) {     
         if (savedSSIDs>=WIFI_MAX_SAVED) break;
@@ -133,16 +133,18 @@ void WifiManager::clearScanned() {
 void WifiManager::scanDone() {
     int scanned = 2;
     int16_t len =  WiFi.scanComplete();
+    Serial.printf("WifiManager::scanDone() with len=%d\n", len);
     styles.hideSpinner();
     for (int i = 0; i < len; ++i) {
         lv_obj_t* button = styles.stdButton(page, WiFi.SSID(i).c_str());
-        lv_page_glue_obj(button, true);
+        
         scannedCont[scanned++] = button;
         if (scanned<WIFI_MAX_SCANNED) {
             scannedCont[scanned]=nullptr;
         }
-        lv_obj_set_size(button,195,40);
+        lv_obj_set_size(button,240,40);
         lv_obj_align(button, scannedCont[scanned-2], LV_ALIGN_OUT_BOTTOM_LEFT,0,5);
+        lv_page_glue_obj(button, true);
         lv_obj_set_event_cb(scannedCont[scanned-1], connect_new_cb);
     }
 }
