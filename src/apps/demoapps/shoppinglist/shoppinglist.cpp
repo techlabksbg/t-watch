@@ -26,9 +26,11 @@ bool ShoppingList::create() {
 }
 
 void ShoppingList::printHomePage(AsyncResponseStream *response) {
-    response->print("<!DOCTYPE html><html><head><title>Shopping List</title></head><body><ul>");
+    response->print("<!DOCTYPE html><html><head>");
+    response->print("<meta charset=\"utf-8\" />");
+    response->print("<title>Shopping List</title></head><body><ul>");
     response->print("<p>Type your shopping list here:</p>");
-    response->print("<form method=\"post\" action=\"/\">");
+    response->print("<form method=\"post\" action=\"/\" enctype=\"multipart/form-data\" accept-charset=\"utf-8\">");
     response->print("<textarea name=\"list\" rows=\"20\">");
     if (this->currentShoppingList != nullptr) {
         response->print(this->currentShoppingList);
@@ -49,6 +51,7 @@ void ShoppingList::registerHandlers() {
     server->on("/", HTTP_POST, [this](AsyncWebServerRequest *request) {
         AsyncWebParameter* listParameter = request->getParam("list", true, false);
         this->currentShoppingList = listParameter->value();
+
         lv_label_set_text(this->firstShoppingItem, this->currentShoppingList.c_str());
 
         AsyncResponseStream *response = request->beginResponseStream("text/html");
