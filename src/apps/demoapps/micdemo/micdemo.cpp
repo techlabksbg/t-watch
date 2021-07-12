@@ -4,7 +4,7 @@
 // TWATCH 2020 V3 PDM microphone pin
 #define MIC_DATA            2
 #define MIC_CLOCK           0
-#define MIC_BUFFER_SIZE 240
+#define MIC_BUFFER_SIZE 480
 
 #define SCOPE_BG LV_COLOR_BLUE
 #define SCOPE_FG LV_COLOR_CYAN
@@ -18,14 +18,17 @@ bool MicDemo::create() {
 
 bool MicDemo::show() {
     setup();
-    micTask = lv_task_create(micLoop, 5, LV_TASK_PRIO_LOWEST, NULL);
+    if (micTask==nullptr) {
+        micTask = lv_task_create(micLoop, 20, LV_TASK_PRIO_LOWEST, NULL);
+    }
     return true;
 }
 
 bool MicDemo::hide() {
-    lv_task_del(micTask);
-    micTask = nullptr;
-
+    if (micTask==nullptr) {
+        lv_task_del(micTask);
+        micTask = nullptr;
+    }
     tearDown();
     return true;
 }
@@ -75,16 +78,38 @@ size_t MicDemo::readData() {
     }
     size_t read_len = 0;
     i2s_read(I2S_NUM_0, micBuffer, MIC_BUFFER_SIZE*2, &read_len, portMAX_DELAY);
-    for (int x=0; x<240; x++) {
-        //int s = micBuffer[x] < 0 ? -1 : 1;
-        micBuffer[x] = (int16_t)(micBuffer[x]/10+240);
-        //lv_canvas_set_px(canvas, x, micBuffer[x], SCOPE_BG);
-        if (micBuffer[x]>=0 && micBuffer[x]<240) {
-            ttgo->tft->drawPixel(x, micBuffer[x], 0xfff);
+    if (read_len==0) return 0;
+    read_len/=2;
+    int32_t avg = 0;
+    for (int x=0; x<read_len; x++) {
+        avg+=(int32_t)micBuffer[x];
+    }
+    avg = avg/(int32_t)read_len;
+    int neg=0, pos=0, start=0;
+    for (int x=0; x<read_len; x++) {
+        micBuffer[x]-=avg;
+        if (micBuffer[x]<0) {
+            if (pos>0) {
+                neg = 0;
+            }
+            neg++;
+            pos=0;
+        } else {
+            pos++;
+            if (pos==8 && neg>=8 && start==0) {
+                start = start-8;
+            }
+        }
+    }
+    if (start<MIC_BUFFER_SIZE-240) {
+        for (int x=239; x>=0; x--) {
+            micBuffer[x] = (int16_t)(micBuffer[x+start]/10+120);
+            if (micBuffer[x]>=0 && micBuffer[x]<240) {
+                ttgo->tft->drawPixel(x, micBuffer[x], 0xfff);
+            }
         }
     }
     clearIt = true;
-    //Serial.println("MicDemo::readData() end");
     return read_len;
 }
 
