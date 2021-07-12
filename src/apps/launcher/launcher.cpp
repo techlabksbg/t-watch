@@ -10,14 +10,14 @@ bool Launcher::create() {
     
     page = styles.stdPage(myScr);
     
-    Serial.printf("Number of tiles in %s is %d\n", getName(), numberOfApps);
+    //Serial.printf("Number of tiles in %s is %d\n", getName(), numberOfApps);
     
 
 
 
     tiles = new lv_obj_t*[numberOfApps];
     for (int i=0; i<numberOfApps; i++) {
-        Serial.printf("Creating tile %d\n", i);
+        //Serial.printf("Creating tile %d\n", i);
         tiles[i] =  lv_cont_create(page, NULL);
         lv_obj_add_style(tiles[i], LV_OBJ_PART_MAIN, &styles.appTileStyle);
         lv_obj_set_size(tiles[i],120, 120);
@@ -49,11 +49,11 @@ bool Launcher::create() {
 }
 
 bool Launcher::show() {
-    Serial.printf("Launcher::show() of %s\n", getName());
+    //Serial.printf("Launcher::show() of %s\n", getName());
     return true;
 }
 bool Launcher::hide() {
-    Serial.printf("Launcher::hide() of %s\n", getName());
+    //Serial.printf("Launcher::hide() of %s\n", getName());
     return true;
 }
 
@@ -71,14 +71,14 @@ bool Launcher::destroy() {
 void Launcher::registerApp(App* app) {
     if (numberOfApps<MAXAPPS) {
         apps[numberOfApps++] = app;
-        Serial.printf("Registering %s into %s as AppNr %d\n", app->getName(), getName(), numberOfApps-1);
+        //Serial.printf("Registering %s into %s as AppNr %d\n", app->getName(), getName(), numberOfApps-1);
     }
 }
 
 App* Launcher::findWatch() {
-    Serial.printf("Searching in %s for watches...\n", getName());
+    //Serial.printf("Searching in %s for watches...\n", getName());
     for (int i=0; i<numberOfApps; i++) {
-        Serial.printf("  Testing app %s\n",apps[i]->getName());
+        //Serial.printf("  Testing app %s\n",apps[i]->getName());
         if (apps[i]->isWatch()) {
             return apps[i];
         } else if (apps[i]->isLauncher()) {
@@ -90,10 +90,10 @@ App* Launcher::findWatch() {
 }
 
 App* Launcher::getAppByName(const char* name) {
-    Serial.printf("Searching in launcher %s for app named %s\n", getName(), name);
+    //Serial.printf("Searching in launcher %s for app named %s\n", getName(), name);
     for (int i=0; i<numberOfApps; i++) {
         if (strcmp(apps[i]->getName(),name)==0) {
-            Serial.println("getAppByName: App found!");
+            //Serial.println("getAppByName: App found!");
             return apps[i];
         }
         if (apps[i]->isLauncher()) {
