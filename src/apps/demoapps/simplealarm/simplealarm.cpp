@@ -81,3 +81,11 @@ bool SimpleAlarm::hide() {
 
     return true;
 }
+
+void SimpleAlarm::processAlarm() {
+    Serial.printf("SimpleAlarm::processAlarm()");
+    if (alarmLoopTask == nullptr) {
+        Serial.println("SimpleAlarm::processAlarm() creating Loop task");
+        alarmLoopTask = lv_task_create(alarmLoop, 1000, LV_TASK_PRIO_LOWEST, this);
+    }
+}

@@ -16,6 +16,7 @@ class SimpleAlarm : public App {
     virtual void* getIcon() { return (void*)&simplealarmicon; }
     virtual const char * getName() {return "Simple Alarm";}
 
+    virtual void processAlarm();
 
     private:
 
@@ -47,14 +48,7 @@ class SimpleAlarm : public App {
         SimpleAlarm* that = (SimpleAlarm*) lv_obj_get_user_data(obj);
         Serial.printf("that = %p\n",that);
         Serial.printf("Setting alarm to %02d:%02d with that=%p\n", that->hours, that->minutes, that);
-        that->setAlarm([that](){
-            Serial.printf("SimpleAlarm::setAlarm_cb() that=%p\n", that);
-            if (that->alarmLoopTask == nullptr) {
-                Serial.println("SimpleAlarm::setAlarm_cb() creating Loop task");
-                that->alarmLoopTask = lv_task_create(alarmLoop, 1000, LV_TASK_PRIO_LOWEST, that);
-            }
-        }, that->hours, that->minutes);
-        
+        that->setAlarm(that->hours, that->minutes);
         Serial.println("I'm outa here...");
         that->hide_myself();
     }

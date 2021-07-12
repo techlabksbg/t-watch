@@ -68,6 +68,43 @@ bool Launcher::destroy() {
 }
 
 
+void Launcher::registerApp(App* app) {
+    if (numberOfApps<MAXAPPS) {
+        apps[numberOfApps++] = app;
+        Serial.printf("Registering %s into %s as AppNr %d\n", app->getName(), getName(), numberOfApps-1);
+    }
+}
+
+App* Launcher::findWatch() {
+    Serial.printf("Searching in %s for watches...\n", getName());
+    for (int i=0; i<numberOfApps; i++) {
+        Serial.printf("  Testing app %s\n",apps[i]->getName());
+        if (apps[i]->isWatch()) {
+            return apps[i];
+        } else if (apps[i]->isLauncher()) {
+            App* w = ((Launcher*) apps[i])->findWatch();
+            if (w!=nullptr) return w;
+        }
+    }
+    return nullptr;
+}
+
+App* Launcher::getAppByName(const char* name) {
+    Serial.printf("Searching in launcher %s for app named %s\n", getName(), name);
+    for (int i=0; i<numberOfApps; i++) {
+        if (strcmp(apps[i]->getName(),name)==0) {
+            Serial.println("getAppByName: App found!");
+            return apps[i];
+        }
+        if (apps[i]->isLauncher()) {
+            App* w = ((Launcher*) apps[i])->getAppByName(name);
+            if (w!=nullptr) return w;
+        }
+    }
+    return nullptr;
+}
+
+
 Launcher launcher("Launcher", (Launcher*) nullptr);
 Launcher* Launcher::rootLauncher = &launcher;
 App* Launcher::activeApp = nullptr;
@@ -76,4 +113,3 @@ App* Launcher::lastWatch = nullptr;
 App* Launcher::lastApp = nullptr;
 App* Launcher::sleepyApp = nullptr;
 App* Launcher::alarmApp = nullptr;
-std::function<void(void)> Launcher::rtcCallback = nullptr;

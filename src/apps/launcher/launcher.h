@@ -15,7 +15,6 @@
  */
 
 #include "../watches/techlabwatch/techlabwatch.h"
-#include "../watches/simplealarm/simplealarm.h"
 #include "../settingapps/brightness/brightness.h"
 #include "../settingapps/reboot/reboot.h"
 #include "../settingapps/poweroff/poweroff.h"
@@ -23,6 +22,7 @@
 #include "../settingapps/wifimanager/wifimanager.h"
 #include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
+#include "../demoapps/simplealarm/simplealarm.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
 #include "../demoapps/spiffsaudio/spiffsaudio.h"
@@ -62,8 +62,6 @@ class Launcher : public App {
 
 
     private:
-    //lv_point_t* validPoints;
-    //lv_obj_t* tileView;
     lv_obj_t* page;
     lv_obj_t** tiles;
     Launcher* parent;
@@ -74,12 +72,7 @@ class Launcher : public App {
 
     App* apps[MAXAPPS];
     int numberOfApps=0;
-    void registerApp(App* app) {
-        if (numberOfApps<MAXAPPS) {
-            apps[numberOfApps++] = app;
-            Serial.printf("Registering %s into %s as AppNr %d\n", app->getName(), getName(), numberOfApps-1);
-        }
-    }
+    void registerApp(App* app);
     
 
     void static tile_event_cb(lv_obj_t *obj, lv_event_t event) {        
@@ -123,7 +116,8 @@ class Launcher : public App {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new MotorApp);
-        demos->registerApp(new AccelDemo);        
+        demos->registerApp(new AccelDemo);
+        demos->registerApp(new SimpleAlarm);
         demos->registerApp(new WebAudio);
         demos->registerApp(new SpiffsAudio);
         demos->registerApp(new MicDemo);
@@ -144,13 +138,15 @@ class Launcher : public App {
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
-        Launcher::rootLauncher->registerApp(new SimpleAlarm);
         Serial.println("Launcher::setup() complete");
+        if (configJson->containsKey("alarmApp")) {
+            Serial.printf("Restoring Alarm callback for app %s\n", (const char *)((*configJson)["alarmApp"]));
+            alarmApp = rootLauncher->getAppByName((const char *)((*configJson)["alarmApp"]));
+        }
     }
 
-  
 
-    static void setAlarm(App* app, std::function<void(void)> callback, int hours, int minutes) {
+    static void setAlarm(App* app, int hours, int minutes) {
         Serial.printf("Setting alarm to %02d:%02d to call App %s\n", hours, minutes, app->getName());
         time_t now;
         struct tm  info;
@@ -165,8 +161,9 @@ class Launcher : public App {
         ttgo->rtc->setAlarm(hours, minutes, info.tm_mday, info.tm_wday);
         Serial.printf("Enabling alarm on day %d, wday %d\n", info.tm_mday, info.tm_wday);
         ttgo->rtc->enableAlarm();
+        (*configJson)["alarmApp"] = app->getName();
+        saveJsonConfig();
         alarmApp = app;
-        rtcCallback = callback;
     }
 
    
@@ -178,7 +175,6 @@ class Launcher : public App {
     static App* lastApp;
     static App* sleepyApp;
     static App* alarmApp;
-    static std::function<void(void)> rtcCallback;
 
     static void goToSleep() {
         if (activeApp!=nullptr && activeApp->state==STATE_SHOWN && activeApp->isNormal()) {
@@ -200,11 +196,10 @@ class Launcher : public App {
 
     static void rtcAlarmFired() {
         if (alarmApp!=nullptr) {
-            Serial.printf("Launcher::rtcAlarmFired(): Waking app %s back up\n", alarmApp->getName());
+            Serial.printf("Launcher::rtcAlarmFired(): Showing app %s\n", alarmApp->getName());
             showApp(alarmApp);
-            if (rtcCallback!=nullptr) {
-                rtcCallback();
-            }
+            Serial.printf("Launcher::rtcAlarmFired(): Calling processAlarm on app %s\n", alarmApp->getName());
+            alarmApp->processAlarm();
             alarmApp = nullptr;
         }
     }
@@ -233,7 +228,6 @@ class Launcher : public App {
     static void showApp(void * app) {
         showApp((App*) app);
     }
-
     static void showApp(App* app) {
         Serial.printf("About to show app %s\n", app->getName());
         if (app->state == STATE_UNINITALIZED || app->state == STATE_DESTROYED) {
@@ -350,19 +344,11 @@ class Launcher : public App {
     }
 
     private:
-    App* findWatch() {
-        Serial.printf("Searching in %s for watches...\n", getName());
-        for (int i=0; i<numberOfApps; i++) {
-            Serial.printf("  Testing app %s\n",apps[i]->getName());
-            if (apps[i]->isWatch()) {
-                return apps[i];
-            } else if (apps[i]->isLauncher()) {
-                App* w = ((Launcher*) apps[i])->findWatch();
-                if (w!=nullptr) return w;
-            }
-        }
-        return nullptr;
-    }
+    /** returns the first watch found (or nullptr) */
+    App* findWatch();
+    /** returns the first app instance with this name (or nullptr) */
+    App* getAppByName(const char* name);
+
 
 };
 

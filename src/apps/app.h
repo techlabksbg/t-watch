@@ -25,8 +25,7 @@ class App {
     } app_type_t;
 
     typedef void app_cb_t(App*);
-    //typedef std::function<void(App*, std::function<void(void)>, int, int)> rtc_cb_t;
-    typedef void (rtc_cb_t)(App*, std::function<void()>, int, int);
+    typedef void (rtc_cb_t)(App*, int, int);
 
 
     virtual bool create() = 0;
@@ -59,11 +58,25 @@ class App {
         (*hide_cb)(this);
     }
 
-    void setAlarm(std::function<void(void)> cb, int hours, int minutes) {
+    /**
+     * Sets the alarm for hours:minutes (in the next 24 hours).
+     * Your app will be shown and the 
+     * processAlarm() method will be called, so implement it.
+     * @param hours Hours 0-23
+     * @param minutes Minutes 0-59
+     */
+    void setAlarm(int hours, int minutes) {
         Serial.println("App::setAlarm(...) start");
-        (*setAlarm_cb)(this, cb, hours, minutes);
+        (*setAlarm_cb)(this, hours, minutes);
         Serial.println("App::setAlarm(...) end");
     }
+
+    /**
+     * This method will be called, if the alarm triggers.
+     * You need to set the alarm with the setAlarm method.
+     * Implement it!
+     */ 
+    virtual void processAlarm(){}
 
     static void show_app(App * app) {
         Serial.printf("App::show_app() with %s\n",app->getName());
