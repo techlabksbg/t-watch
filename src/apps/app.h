@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../os/os.h"
-#include "styles.h"
+#include "styles/styles.h"
 
 #define MAXAPPS 32
 

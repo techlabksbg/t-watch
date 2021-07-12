@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../app.h"
-#include "../../styles.h"
 
 LV_IMG_DECLARE(wifiicon);
 

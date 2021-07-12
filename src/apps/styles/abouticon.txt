@@ -1,4 +1,4 @@
-launcherbg.jpg
+stdbackground.jpg
 
 Darkened and cropped by Ivo Blöchliger
 

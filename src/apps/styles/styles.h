@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../os/os.h"
+#include "../../os/os.h"
 
-LV_IMG_DECLARE(launcherbg);
+LV_IMG_DECLARE(stdbackground);
 
 
 /**
@@ -57,7 +57,7 @@ struct Styles {
 
     lv_obj_t* stdBgImage(lv_obj_t* myScr) {
         lv_obj_t* bg = lv_img_create(myScr, NULL);  /*Create an image object*/
-        lv_img_set_src(bg, (void *) &launcherbg);
+        lv_img_set_src(bg, (void *) &stdbackground);
         lv_obj_align(bg, NULL, LV_ALIGN_CENTER, 0, 0);
         return bg;
     }
