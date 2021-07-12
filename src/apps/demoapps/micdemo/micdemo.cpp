@@ -25,7 +25,7 @@ bool MicDemo::show() {
 }
 
 bool MicDemo::hide() {
-    if (micTask==nullptr) {
+    if (micTask!=nullptr) {
         lv_task_del(micTask);
         micTask = nullptr;
     }
