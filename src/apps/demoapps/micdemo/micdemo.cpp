@@ -88,28 +88,35 @@ size_t MicDemo::readData() {
     int neg=0, pos=0, start=0;
     for (int x=0; x<read_len; x++) {
         micBuffer[x]-=avg;
-        if (micBuffer[x]<0) {
-            if (pos>0) {
-                neg = 0;
+        if (micBuffer[x]>0) {
+            if (neg>0) {
+                pos=0;
             }
-            neg++;
-            pos=0;
-        } else {
             pos++;
-            if (pos==8 && neg>=8 && start==0) {
-                start = start-8;
+            neg=0;
+        } else {
+            neg++;
+            if (neg==8 && pos>8 && start==0) {
+                start = x;
             }
         }
     }
-    if (start<MIC_BUFFER_SIZE-240) {
-        for (int x=239; x>=0; x--) {
+    if (start<MIC_BUFFER_SIZE-240) { //} && start>0) {
+        Serial.printf("start=%d\n",start);
+        for (int x=0; x<240; x++) {
             micBuffer[x] = (int16_t)(micBuffer[x+start]/10+120);
+            
+        }
+        for (int x=0; x<240; x++) {
             if (micBuffer[x]>=0 && micBuffer[x]<240) {
                 ttgo->tft->drawPixel(x, micBuffer[x], 0xfff);
             }
         }
+        clearIt = true;
+    } else {
+        clearIt = false;
     }
-    clearIt = true;
+    
     return read_len;
 }
 
