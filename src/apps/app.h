@@ -82,6 +82,13 @@ class App {
      */ 
     virtual void processAlarm(){}
 
+    /**
+     * Implement this method an return true, if 
+     * you don't want your app to be hidden on
+     * double tap.
+     */
+    virtual bool processDoubleTap(){ return false; }
+
     static void show_app(App * app) {
         Serial.printf("App::show_app() with %s\n",app->getName());
         (*show_cb)(app);

@@ -207,7 +207,7 @@ class Launcher : public App {
     }
 
     static void doubleTap() {
-        if (activeApp->isLauncher() && activeApp!=rootLauncher) {
+        if (activeApp!=rootLauncher && !activeApp->processDoubleTap()) {
             hideApp(activeApp);
         }
     }

@@ -14,4 +14,5 @@ bool Credits::create() {
     lv_obj_align(t, l, LV_ALIGN_OUT_BOTTOM_LEFT, 0,5);
     l = styles.stdLabel(page, "a\nb\nc");
     lv_obj_align(l, t, LV_ALIGN_OUT_BOTTOM_LEFT, 0,5);
+    return true;
 }
