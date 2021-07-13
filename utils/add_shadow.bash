@@ -4,7 +4,7 @@ LIC=abouticon.txt
 
 echo "Converting $PNG to $OUT"
 
-convert "$PNG" \( +clone -background white -shadow 70x3+1+1 \) +swap -background none -layers flatten +repage -crop 72x72+0+0 "$OUT"
+convert "$PNG" \( +clone -background white -shadow 100x3+1+1 \) +swap -background none -layers flatten +repage -crop 72x72+0+0 "$OUT"
 
 mv "$OUT" "$PNG"
 
@@ -14,7 +14,4 @@ then
    mv temp24985u98e.txt $LIC
    echo Edited $LIC
 fi
-
-
-
 

@@ -22,6 +22,7 @@
 #include "../settingapps/wifimanager/wifimanager.h"
 #include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
+#include "../settingapps/credits/credits.h"
 #include "../demoapps/simplealarm/simplealarm.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
@@ -138,6 +139,7 @@ class Launcher : public App {
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
+        Launcher::rootLauncher->registerApp(new Credits);
         Serial.println("Launcher::setup() complete");
         if (configJson->containsKey("alarmApp")) {
             Serial.printf("Restoring Alarm callback for app %s\n", (const char *)((*configJson)["alarmApp"]));
