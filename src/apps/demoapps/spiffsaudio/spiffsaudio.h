@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #pragma once
 
 // Upload this file to SPIFFS (for example by using the webfiles app)

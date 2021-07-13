@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #pragma once
 
 #include "AudioOutputI2S.h"

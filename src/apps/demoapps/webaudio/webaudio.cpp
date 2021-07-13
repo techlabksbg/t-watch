@@ -1,3 +1,10 @@
+/**
+ * @author Ivo Blöchliger
+ * The audio handling is based on example code by 
+ * @author Lewis He
+ */
+
+
 #include "webaudio.h"
 
 // See https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/PlayMP3FromSPIFFS/PlayMP3FromSPIFFS.ino

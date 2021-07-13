@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "webfiles.h"
 #include "SPIFFS.h"
 

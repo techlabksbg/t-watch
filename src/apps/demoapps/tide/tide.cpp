@@ -1,3 +1,7 @@
+/**
+ * @author Sebastian Gfeller
+ */
+
 #include "tide.h"
 
 bool Tide::create() {

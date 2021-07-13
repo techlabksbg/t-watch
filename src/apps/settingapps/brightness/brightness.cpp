@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "brightness.h"
 
 bool Brightness::create() {

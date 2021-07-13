@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "app.h"
 
 App::app_cb_t* App::hide_cb = nullptr;

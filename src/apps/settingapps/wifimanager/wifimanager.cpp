@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "wifimanager.h"
 
 WifiManager::WifiManager() {

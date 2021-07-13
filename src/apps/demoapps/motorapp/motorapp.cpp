@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "motorapp.h"
 
 bool MotorApp::create() {

@@ -1,3 +1,7 @@
+/**
+ * @author Sebastian Gfeller
+ */
+
 #pragma once
 
 #include "../../app.h"

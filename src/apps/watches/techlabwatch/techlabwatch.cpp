@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "techlabwatch.h"
 
 LV_IMG_DECLARE(techlabwatchbg);

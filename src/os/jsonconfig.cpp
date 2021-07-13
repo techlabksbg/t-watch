@@ -1,3 +1,7 @@
+/**
+ * @author Ivo Blöchliger
+ */
+
 #include "jsonconfig.h"
 
 #include <FS.h>

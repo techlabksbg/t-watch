@@ -1,3 +1,7 @@
+/**
+ * @author Sebastian Gfeller
+ */
+
 #include "shoppinglist.h"
 
 bool ShoppingList::create() {

@@ -1,3 +1,9 @@
+/**
+ * @author Ivo Blöchliger
+ * Based on code by
+ * @author Lewis He
+ */
+
 #include "micdemo.h"
 
 #include <driver/i2s.h>

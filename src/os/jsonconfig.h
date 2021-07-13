@@ -1,3 +1,6 @@
+/**
+ * @author Ivo Blöchliger
+ */
 #pragma once
 
 #include "os.h"

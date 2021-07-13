@@ -1,5 +1,9 @@
-#include "os/os.h"
+/**
+ * @author Ivo Blöchliger
+ */
 
+
+#include "os/os.h"
 
 void setup() {
     os_setup();
