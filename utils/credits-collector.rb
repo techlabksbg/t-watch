@@ -34,3 +34,7 @@ puts artworks
 puts "\nSource code authors:"
 puts sources
 
+inc = "const char * coders = \"#{sources.join('\n')}\";\n"
+inc += "const char * artists = \"#{artworks.join('\n')}\";\n"
+
+File.write("../src/apps/settingapps/credits/credits.txt", inc)
