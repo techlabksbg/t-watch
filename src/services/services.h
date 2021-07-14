@@ -20,5 +20,11 @@
  */
 bool downloadToSPIFFS(App* app, const char * filename, const char * url, const char* root_ca=nullptr, bool remove=false);
 
-
+/**
+ * Call this function to start screencast streaming to port 8080
+ * on the given host. Call it with nullptr to terminate.
+ * WiFi must be on.
+ * The images are raw 240x240*2 Bytes.
+ * @param host Hostname or IP address.
+ */
 void streamToIP(const char* host);

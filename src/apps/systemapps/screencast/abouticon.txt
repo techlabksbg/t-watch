@@ -1,0 +1,14 @@
+screencasticon.png
+
+White shadow added by Ivo Blöchliger
+
+From: https://openmoji.org/library/#search=camera&emoji=1F3A5
+
+movie camera
+Unicode	1F3A5
+🎥
+Author	Sina Schulz
+Category	objects
+Subcategory	light-video
+License: CC-BY-SA 4.0
+

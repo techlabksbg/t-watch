@@ -23,6 +23,7 @@
 #include "../systemapps/sysinfo/sysinfo.h"
 #include "../systemapps/webfiles/webfiles.h"
 #include "../systemapps/credits/credits.h"
+#include "../systemapps/screencast/screencast.h"
 #include "../demoapps/simplealarm/simplealarm.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
@@ -115,6 +116,7 @@ class Launcher : public App {
         system->icon = (void*) &systemappsicon;
         system->registerApp(new Credits);
         system->registerApp(new WebFiles);
+        system->registerApp(new ScreenCast);        
         system->registerApp(new SysInfo);
         system->registerApp(new PowerOff);
         system->registerApp(new Reboot);

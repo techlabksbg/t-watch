@@ -36,3 +36,8 @@ TODO:
   - include ntp into wifimanager
   - turn off wifi when clicking connected ssid
   - App to set timezone
+  - turn on screen on startup as early as possible, show boot messages.
+
+
+Convert a dump to images:
+ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb565 -s 240x240 -i test.raw -f image2 -vcodec png 'out%02d'.png

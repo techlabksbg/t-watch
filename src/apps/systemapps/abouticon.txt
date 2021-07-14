@@ -2,6 +2,7 @@ systemappsicon.png
 
 White shadow added by Ivo Blöchliger
 
+From: https://openmoji.org/library/#search=gear&emoji=2699
 
 gear
 Unicode	2699
