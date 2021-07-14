@@ -58,7 +58,8 @@ void SpiffsAudio::freeAudioChain() {
 }
 
 bool SpiffsAudio::show() {
-    if (downloadToSPIFFS(this, "http://tech-lab.ch/twatch/upchime2.mp3", SPIFFSAUDIO_MP3FILE)) {
+    #include "ISRG_Root_X1.h"
+    if (downloadToSPIFFS(this, SPIFFSAUDIO_MP3FILE, "https://tech-lab.ch/twatch/upchime2.mp3",root_ca)) {
         buildAudioChain();
     }
     return true;
