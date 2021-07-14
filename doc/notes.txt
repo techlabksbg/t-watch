@@ -30,3 +30,9 @@ Free icon libraries:
 
 https://phosphoricons.com/
 https://fonts.google.com/icons
+
+TODO:
+  - include Latin-1 characters
+  - include ntp into wifimanager
+  - turn off wifi when clicking connected ssid
+  - App to set timezone

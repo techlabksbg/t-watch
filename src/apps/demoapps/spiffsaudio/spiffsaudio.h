@@ -5,7 +5,7 @@
 #pragma once
 
 // Upload this file to SPIFFS (for example by using the webfiles app)
-#define SPIFFSAUDIO_MP3FILE "/tngchirp.mp3"
+#define SPIFFSAUDIO_MP3FILE "/upchime2.mp3"
 
 #include <SPIFFS.h>
 
@@ -17,7 +17,6 @@
 
 
 #include "../../app.h"
-#include "../../settingapps/wifimanager/wifimanager.h"
 
 LV_IMG_DECLARE(spiffsaudioicon);
 
@@ -39,7 +38,7 @@ class SpiffsAudio : public App {
 
     static lv_task_t* audioTask;
 
-    lv_obj_t* connectButton = nullptr;
+    lv_obj_t* playButton = nullptr;
     lv_obj_t* buttonLabel = nullptr;
 
     AudioOutputI2S* audioOutput = nullptr;
@@ -48,10 +47,16 @@ class SpiffsAudio : public App {
     AudioGeneratorMP3* audioMp3 = nullptr;
     AudioOutputI2S* audioI2S = nullptr;
 
-    static void connect_cb(lv_obj_t *button, lv_event_t event) {
+    void buildAudioChain();
+    void freeAudioChain();
+
+    static void play_cb(lv_obj_t *button, lv_event_t event) {
         if (event != LV_EVENT_SHORT_CLICKED) return;
+        if (self->audioMp3==nullptr) {
+            self->buildAudioChain();
+        }
         if (self->audioMp3!=nullptr) {
-            if (!self->audioMp3->isRunning()) {
+            if (!self->audioMp3->isRunning() && SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
                 self->audioSource->open(SPIFFSAUDIO_MP3FILE);
                 self->audioMp3->begin(self->audioID3, self->audioI2S);
                 if (self->audioTask==nullptr) {

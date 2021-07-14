@@ -5,6 +5,7 @@
  */
 
 #include "spiffsaudio.h"
+#include "../../../services/services.h"
 
 // See https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/PlayMP3FromSPIFFS/PlayMP3FromSPIFFS.ino
 
@@ -13,20 +14,15 @@ bool SpiffsAudio::create() {
     lv_obj_t* bg = styles.stdBgImage(myScr);
     register_for_swipe_up(bg);
     lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &styles.background);
-    connectButton = styles.stdButton(bg, "Capt'n!", connect_cb);
-    buttonLabel = lv_obj_get_child(connectButton, NULL);
-    lv_obj_align(connectButton, bg, LV_ALIGN_CENTER, 0,0);
+    playButton = styles.stdButton(bg, "Sound!", play_cb);
+    buttonLabel = lv_obj_get_child(playButton, NULL);
+    lv_obj_align(playButton, bg, LV_ALIGN_CENTER, 0,0);
 
     return true;
 }
 
-bool SpiffsAudio::show() {
-    if (!SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
-        lv_obj_t* label = styles.stdLabel(myScr, SPIFFSAUDIO_MP3FILE "\nnot found.");
-        lv_label_set_text(buttonLabel, "Quit");
-        lv_obj_align(label, connectButton, LV_ALIGN_OUT_BOTTOM_MID, 0,20);
-        register_for_hide_on_click(connectButton);
-    } else if (audioSource==nullptr) {
+void SpiffsAudio::buildAudioChain() {
+    if (audioSource==nullptr) {
         Serial.println("Building audio chain...");
         ttgo->enableLDO3();
         ttgo->enableAudio();
@@ -39,15 +35,9 @@ bool SpiffsAudio::show() {
         //audioMp3->begin(audioID3, audioI2S);
         Serial.println("Audiochain done.");
     }
-    
-    return true;
 }
 
-bool SpiffsAudio::hide() {
-    if (audioTask!=nullptr) {
-        Serial.println("Disabling audio loop task");
-        lv_task_del(audioTask);  audioTask = nullptr;        
-    }
+void SpiffsAudio::freeAudioChain() {
     if (audioMp3!=nullptr) {
         Serial.println("SpiffsAudio::hide() tearing down audio chain...");
         if (audioMp3->isRunning()) {
@@ -65,6 +55,21 @@ bool SpiffsAudio::hide() {
         Serial.println("Tear down done, disabling hardware...");
         ttgo->disableAudio();
     }
+}
+
+bool SpiffsAudio::show() {
+    if (downloadToSPIFFS(this, "http://tech-lab.ch/twatch/upchime2.mp3", SPIFFSAUDIO_MP3FILE)) {
+        buildAudioChain();
+    }
+    return true;
+}
+
+bool SpiffsAudio::hide() {
+    if (audioTask!=nullptr) {
+        Serial.println("Disabling audio loop task");
+        lv_task_del(audioTask);  audioTask = nullptr;        
+    }
+    freeAudioChain();
     return true;
 }
 
