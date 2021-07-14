@@ -6,7 +6,7 @@
 
 #include "../../app.h"
 #include "ESPAsyncWebServer.h"
-#include "../wifimanager/wifimanager.h"
+#include "../../settingapps/wifimanager/wifimanager.h"
 
 
 LV_IMG_DECLARE(webfilesicon);

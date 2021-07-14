@@ -1,0 +1,11 @@
+systemappsicon.png
+
+White shadow added by Ivo Blöchliger
+
+
+gear
+Unicode	2699
+⚙
+Author	Hilda Kalyoncu
+Category	objects
+Subcategory	tool

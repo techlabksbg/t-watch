@@ -149,6 +149,7 @@ class Launcher : public App {
         App::show_cb = &showApp;
         App::setAlarm_cb = &setAlarm;
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
+        Launcher::rootLauncher->registerApp(setupSystemLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
         

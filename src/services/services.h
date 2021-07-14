@@ -18,5 +18,7 @@
  * @param root_ca The root-certificate, mandatory if downloading by https!
  * @param remove Delete the file first, to force the download of the file.
  */
-
 bool downloadToSPIFFS(App* app, const char * filename, const char * url, const char* root_ca=nullptr, bool remove=false);
+
+
+void streamToIP(const char* host);
