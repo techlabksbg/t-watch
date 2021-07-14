@@ -16,13 +16,13 @@
 
 #include "../watches/techlabwatch/techlabwatch.h"
 #include "../settingapps/brightness/brightness.h"
-#include "../settingapps/reboot/reboot.h"
-#include "../settingapps/poweroff/poweroff.h"
-#include "../settingapps/sysinfo/sysinfo.h"
 #include "../settingapps/wifimanager/wifimanager.h"
-#include "../settingapps/webfiles/webfiles.h"
 #include "../settingapps/ntpsync/ntpsync.h"
-#include "../settingapps/credits/credits.h"
+#include "../systemapps/reboot/reboot.h"
+#include "../systemapps/poweroff/poweroff.h"
+#include "../systemapps/sysinfo/sysinfo.h"
+#include "../systemapps/webfiles/webfiles.h"
+#include "../systemapps/credits/credits.h"
 #include "../demoapps/simplealarm/simplealarm.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
@@ -37,7 +37,7 @@
 // Converter at https://lvgl.io/tools/imageconverter
 LV_IMG_DECLARE(settingsicon);
 LV_IMG_DECLARE(demoappsicon);
-
+LV_IMG_DECLARE(systemappsicon);
 
 
 class Launcher : public App {
@@ -103,12 +103,24 @@ class Launcher : public App {
         settings->registerApp(new Brightness);
         settings->registerApp(&wifiManager);
         settings->registerApp(new NTP_Sync);
-        settings->registerApp(new WebFiles);
-        settings->registerApp(new SysInfo);
-        settings->registerApp(new Reboot);
-        settings->registerApp(new PowerOff);
         return settings;
     }
+
+   /** 
+     * Build the Settings Launcher, as a child of the
+     * root launcher
+     */
+    static Launcher* setupSystemLauncher() {
+        Launcher* system = new Launcher("System", rootLauncher);
+        system->icon = (void*) &systemappsicon;
+        system->registerApp(new Credits);
+        system->registerApp(new WebFiles);
+        system->registerApp(new SysInfo);
+        system->registerApp(new PowerOff);
+        system->registerApp(new Reboot);
+        return system;
+    }
+
 
     /**
      * Build the demo launcher
@@ -139,7 +151,7 @@ class Launcher : public App {
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
         Launcher::rootLauncher->registerApp(new TechLabWatch);
-        Launcher::rootLauncher->registerApp(new Credits);
+        
         Serial.println("Launcher::setup() complete");
         if (configJson->containsKey("alarmApp")) {
             Serial.printf("Restoring Alarm callback for app %s\n", (const char *)((*configJson)["alarmApp"]));
