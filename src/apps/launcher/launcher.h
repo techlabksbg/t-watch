@@ -17,7 +17,6 @@
 #include "../watches/techlabwatch/techlabwatch.h"
 #include "../settingapps/brightness/brightness.h"
 #include "../settingapps/wifimanager/wifimanager.h"
-#include "../settingapps/ntpsync/ntpsync.h"
 #include "../systemapps/reboot/reboot.h"
 #include "../systemapps/poweroff/poweroff.h"
 #include "../systemapps/sysinfo/sysinfo.h"
@@ -103,7 +102,6 @@ class Launcher : public App {
         settings->icon = (void*) &settingsicon;
         settings->registerApp(new Brightness);
         settings->registerApp(&wifiManager);
-        settings->registerApp(new NTP_Sync);
         return settings;
     }
 
