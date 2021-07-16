@@ -33,11 +33,12 @@ https://fonts.google.com/icons
 
 TODO:
   - include Latin-1 characters
-  - include ntp into wifimanager
-  - turn off wifi when clicking connected ssid
+  - crash when removing an ssid (write to JSON succeeds)
   - App to set timezone
   - turn on screen on startup as early as possible, show boot messages.
 
+IDEAS:
+  - screencast save only changed areas
 
 Convert a dump to images:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb565 -s 240x240 -i test.raw -f image2 -vcodec png 'out%02d'.png

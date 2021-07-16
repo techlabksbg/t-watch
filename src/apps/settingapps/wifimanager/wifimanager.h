@@ -67,6 +67,13 @@ class WifiManager : public App {
     static void connect_cb(lv_obj_t *button, lv_event_t event) {
         if (event != LV_EVENT_SHORT_CLICKED) return;
         Serial.println("WifiManager::connect_cb");
+        if (!(lv_btn_get_state(button)==LV_BTN_STATE_CHECKED_PRESSED || 
+            lv_btn_get_state(button)==LV_BTN_STATE_CHECKED_RELEASED)) {
+            Serial.println("Button is selected, turing wifi off");
+            self->disconnect();
+            return;
+        }
+
         lv_obj_t* label = lv_obj_get_child(button,NULL);
         Serial.printf("Got label %p\n", label);
         strlcpy(self->ssid, lv_label_get_text(label), PW_MAX_LENGTH+1);
