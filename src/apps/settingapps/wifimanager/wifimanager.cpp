@@ -304,6 +304,15 @@ void WifiManager::connectionEstablished() {
         closeOnConnect = nullptr;
         Serial.println("WifiManager::connectionEstablished() done calling app..");
     }
+    // NTP sync
+    if (WiFi.isConnected()) {
+        sntp_set_time_sync_notification_cb([](timeval *tv) {
+            Serial.println("ntp callback, syncing to rtc");
+            ttgo->rtc->syncToRtc();
+        });
+        Serial.println("NTP sync start.");
+        configTzTime((*configJson)["tz"], "pool.ntp.org");
+    }
 }
 
 void WifiManager::connectionLost() {
