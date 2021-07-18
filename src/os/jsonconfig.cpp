@@ -44,7 +44,7 @@ void loadJsonConfig() {
     }
     bool saveIt = false;
     if (!configJson->containsKey("tz")) {
-        (*configJson)["tz"]="CET-2";
+        (*configJson)["tz"]="CET-1CEST,M3.5.0,M10.5.0/3";
         saveIt=true;
     }
     if (!configJson->containsKey("wifi")) {

@@ -1,0 +1,21 @@
+timezoneicon.png
+
+Composite by Ivo Blöchliger, made from the following to sources:
+
+From: https://openmoji.org/library/#search=time&emoji=231A
+watch
+Unicode	231A
+⌚
+Author	Rana Cakir
+Category	travel-places
+Subcategory	time
+License CC-BY-SA 4.0
+
+From: https://openmoji.org/library/#search=world&emoji=1F30D
+globe showing Europe-Africa
+Unicode	1F30D
+🌍
+Author	Martin Wehl
+Category	travel-places
+Subcategory	place-map
+License CC-BY-SA 4.0

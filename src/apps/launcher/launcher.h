@@ -16,6 +16,7 @@
 
 #include "../watches/techlabwatch/techlabwatch.h"
 #include "../settingapps/brightness/brightness.h"
+#include "../settingapps/timezone/timezone.h"
 #include "../settingapps/wifimanager/wifimanager.h"
 #include "../systemapps/reboot/reboot.h"
 #include "../systemapps/poweroff/poweroff.h"
@@ -100,8 +101,9 @@ class Launcher : public App {
     static Launcher* setupSettingsLauncher() {
         Launcher* settings = new Launcher("Settings", rootLauncher);
         settings->icon = (void*) &settingsicon;
-        settings->registerApp(new Brightness);
         settings->registerApp(&wifiManager);
+        settings->registerApp(new Brightness);
+        settings->registerApp(new TimeZone);
         return settings;
     }
 
