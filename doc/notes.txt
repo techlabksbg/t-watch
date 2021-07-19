@@ -34,14 +34,6 @@ https://fonts.google.com/icons
 TODO:
   - include Latin-1 characters
   - crash when removing an ssid (write to JSON succeeds)
-  - App to set timezone
-    See files in /usr/share/zoneinfo/ (last line in file) for correct string
-
-      setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 1);
-      tzset();
-      sntp_setoperatingmode(SNTP_OPMODE_POLL);
-      sntp_setservername(0, ntpServer);
-      sntp_init(); 
   - turn on screen on startup as early as possible, show boot messages.
 
 IDEAS:

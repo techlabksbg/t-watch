@@ -49,14 +49,19 @@ void os_setup() {
     //Initialize TWatch
     ttgo->begin();
 
+    // Turn on backlight
+    ttgo->openBL();
+    ttgo->tft->setTextColor(0xffff);
+    ttgo->tft->println("Enabling IRQs");
+
+    ttgo->tft->println("  -> power");
     // Turn on the IRQ used
     ttgo->power->adc1Enable(AXP202_BATT_VOL_ADC1 | AXP202_BATT_CUR_ADC1 | AXP202_VBUS_VOL_ADC1 | AXP202_VBUS_CUR_ADC1, AXP202_ON);
     ttgo->power->enableIRQ(AXP202_VBUS_REMOVED_IRQ | AXP202_VBUS_CONNECT_IRQ | AXP202_CHARGING_FINISHED_IRQ, AXP202_ON);
     ttgo->power->clearIRQ();
 
-    //Initialize lvgl
-    ttgo->lvgl_begin();
 
+    ttgo->tft->println("  -> accelerometer");
     // Enable BMA423 interrupt ，
     // The default interrupt configuration,
     // you need to set the acceleration parameters, please refer to the BMA423_Accel example
@@ -92,6 +97,7 @@ void os_setup() {
         }
     }, FALLING);
 
+    ttgo->tft->println("rtc to system");
     //Check if the RTC clock matches, if not, use compile time
     ttgo->rtc->check();
     //Synchronize time to system time
@@ -108,6 +114,7 @@ void os_setup() {
         }
     }, FALLING);
 
+    ttgo->tft->println("init motor");
     // Initialize vibration Motor
     ttgo->motor_begin();
 
@@ -127,12 +134,11 @@ void os_setup() {
     });
 #endif
 
+    ttgo->tft->println("set wifi callbacks");
     //Setting up the network
     setupNetwork();
 
-
-    //Clear lvgl counter
-    lv_disp_trig_activity(NULL);
+  
 
 #if LV_USE_LOG
     lv_log_register_print_cb(my_log_cb);
@@ -146,12 +152,20 @@ void os_setup() {
 #endif
 
     //When the initialization is complete, turn on the backlight
-    ttgo->openBL();
+    ttgo->tft->println("set up SPIFFS");
     if (!(spiffs_initialized = SPIFFS.begin())) {
         Serial.println("SPIFFS init failed!");
     }
 
+    ttgo->tft->println("load config");
     loadJsonConfig();
+
+    ttgo->tft->println("start lvgl");
+    //Initialize lvgl
+    ttgo->lvgl_begin();
+
+    //Clear lvgl counter
+    lv_disp_trig_activity(NULL);
 
     //Execute your own GUI interface
     styles.setup();
