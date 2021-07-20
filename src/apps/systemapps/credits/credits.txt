@@ -1,2 +1,2 @@
 const char * coders = "Ivo Blöchliger\nLewis He\nSebastian Gfeller";
-const char * artists = "Alexander Müller\nBaris Camli\nHilda Kalyoncu\nJonas Dunkel\nJonas Roßner\nJose Avila\nJulian Grüneberg\nLuca Bosin\nMarius Schnabel\nMartin Wehl\nNASA Hubble\nPhosphor Icons\nRana Cakir\nSina Schulz\nVanessa Boutzikoudi";
+const char * artists = "Alexander Müller\nBaris Camli\nFoolBoyMedia\nHilda Kalyoncu\nJonas Dunkel\nJonas Roßner\nJose Avila\nJulian Grüneberg\nLuca Bosin\nMarius Schnabel\nMartin Wehl\nNASA Hubble\nPhosphor Icons\nRana Cakir\nSina Schulz\nVanessa Boutzikoudi";
