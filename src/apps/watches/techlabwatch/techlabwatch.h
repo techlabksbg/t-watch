@@ -6,6 +6,8 @@
 
 #include "../../app.h"
 
+LV_IMG_DECLARE(techlabwatchicon);
+
 
 class TechLabWatch : public App {
     public:
@@ -19,32 +21,34 @@ class TechLabWatch : public App {
     virtual bool hide();
     virtual bool destroy();
 
-    virtual void* getIcon();
-    virtual const char * getName();
+    virtual void* getIcon() { return (void*) &techlabwatchicon; }
+    virtual const char * getName() { return "TechLab Watch"; }
 
 
     private:
-    static lv_obj_t* bg;
-    static lv_obj_t* timeLabel;
-    static lv_obj_t* dateLabel;
-    static lv_task_t* task;
+    // GUI elements
+    lv_obj_t* bg = nullptr;
+    lv_obj_t* timeLabel = nullptr;
+    lv_obj_t* dateLabel = nullptr;
 
-    static void loop(lv_task_t * taskptr) {
-        time_t now;
-        struct tm  info;
-        char buf[64];
-        //Serial.println("Getting time");
-        time(&now);
-        localtime_r(&now, &info);
-        strftime(buf, sizeof(buf), "%H\n%M\n%S", &info);
-        //Serial.printf("About to set text to %s\n", buf);
-        lv_label_set_text(timeLabel, buf);
-        strftime(buf, sizeof(buf), "%Y\n%m\n%d", &info);
-        lv_label_set_text(dateLabel, buf);
-        //Serial.println("TechLabWatch::loop done.");
+    // Pointer to lv task
+    lv_task_t* task = nullptr;
+
+    /**
+     * Called every 1000ms from task_cb to
+     * display current time.
+     */
+    void loop();
+
+    /**
+     * Task called every 1000ms.
+     * Reads out the pointer to the current instance
+     * and calls the loop method.
+     */
+    static void task_cb(lv_task_t * taskptr) {
+        TechLabWatch* w = (TechLabWatch*) taskptr->user_data;
+        w->loop();
     }
-
-    
 
 };
 
