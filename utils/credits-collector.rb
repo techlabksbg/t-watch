@@ -37,4 +37,4 @@ puts sources
 inc = "const char * coders = \"#{sources.join('\n')}\";\n"
 inc += "const char * artists = \"#{artworks.join('\n')}\";\n"
 
-File.write("../src/apps/settingapps/credits/credits.txt", inc)
+File.write("../src/apps/systemapps/credits/credits.txt", inc)
