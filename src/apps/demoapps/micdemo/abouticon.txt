@@ -1,0 +1,11 @@
+micdemoicon.png
+
+From: https://openmoji.org/library/#search=microphone&emoji=1F3A4
+
+microphone
+Unicode	1F3A4
+🎤
+Author	Sina Schulz
+Category	objects
+Subcategory	music
+License CC-BY-SA 4.0
