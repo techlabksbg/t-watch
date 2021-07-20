@@ -11,6 +11,7 @@ bool ScreenCast::create() {
     lv_obj_t* button = styles.stdButton(myScr, "Switch", button_cb);
     lv_obj_set_user_data(button, this); // So the callback can get the instance context.
     lv_obj_align(button, nullptr, LV_ALIGN_CENTER, 0,0);
+    return true;
 }
 
 void ScreenCast::click() {
