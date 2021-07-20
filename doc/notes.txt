@@ -33,8 +33,10 @@ https://fonts.google.com/icons
 
 TODO:
   - include Latin-1 characters
+      https://lvgl.io/tools/fontconverter
+      
   - crash when removing an ssid (write to JSON succeeds)
-  - turn on screen on startup as early as possible, show boot messages.
+  - show message before reboot or power off.
 
 IDEAS:
   - screencast save only changed areas

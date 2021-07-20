@@ -32,6 +32,7 @@
 #include "../demoapps/acceldemo/acceldemo.h"
 #include "../demoapps/shoppinglist/shoppinglist.h"
 #include "../demoapps/tide/tide.h"
+#include "../demoapps/drawing/drawing.h"
 
 
 // 
@@ -130,6 +131,7 @@ class Launcher : public App {
     static Launcher* setupDemoLauncher() {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
+        demos->registerApp(new Drawing);
         demos->registerApp(new MotorApp);
         demos->registerApp(new AccelDemo);
         demos->registerApp(new SimpleAlarm);

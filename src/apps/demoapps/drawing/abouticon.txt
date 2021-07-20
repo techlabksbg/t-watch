@@ -1,0 +1,13 @@
+drawingicon.png
+
+White shadow added by Ivo Blöchliger
+
+From: https://openmoji.org/library/#search=pen&emoji=270F
+
+pencil
+Unicode	270F
+✏
+Author	Rana Cakir
+Category	objects
+Subcategory	writing
+License CC-BY-SA 4.0
