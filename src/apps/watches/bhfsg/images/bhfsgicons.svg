@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="bhfsgicons.svg">
+  <defs
+     id="defs2">
+    <filter
+       y="-0.2678522"
+       height="1.5357044"
+       inkscape:menu-tooltip="Darkens the edge with an inner blur and adds a flexible glow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Dark and Glow"
+       style="color-interpolation-filters:sRGB;"
+       id="filter2808"
+       x="-0.063024046"
+       width="1.1260481">
+      <feGaussianBlur
+         stdDeviation="4.4642032"
+         result="result6"
+         id="feGaussianBlur2798" />
+      <feComposite
+         result="result8"
+         in="SourceGraphic"
+         operator="atop"
+         in2="result6"
+         id="feComposite2800" />
+      <feComposite
+         result="result9"
+         operator="over"
+         in2="SourceAlpha"
+         in="result8"
+         id="feComposite2802" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 "
+         result="result10"
+         id="feColorMatrix2804" />
+      <feBlend
+         in="result10"
+         mode="normal"
+         in2="result6"
+         id="feBlend2806" />
+    </filter>
+    <filter
+       y="-0.097969575"
+       height="1.1959391"
+       inkscape:menu-tooltip="Darkens the edge with an inner blur and adds a flexible glow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Dark and Glow"
+       style="color-interpolation-filters:sRGB;"
+       id="filter2874"
+       x="-0.023051664"
+       width="1.0461033">
+      <feGaussianBlur
+         stdDeviation="1.6328262"
+         result="result6"
+         id="feGaussianBlur2864" />
+      <feComposite
+         result="result8"
+         in="SourceGraphic"
+         operator="atop"
+         in2="result6"
+         id="feComposite2866" />
+      <feComposite
+         result="result9"
+         operator="over"
+         in2="SourceAlpha"
+         in="result8"
+         id="feComposite2868" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 "
+         result="result10"
+         id="feColorMatrix2870" />
+      <feBlend
+         in="result10"
+         mode="normal"
+         in2="result6"
+         id="feBlend2872" />
+    </filter>
+    <filter
+       y="-0.2337362"
+       height="1.4674724"
+       inkscape:menu-tooltip="Darkens the edge with an inner blur and adds a flexible glow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Dark and Glow"
+       style="color-interpolation-filters:sRGB;"
+       id="filter2908"
+       x="-0.054996753"
+       width="1.1099935">
+      <feGaussianBlur
+         stdDeviation="3.8956034"
+         result="result6"
+         id="feGaussianBlur2898" />
+      <feComposite
+         result="result8"
+         in="SourceGraphic"
+         operator="atop"
+         in2="result6"
+         id="feComposite2900" />
+      <feComposite
+         result="result9"
+         operator="over"
+         in2="SourceAlpha"
+         in="result8"
+         id="feComposite2902" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 "
+         result="result10"
+         id="feColorMatrix2904" />
+      <feBlend
+         in="result10"
+         mode="normal"
+         in2="result6"
+         id="feBlend2906" />
+    </filter>
+    <filter
+       y="-0.099483371"
+       height="1.1985537"
+       inkscape:menu-tooltip="Darkens the edge with an inner blur and adds a flexible glow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Dark and Glow"
+       style="color-interpolation-filters:sRGB"
+       id="filter2874-3"
+       x="-0.081810355"
+       width="1.1685017">
+      <feGaussianBlur
+         stdDeviation="1.6328262"
+         result="result6"
+         id="feGaussianBlur2864-6" />
+      <feComposite
+         result="result8"
+         in="SourceGraphic"
+         operator="atop"
+         in2="result6"
+         id="feComposite2866-7" />
+      <feComposite
+         result="result9"
+         operator="over"
+         in2="SourceAlpha"
+         in="result8"
+         id="feComposite2868-5" />
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 "
+         result="result10"
+         id="feColorMatrix2870-3" />
+      <feBlend
+         in="result10"
+         mode="normal"
+         in2="result6"
+         id="feBlend2872-5" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.0557596"
+     inkscape:cx="421.57319"
+     inkscape:cy="69.067101"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid833" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:0.99;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#00ffff;stroke-width:4.4975;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2810"
+       width="253.69615"
+       height="162.78566"
+       x="-10.54456"
+       y="238.51379"
+       rx="3.1064882" />
+    <path
+       id="path2796"
+       style="fill:none;stroke:#00ffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter2808)"
+       d="M 150,85.000001 190,125 m -40,0 40,-39.999999 m -102,0 h 34 c 1.662,0 3,1.338 3,3 V 122 c 0,1.662 -1.338,3 -3,3 H 88 c -1.662,0 -3,-1.338 -3,-3 V 88.000001 c 0,-1.662 1.338,-3 3,-3 z M 60,105 A 20,20 0 0 1 40,125 20,20 0 0 1 20,105 20,20 0 0 1 40,85.000001 20,20 0 0 1 60,105 Z"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <path
+       id="path2748"
+       style="mix-blend-mode:normal;fill:none;stroke:#00ffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter2874)"
+       d="m 150,85 40,40 m -40,0 40,-40 M 88,85 h 34 c 1.662,0 3,1.338 3,3 v 34 c 0,1.662 -1.338,3 -3,3 H 88 c -1.662,0 -3,-1.338 -3,-3 V 88 c 0,-1.662 1.338,-3 3,-3 z M 60,105 A 20,20 0 0 1 40,125 20,20 0 0 1 20,105 20,20 0 0 1 40,85 20,20 0 0 1 60,105 Z"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <path
+       id="path2894"
+       style="mix-blend-mode:normal;fill:none;stroke:#00ffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter2874)"
+       d="m 150,85 40,40 m -40,0 40,-40 M 87.999998,85 H 122 c 1.662,0 3,1.338 3,3 v 34 c 0,1.662 -1.338,3 -3,3 H 87.999998 c -1.662,0 -3,-1.338 -3,-3 V 88 c 0,-1.662 1.338,-3 3,-3 z m -28,20 a 20,20 0 0 1 -20,20 20,20 0 0 1 -20,-20 20,20 0 0 1 20,-20 20,20 0 0 1 20,20 z"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <path
+       id="path2896"
+       style="opacity:0.198469;mix-blend-mode:normal;fill:none;stroke:#00ffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter2908)"
+       d="m 150,150 40,40 m -40,0 40,-40 m -102,0 h 34 c 1.662,0 3,1.338 3,3 v 34 c 0,1.662 -1.338,3 -3,3 H 88 c -1.662,0 -3,-1.338 -3,-3 v -34 c 0,-1.662 1.338,-3 3,-3 z m -28,20 a 20,20 0 0 1 -20,20 20,20 0 0 1 -20,-20 20,20 0 0 1 20,-20 20,20 0 0 1 20,20 z"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2910"
+       width="60"
+       height="60"
+       x="10"
+       y="75"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2914"
+       width="60"
+       height="60"
+       x="75"
+       y="75"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2916"
+       width="60"
+       height="60"
+       x="140"
+       y="75"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2918"
+       width="60"
+       height="60"
+       x="140"
+       y="140"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2920"
+       width="60"
+       height="60"
+       x="75"
+       y="140"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2912"
+       width="60"
+       height="60"
+       x="10"
+       y="140"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/images/bhfsgdigits.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <path
+       id="path2894-6"
+       style="mix-blend-mode:normal;fill:none;stroke:#00ffff;stroke-width:3;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter2874-3)"
+       d="m 90,10 40,40 M 90,50 130,10 M 93.000005,-55 h 34.000005 c 1.662,0 3,1.338 3,3 v 34 c 0,1.662 -1.338,3 -3,3 H 93.000005 c -1.662,0 -3,-1.338 -3,-3 v -34 c 0,-1.662 1.338,-3 3,-3 z m -28,20 c 0,11.045695 -8.954305,20 -20,20 -11.045695,0 -20,-8.954305 -20,-20 0,-11.045695 8.954305,-20 20,-20 11.045695,0 20,8.954305 20,20 z"
+       inkscape:export-filename="/home/ivo/burggraben/informatik/labor/arduino/t-watch/IvosWatch/src/apps/watches/bhfsg/bhfsgicon.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100"
+       sodipodi:nodetypes="ccccssssssssssssss" />
+  </g>
+</svg>
