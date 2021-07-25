@@ -40,7 +40,7 @@
 LV_IMG_DECLARE(settingsicon);
 LV_IMG_DECLARE(demoappsicon);
 LV_IMG_DECLARE(systemappsicon);
-
+LV_IMG_DECLARE(watchesicon);
 
 class Launcher : public App {
     public:
@@ -143,6 +143,13 @@ class Launcher : public App {
         return demos;
     }
 
+    static Launcher* setupWatchesLauncher() {
+        Launcher* watches = new Launcher("Watches", rootLauncher);
+        watches->icon = (void*) &watchesicon;
+        watches->registerApp(new TechLabWatch);
+        return watches;
+    }
+
     public:
     /**
      * Setup the main launcher (rootLauncher) and
@@ -155,7 +162,7 @@ class Launcher : public App {
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupSystemLauncher());
         Launcher::rootLauncher->registerApp(setupDemoLauncher());
-        Launcher::rootLauncher->registerApp(new TechLabWatch);
+        Launcher::rootLauncher->registerApp(setupWatchesLauncher());
         
         Serial.println("Launcher::setup() complete");
         if (configJson->containsKey("alarmApp")) {
