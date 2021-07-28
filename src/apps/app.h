@@ -90,6 +90,8 @@ class App {
      * double tap.
      */
     virtual bool processDoubleTap(){ return false; }
+    virtual void loop(){}
+
 
     static void show_app(App * app) {
         Serial.printf("App::show_app() with %s\n",app->getName());
@@ -160,8 +162,21 @@ class App {
         }
     }
 
+    protected:
+    /**
+     * Will call loop every period ms
+     * @param period Loop will be called every period milliseconds.
+     */
+    void start_loop(uint32_t period);
+
+    /**
+     * Stops the looping
+     */
+    void stop_loop();
+
     private:
-    
+    lv_task_t* loop_task {nullptr};
+
 
 };
 
