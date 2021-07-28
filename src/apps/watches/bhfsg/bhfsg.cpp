@@ -50,7 +50,7 @@ bool BhfSGWatch::create() {
 void BhfSGWatch::loop() {
     time_t now;
     Serial.println("loop");
-    static struct tm last;
+    static struct tm last {0,0,0,0};
     struct tm  info;
     time(&now);
     localtime_r(&now, &info);
@@ -79,20 +79,13 @@ void BhfSGWatch::loop() {
 }
 
 bool BhfSGWatch::show() {
-    if (task==nullptr) {
-        task = lv_task_create([](lv_task_t * taskptr){
-            ((BhfSGWatch*)(taskptr->user_data))->loop();
-        },1000, LV_TASK_PRIO_LOWEST, this);
-    }
+    start_loop(1000);
     return true;
 }
 
 
 bool BhfSGWatch::hide() {
-    if (task!=nullptr) {
-        lv_task_del(task);
-        task = nullptr;
-    }
+    stop_loop();
     return true;
 }
 

@@ -24,21 +24,16 @@ class BhfSGWatch : public App {
     virtual void* getIcon() { return (void*) &bhfsgicon; }
     virtual const char * getName() { return "Bahnhof SG"; }
 
+    /**
+     * Implement my own loop method
+     */
+    virtual void loop();
+
 
     private:
     // GUI elements
     lv_obj_t*** imgs = nullptr;
     void *** imgsrcs = nullptr;
-
-    // Pointer to lv task
-    lv_task_t* task = nullptr;
-
-    /**
-     * Called every 1000ms from task_cb to
-     * display current time.
-     */
-    void loop();
-
    
 
 };
