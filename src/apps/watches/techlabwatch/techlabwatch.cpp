@@ -41,18 +41,12 @@ bool TechLabWatch::create() {
 }
 
 bool TechLabWatch::show() {
-    // display correct time
+    // display correct time now
     loop();
-    // create task, if not already running
-    if (task==nullptr) {
-        /** 
-         * Call task_cb every 1000ms
-         * Pass the pointer to this instance as user-data
-         * So we can call the loop method in the context of this instance.
-         */
-        task = lv_task_create(task_cb, 1000, LV_TASK_PRIO_LOWEST, this);
-    }
-    // All done.
+
+    // call loop every 1000 ms
+    start_loop(1000);
+
     return true;
 }
 
@@ -73,11 +67,7 @@ void TechLabWatch::loop() {
 }
 
 bool TechLabWatch::hide() {
-    if (task!=nullptr) {
-        Serial.println("TechLabWatch::hide  delete taks");
-        lv_task_del(task);
-        task = nullptr;
-    }
+    stop_loop();
     return true;
 }
 

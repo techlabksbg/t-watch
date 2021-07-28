@@ -24,6 +24,11 @@ class TechLabWatch : public App {
     virtual void* getIcon() { return (void*) &techlabwatchicon; }
     virtual const char * getName() { return "TechLab Watch"; }
 
+    /**
+     * Called every 1000ms from task_cb to
+     * display current time.
+     */
+    virtual void loop();
 
     private:
     // GUI elements
@@ -31,24 +36,8 @@ class TechLabWatch : public App {
     lv_obj_t* timeLabel = nullptr;
     lv_obj_t* dateLabel = nullptr;
 
-    // Pointer to lv task
-    lv_task_t* task = nullptr;
-
-    /**
-     * Called every 1000ms from task_cb to
-     * display current time.
-     */
-    void loop();
-
-    /**
-     * Task called every 1000ms.
-     * Reads out the pointer to the current instance
-     * and calls the loop method.
-     */
-    static void task_cb(lv_task_t * taskptr) {
-        TechLabWatch* w = (TechLabWatch*) taskptr->user_data;
-        w->loop();
-    }
+    
+    
 
 };
 
