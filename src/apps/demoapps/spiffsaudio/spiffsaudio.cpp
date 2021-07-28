@@ -10,11 +10,14 @@
 // See https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/PlayMP3FromSPIFFS/PlayMP3FromSPIFFS.ino
 
 bool SpiffsAudio::create() {
-    self = this;
     lv_obj_t* bg = styles.stdBgImage(myScr);
     register_for_swipe_up(bg);
     lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &styles.background);
-    playButton = styles.stdButton(bg, "Sound!", play_cb);
+    playButton = styles.stdButton(bg, "Sound!", [](lv_obj_t *button, lv_event_t event) {
+        if (event != LV_EVENT_SHORT_CLICKED) return;
+        ((SpiffsAudio*)(button->user_data))->play_button();
+    }, this);
+
     buttonLabel = lv_obj_get_child(playButton, NULL);
     lv_obj_align(playButton, bg, LV_ALIGN_CENTER, 0,0);
 
@@ -66,13 +69,32 @@ bool SpiffsAudio::show() {
 }
 
 bool SpiffsAudio::hide() {
-    if (audioTask!=nullptr) {
-        Serial.println("Disabling audio loop task");
-        lv_task_del(audioTask);  audioTask = nullptr;        
-    }
+    stop_loop();
     freeAudioChain();
     return true;
 }
 
-SpiffsAudio* SpiffsAudio::self = nullptr;
-lv_task_t* SpiffsAudio::audioTask = nullptr;
+void SpiffsAudio::play_button() {
+    if (audioMp3==nullptr) {
+        buildAudioChain();
+    }
+    if (audioMp3!=nullptr) {
+        if (!audioMp3->isRunning() && SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
+            audioSource->open(SPIFFSAUDIO_MP3FILE);
+            audioMp3->begin(audioID3, audioI2S);
+            start_loop(5);
+        }
+    }
+}
+
+void SpiffsAudio::loop() {
+    if (audioMp3!=nullptr) {
+        if (audioMp3->isRunning()) {
+            if (!audioMp3->loop()) {
+                audioSource->close();
+                audioMp3->stop();
+                stop_loop();
+            }        
+        }
+    }
+}

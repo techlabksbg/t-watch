@@ -31,12 +31,9 @@ class SpiffsAudio : public App {
     void* getIcon() { return (void*) &spiffsaudioicon; }
     const char * getName() { return "SpiffsAudio"; }
 
-    static SpiffsAudio* self;
-
+    virtual void loop();
 
     private:
-
-    static lv_task_t* audioTask;
 
     lv_obj_t* playButton = nullptr;
     lv_obj_t* buttonLabel = nullptr;
@@ -50,48 +47,7 @@ class SpiffsAudio : public App {
     void buildAudioChain();
     void freeAudioChain();
 
-    static void play_cb(lv_obj_t *button, lv_event_t event) {
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        if (self->audioMp3==nullptr) {
-            self->buildAudioChain();
-        }
-        if (self->audioMp3!=nullptr) {
-            if (!self->audioMp3->isRunning() && SPIFFS.exists(SPIFFSAUDIO_MP3FILE)) {
-                self->audioSource->open(SPIFFSAUDIO_MP3FILE);
-                self->audioMp3->begin(self->audioID3, self->audioI2S);
-                if (self->audioTask==nullptr) {
-                    Serial.println("SpiffsAudio::show Creating task");
-                    self->audioTask = lv_task_create(audioLoop, 5, LV_TASK_PRIO_LOWEST, NULL);
-                }
-            }
-        }
-    }
-
-
-
-    static void audioLoop(struct _lv_task_t *data) {
-        //int n = 0;
-        if (self->audioMp3!=nullptr) {
-           //n = 1;
-            if (self->audioMp3->isRunning()) {
-                //n = 2;
-                if (!self->audioMp3->loop()) {
-                    self->audioSource->close();
-                    self->audioMp3->stop();
-                    Serial.println("audioLoop(): Stopping task");
-                    lv_task_del(self->audioTask);
-                    self->audioTask = nullptr;
-                } else {
-                    //n = 4;
-                }
-            } else {
-                //n = 5;
-                // self->hide_myself();
-            }
-        }
-        //Serial.print('0'+n);
-    }
-
+    void play_button();
 
 
 };
