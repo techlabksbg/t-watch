@@ -8,34 +8,24 @@
 
 
 bool AccelDemo::create() {
-    self = this;
     register_for_swipe_up(myScr);
     lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
     return true;
 }
 
 
-
-
-
 bool AccelDemo::show() {
-    if (demoTask==nullptr) {
-        Serial.println("AccelDemo::show() create task");
-        demoTask = lv_task_create(_demoLoop, 20, LV_TASK_PRIO_LOWEST, NULL);
-    }
+    start_loop(20);
     return true;
 }
 
 bool AccelDemo::hide() {
-    if (demoTask!=nullptr) {
-        lv_task_del(demoTask);
-        demoTask = nullptr;
-    }
+    stop_loop();
     return true;
 }
 
 
-void AccelDemo::demoLoop() {
+void AccelDemo::loop() {
     ttgo->tft->fillEllipse(x,y,R,R, 0);
     Accel accel;
     ttgo->bma->getAccel(accel);
@@ -61,6 +51,3 @@ void AccelDemo::demoLoop() {
     }
     ttgo->tft->fillEllipse(x,y,R,R, 0xfff);
 }
-
-
-AccelDemo* AccelDemo::self = nullptr;

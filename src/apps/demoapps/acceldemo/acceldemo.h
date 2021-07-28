@@ -19,15 +19,10 @@ class AccelDemo : public App {
     void* getIcon() { return (void*) &acceldemoicon; }
     const char * getName() { return "AccelDemo"; }
 
-     static void _demoLoop(struct _lv_task_t *data) {
-        self->demoLoop();
-    }
+    virtual void loop();
 
     private:
 
-    void demoLoop();
-    static AccelDemo* self;
-    lv_task_t* demoTask = nullptr;
     double x = 120;
     double y = 120;
     double fx = 0;
