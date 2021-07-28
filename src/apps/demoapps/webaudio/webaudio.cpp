@@ -10,15 +10,25 @@
 // See https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/PlayMP3FromSPIFFS/PlayMP3FromSPIFFS.ino
 
 bool WebAudio::create() {
-    self = this;
     lv_obj_t* bg = styles.stdBgImage(myScr);
     register_for_swipe_up(bg);
     lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &styles.background);
-    connectButton = styles.stdButton(bg, "Capt'n!", connect_cb);
+    connectButton = styles.stdButton(bg, "Connect", [](lv_obj_t *button, lv_event_t event) {
+        if (event != LV_EVENT_SHORT_CLICKED) return;
+        ((WebAudio*)(button->user_data))->button_pressed();
+    }, this);
     buttonLabel = lv_obj_get_child(connectButton, NULL);
     lv_obj_align(connectButton, myScr, LV_ALIGN_CENTER, 0,0);
 
     return true;
+}
+
+void WebAudio::button_pressed() {
+    if (strcmp(lv_label_get_text(buttonLabel), "Quit")==0) {
+        hide_myself();
+    } else {
+        wifiManager.connect(this);
+    }
 }
 
 bool WebAudio::show() {
@@ -43,23 +53,21 @@ bool WebAudio::show() {
             audioMp3->begin(audioID3, audioI2S);
             Serial.println("Audiochain done.");
         }
-        if (audioTask==nullptr) {
-            Serial.println("WebAudio::show Creating task");
-            audioTask = lv_task_create(audioLoop, 5, LV_TASK_PRIO_LOWEST, NULL);
-        }
-
+        start_loop(5);
     } else {
-        Serial.println("no connection...");
+        // connect to wifi after initialisation
+        lv_async_call([](void *userdata) {
+            Serial.println("Async connect to WiFi...");
+            wifiManager.connect((App*)userdata);
+        }, this);
+        Serial.println("no connection... async call scheduled");
         lv_label_set_text(buttonLabel, "Connect");
     }
     return true;
 }
 
 bool WebAudio::hide() {
-    if (audioTask!=nullptr) {
-        Serial.println("Disabling audio loop task");
-        lv_task_del(audioTask);  audioTask = nullptr;        
-    }
+    stop_loop();
     if (audioMp3!=nullptr) {
         Serial.println("WebAudio::hide() tearing down audio chain...");
         if (audioMp3->isRunning()) {
@@ -84,5 +92,13 @@ bool WebAudio::hide() {
     return true;
 }
 
-WebAudio* WebAudio::self = nullptr;
-lv_task_t* WebAudio::audioTask = nullptr;
+
+void WebAudio::loop() {
+    if (audioMp3!=nullptr && audioMp3->isRunning()) {
+        if (!audioMp3->loop()) {
+            audioMp3->stop();
+            hide_myself();
+        }
+    } 
+}
+
