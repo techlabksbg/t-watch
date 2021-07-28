@@ -16,7 +16,6 @@
 #define SCOPE_FG LV_COLOR_CYAN
 
 bool MicDemo::create() {
-    self = this;
     register_for_swipe_up(myScr);
     lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
     return true;
@@ -24,17 +23,12 @@ bool MicDemo::create() {
 
 bool MicDemo::show() {
     setup();
-    if (micTask==nullptr) {
-        micTask = lv_task_create(micLoop, 20, LV_TASK_PRIO_LOWEST, NULL);
-    }
+    start_loop(20);
     return true;
 }
 
 bool MicDemo::hide() {
-    if (micTask!=nullptr) {
-        lv_task_del(micTask);
-        micTask = nullptr;
-    }
+    stop_loop();
     tearDown();
     return true;
 }
@@ -72,7 +66,7 @@ void MicDemo::setup() {
     Serial.println("MicDemo::setup() end");
 }
 
-size_t MicDemo::readData() {
+void MicDemo::loop() {
     //Serial.println("MicDemo::readData() start");
     if (clearIt) {
         for (int x=0; x<240; x++) {
@@ -84,7 +78,7 @@ size_t MicDemo::readData() {
     }
     size_t read_len = 0;
     i2s_read(I2S_NUM_0, micBuffer, MIC_BUFFER_SIZE*2, &read_len, portMAX_DELAY);
-    if (read_len==0) return 0;
+    if (read_len==0) return;
     read_len/=2;
     int32_t avg = 0;
     for (int x=0; x<read_len; x++) {
@@ -122,8 +116,6 @@ size_t MicDemo::readData() {
     } else {
         clearIt = false;
     }
-    
-    return read_len;
 }
 
 // from https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2s.html
@@ -135,4 +127,3 @@ void MicDemo::tearDown() {
     i2s_driver_uninstall(I2S_NUM_0);
 }
 
-MicDemo* MicDemo::self = nullptr;

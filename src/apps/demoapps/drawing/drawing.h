@@ -21,13 +21,9 @@ class Drawing : public App {
 
     virtual bool processDoubleTap(){ return true; } // Do not hide app on double tap
 
-    static void task_cb(struct _lv_task_t *data) {
-         ((Drawing*)data->user_data)->loop();
-    }
+    virtual void loop();
 
     private:
-    lv_task_t* task = nullptr;
-    void loop();
     uint16_t x,y;
     bool drawing = false;
     unsigned long last=0;

@@ -6,9 +6,7 @@ bool Drawing::create() {
 }
 
 bool Drawing::show() {
-    if (task==nullptr) {
-        task = lv_task_create(task_cb, 20, LV_TASK_PRIO_LOWEST, this);
-    }
+    start_loop(20);
     drawing = false;
     return true;
 }
@@ -36,9 +34,6 @@ void Drawing::loop() {
 }
 
 bool Drawing::hide() {
-    if (task!=nullptr) {
-        lv_task_del(task);
-        task = nullptr;
-    }
+    stop_loop();
     return true;
 }
