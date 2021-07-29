@@ -88,3 +88,59 @@ implement the method in your `.cpp`-file.
 See the file [drawing.h](demoapps/drawing/drawing.h).
 
 
+
+### Setting an alarm
+Your app can set an alarm by calling
+```c++
+setAlarm(int hours, int minutes)
+```
+
+You have to implement the `processAlarm()`-method, called when the alarm fired. The `show`-method will be called just before, if necessary.
+
+
+#### Examples
+See the files [simplealarm.h](demoapps/simplealarm/simplealarm.h) and [simplealarm.h](demoapps/simplealarm/simplealarm.cpp).
+
+
+### Requesting WiFi connection
+Outside the `create`- and `show`-methods (typically from a UI-event) you can call
+```c++
+wifimanager.connect(this);
+```
+This will open the wifimanager to establish the latest connection and if successful, will `show` your app again.
+Otherwise, the user chooses manually a WiFi-Connection and has to restart your app manually.
+
+You may also use the following async call inside the `show`-method to automatically start the wifimanager:
+```c++
+    if (!WiFi.isConnected()) {
+        lv_async_call([](void *userdata) {
+            wifiManager.connect((App*)userdata);
+        }, this);
+    } else  {
+        // set up whatever you need wifi for
+    }
+```
+
+#### Examples
+See the files [simplealarm.h](demoapps/webaudio/webaudio.h) and [simplealarm.h](demoapps/webaudio/webaudio.cpp).
+
+### Download a file to SPIFFS if it not already there
+Your app might need some data files on the internal storage (SPIFFS). You can download these files
+from an URL.
+
+First include `#include "services/services.h"`, located in the root of the project.
+
+Then in the `show`-method:
+```c++
+bool SpiffsAudio::show() {
+    // This is the root certificate for the following website. Check the site you want to download from.
+    #include "../../certs/ISRG_Root_X1.h"
+    // The Filename needs a leading slash, for example "/test.mp3"
+    // You might also use http without the certificate, if the website supports it.
+    // The file will only be downloaded, if it does not exist yet.
+    if (downloadToSPIFFS(this, SPIFFSAUDIO_MP3FILE, "https://tech-lab.ch/twatch/upchime2.mp3",root_ca)) {
+        // Do whatever you need to do, once the file exists.
+    }
+    return true;
+}
+```
