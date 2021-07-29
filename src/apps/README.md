@@ -1,5 +1,8 @@
 # How to write your first app
-The easiest way to write your app is in C++. You will need:
+
+See also [this page](app.md) with may methods and useful programming tips for an app explained.
+
+You will need:
 
  - An idea what your app should do
  - A nice icon with transparency, 72 by 72 pixels.
@@ -32,6 +35,9 @@ To convert to a .c file, use https://lvgl.io/tools/imageconverter - there is a s
 
 This should have created a shoppinglisticon.c in the same directory. Add that file, and add an entry
 in about_icons.txt mentioning the author of the nice icon you're using.
+
+Don't forget to add a file named ''abouticon.txt'' where you provide information about the images your app
+uses. Look at examples present in the demo apps, how to write such a file.
 
 ## Your main application code
 Create two files, shoppinglist.h and shoppinglist.cpp
@@ -107,3 +113,5 @@ In the shoppinglist.cpp create method, initialize the label:
 
     firstShoppingItem = styles.stdLabel(myScr, "Porcini");
 
+# Useful methods
+See [this page](app.md) with may methods and useful programming tips for an app explained.
