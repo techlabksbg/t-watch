@@ -72,7 +72,7 @@ to call your `loop`-method every 1000 milliseconds. In your `hide`-method call
 to stop you `loop`-method from beeing called.
 
 #### Examples
-See the files [techlab.h](watches/techlab/techlab.h) and [techlab.cpp](watches/techlab/techlab.cpp).
+See the files [techlab.h](watches/techlabwatch/techlabwatch.h) and [techlab.cpp](watches/techlabwatch/techlabwatch.cpp).
 
 ### Prevent double-tap from hiding your app
 In your `.h`-file add the following:
