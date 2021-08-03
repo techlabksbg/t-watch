@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../os/os.h"
+#include "fonts/ubuntu_r.h"
 
 LV_IMG_DECLARE(stdbackground);
 
@@ -262,11 +263,11 @@ struct Styles {
 
         lv_style_init(&titleLabel);
         lv_style_set_text_color(&titleLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xff, 0x60, 0xc0));
-        lv_style_set_text_font(&titleLabel, LV_STATE_DEFAULT, &lv_font_montserrat_28);
+        lv_style_set_text_font(&titleLabel, LV_STATE_DEFAULT, &ubuntu_r_28);
         
         lv_style_init(&buttonLabel);
         lv_style_set_text_color(&buttonLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xb0, 0xb0, 0xff));
-        lv_style_set_text_font(&buttonLabel, LV_STATE_DEFAULT, &lv_font_montserrat_22);
+        lv_style_set_text_font(&buttonLabel, LV_STATE_DEFAULT, &ubuntu_r_22);
         
         lv_style_init(&buttonBG);
         lv_style_set_bg_color(&buttonBG, LV_STATE_DEFAULT,  LV_COLOR_MAKE(0,0,100));
@@ -280,7 +281,7 @@ struct Styles {
 
         lv_style_init(&textLabel);
         lv_style_set_text_color(&textLabel, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xff, 0xa0));
-        lv_style_set_text_font(&textLabel, LV_STATE_DEFAULT, &lv_font_montserrat_22);
+        lv_style_set_text_font(&textLabel, LV_STATE_DEFAULT, &ubuntu_r_22);
 
         lv_style_init(&appTileStyle);
         lv_style_set_radius(&appTileStyle, LV_OBJ_PART_MAIN, 0);
