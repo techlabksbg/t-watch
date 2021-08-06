@@ -55,7 +55,7 @@ Do **never** open or close any app (including yours) inside this method.
 ## Optional methods
 ### Styles and common UI-Elements
 There are several styles and commond UI-Elements defined in [styles.h](styles/styles.h).
-- `styles.stdPage(myScr)` returns a vertically scrollable page with the standard background. Put all your GUI-elements on top of this page.
+- `styles.stdPage(myScr, useBackgroundImage=true)` returns a vertically scrollable page with the standard background. Put all your GUI-elements on top of this page.
 - `styles.stdBgImage(myScr)` returns an image with the standard background (for non-scrollable contents).
 - `styles.stdLabel(lv_obj_t* parent, const char* text)` returns a standard label with the given text.
 - `stdButton(lv_obj_t* parent, const char* text, lv_event_cb_t callback=nullptr, void* user_data=nullptr)` returns a standard Button with the given Text as label. You can optionally pass a callback for ui-events and set the userdata (typically `this` as a reference to the current app). This can be used as follows:
