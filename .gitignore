@@ -5,3 +5,4 @@ include/TTGO_TWatch_Library
 .swp
 .DS_Store
 utils/backtrace.txtq
+workspace.code-workspace
