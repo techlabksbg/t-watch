@@ -58,7 +58,7 @@ void os_loop()
             if (ttgo->power->isPEKShortPressIRQ()) {
                 //Serial.println("loop.cpp::Button pressed  ");
                 if (!ttgo->bl->isOn()) { // Sleeping? Then wake up
-                    //Serial.println("waking up");
+                    Serial.println("loop.cpp::waking up from short button pressed");
                     low_energy();
                     //Serial.println("done waking up");
                 } else {
@@ -67,8 +67,8 @@ void os_loop()
             }
             if (ttgo->power->isPEKLongtPressIRQ() && ttgo->bl->isOn()) {
                 ttgo->power->clearIRQ();
+                Serial.println("loop.cpp::leeping from long button pressed");
                 low_energy();
-                return;
             }
             ttgo->power->clearIRQ();
             break;
@@ -91,7 +91,7 @@ void os_loop()
     if (ttgo->bl->isOn() && (lv_disp_get_inactive_time(NULL) < DEFAULT_SCREEN_TIMEOUT || 
         (ttgo->power->isVBUSPlug() && lv_disp_get_inactive_time(NULL) < (DEFAULT_SCREEN_TIMEOUT)*10))) {
         lv_task_handler();
-    } else {
+    } else if (ttgo->bl->isOn()) {
         low_energy();
     }
 }
