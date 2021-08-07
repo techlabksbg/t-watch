@@ -29,7 +29,12 @@ void os_loop()
             }
             if (ttgo->bma->isDoubleClick()) {
                 Serial.println("loop.cpp: ttgo->bma->isDoubleClick() == true");
-                Launcher::doubleTap();
+                if (ttgo->bl->isOn()) {
+                    Launcher::doubleTap();
+                } else {
+                    // wake up properly
+                    low_energy();
+                }
             }
             if (ttgo->bma->isTilt()) {
                 Serial.println("loop.cpp: ttgo->bma->isTilt() == true");
