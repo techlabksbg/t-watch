@@ -270,14 +270,14 @@ class Launcher : public App {
     }
 
     static void showApp(void * app) {
-        Serial.println("showApp(void * app)...");
+        //Serial.println("showApp(void * app)...");
         showApp((App*) app);
     }
     static void showApp(App* app) {
         Serial.printf("About to show app %s\n", app->getName());
-        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
-        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
-        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());        
+        //if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        //if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        //if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());        
         if (app->state == STATE_UNINITALIZED || app->state == STATE_DESTROYED) {
             //Serial.println("setting up myScr");
             app->myScr = lv_obj_create(NULL, NULL);
@@ -296,10 +296,10 @@ class Launcher : public App {
         }
 
         if (app->state == STATE_CREATED || app->state==STATE_HIDDEN) {
-            Serial.println("  show...");
+            //Serial.println("  show...");
             if (app->show()) {
                 if (activeApp!=nullptr) {
-                    Serial.printf("  hiding %s\n", activeApp->getName());
+                    //Serial.printf("  hiding %s\n", activeApp->getName());
                     activeApp->hide();
                     activeApp->state = STATE_HIDDEN;
                     rememberApp(activeApp);
@@ -317,20 +317,20 @@ class Launcher : public App {
         } else if (app->state != STATE_SHOWN) {
             Serial.printf("OOPS: The app %s is in state %d\n", app->getName(), app->state);
         }
-        Serial.println("show end");
-        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
-        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
-        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
+        //Serial.println("show end");
+        //if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        //if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        //if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
     }
 
     static void hideApp(void * app) {
         hideApp((App*)app);
     }
     static void hideApp(App* app) {
-        Serial.printf("Launcher::hideApp(%s)\n", app->getName());
-        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
-        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
-        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
+        //Serial.printf("Launcher::hideApp(%s)\n", app->getName());
+        //if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        //if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        //if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
         Serial.printf("Request to hide app %s\n", app->getName());
         if (app->state == STATE_SHOWN) {
             if (app->isWatch()) {
@@ -375,10 +375,10 @@ class Launcher : public App {
         } else {
             Serial.printf("app->hide() on %s not in STATE_SHOWN\n", app->getName());
         }
-        Serial.println("hide end");
-        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
-        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
-        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
+        //Serial.println("hide end");
+        //if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        //if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        //if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
     }
 
     // Toggle between Watch and any App

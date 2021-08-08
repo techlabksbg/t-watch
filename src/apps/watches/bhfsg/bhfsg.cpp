@@ -30,16 +30,16 @@ bool BhfSGWatch::create() {
     imgsrcs[2][0] = (void*) &bhfsgdigit20;
     imgsrcs[2][1] = (void*) &bhfsgdigit21;
 
-    Serial.println("set bg to black");
+    //Serial.println("set bg to black");
     lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_MAKE(0,0,0));
 
     for (int i=0; i<3; i++) {
         for (int j=0; j<(i==0?5:6); j++) {
-            Serial.println("img create");
+            //Serial.println("img create");
             imgs[i][j] = lv_img_create(myScr, nullptr);
-            Serial.println("Set src");
+            //Serial.println("Set src");
             lv_img_set_src(imgs[i][j], imgsrcs[i][0]);
-            Serial.println("align");
+            //Serial.println("align");
             lv_obj_align(imgs[i][j],nullptr,LV_ALIGN_CENTER,j*40-(i==0?80:100),i*50-50);
         }
     }
