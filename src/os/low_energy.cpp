@@ -32,6 +32,7 @@ void low_energy()
         esp_sleep_enable_gpio_wakeup ();
         esp_light_sleep_start();
     } else {
+        Serial.println("low_energy:: WAKING UP");
         ttgo->startLvglTick();
         ttgo->displayWakeup();
         ttgo->rtc->syncToSystem();

@@ -49,13 +49,13 @@ bool BhfSGWatch::create() {
 
 void BhfSGWatch::loop() {
     time_t now;
-    Serial.println("loop");
+    //Serial.println("loop");
     static struct tm last {0,0,0,0};
     struct tm  info;
     time(&now);
     localtime_r(&now, &info);
     int diff = info.tm_hour ^ last.tm_hour;
-    Serial.printf("hour diff=%d\n", diff);
+    //Serial.printf("hour diff=%d\n", diff);
     if (diff) {
         for (int j=0; j<5; j++) {
             if ((diff >> j) & 1) {
@@ -66,7 +66,7 @@ void BhfSGWatch::loop() {
     for (int i=1; i<3; i++) {
         diff = (i==1) ? info.tm_min ^ last.tm_min : info.tm_sec ^ last.tm_sec;
         int v = (i==1) ? info.tm_min : info.tm_sec;
-        Serial.printf("t=%d diff=%d (for v=%d)\n",i,diff,v);
+        //Serial.printf("t=%d diff=%d (for v=%d)\n",i,diff,v);
         if(diff) {
             for (int j=0; j<6; j++) {
                 if ((diff>>j) & 1) {

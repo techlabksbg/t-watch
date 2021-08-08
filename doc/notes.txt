@@ -4,21 +4,6 @@ Init project: (according to https://docs.platformio.org/en/latest/core/quickstar
 
 
 
-Link Libraries into include:
-
-  ln -si /home/ivo/Arduino/libraries/TTGO_TWatch_Library .
-
-
-
-
-
-menuBtn callback (part of mainBar)
-  if not exists, creates menuBars, aligns it to statusbar
-  otherwise simply unhides it
-
-menuBars callback:
-  hides menuBars elements (container and exit-button)
-  unhides mainBar
 
 
 https://lvgl.io/tools/imageconverter  
@@ -34,6 +19,12 @@ https://fonts.google.com/icons
 TODO:
   - include Latin-1 characters
       https://lvgl.io/tools/fontconverter
+      Range: 0x20-0xFF, 61441,61448,61451,61452,61452,61453,61457,61459,61461,61465,
+61468,61473,61478,61479,61480,61502,61512,61515,61516,61517,
+61521,61522,61523,61524,61543,61544,61550,61552,61553,61556,
+61559,61560,61561,61563,61587,61589,61636,61637,61639,61671,
+61674,61683,61724,61732,61787,61931,62016,62017,62018,62019,
+62020,62087,62099,62212,62189,62810,63426,63650
       
   - crash when removing an ssid (write to JSON succeeds)
   - show message before reboot or power off.

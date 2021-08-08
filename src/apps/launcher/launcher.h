@@ -36,6 +36,7 @@
 #include "../demoapps/drawing/drawing.h"
 #include "../demoapps/minesweeper/minesweeper.h"
 
+//#include <esp_debug_helpers>
 
 // 
 // Converter at https://lvgl.io/tools/imageconverter
@@ -207,7 +208,7 @@ class Launcher : public App {
     static App* alarmApp;
 
     static void goToSleep() {
-        if (activeApp!=nullptr && activeApp->state==STATE_SHOWN && activeApp->isNormal()) {
+        if (activeApp!=nullptr && activeApp->state==STATE_SHOWN && !activeApp->isLauncher()) {
             Serial.printf("goToSleep(): Putting app %s to sleep\n", activeApp->getName());
             sleepyApp = activeApp;
             hideApp(activeApp);
@@ -215,20 +216,30 @@ class Launcher : public App {
             Serial.printf("Launcher::goToSleep(): No applicable active app (%s does not qualify)\n", activeApp==nullptr ? "nullptr" : activeApp->getName());
             sleepyApp = nullptr;
         }
+        Serial.println("Launcher::goToSleep() at end:");
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
     }
     static void wakeUp() {
+        Serial.println("Launcher::wakeUp()");
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
         if (sleepyApp!=nullptr) {
+            activeApp = nullptr;
             Serial.printf("Launcher::wakeUp(): Waking app %s back up\n", sleepyApp->getName());
             showApp(sleepyApp);
             sleepyApp = nullptr;
         }
+        Serial.println("wakeUp() end");
     }
 
     static void rtcAlarmFired() {
         if (alarmApp!=nullptr) {
-            //Serial.printf("Launcher::rtcAlarmFired(): Showing app %s\n", alarmApp->getName());
+            Serial.printf("Launcher::rtcAlarmFired(): Showing app %s\n", alarmApp->getName());
             showApp(alarmApp);
-            //Serial.printf("Launcher::rtcAlarmFired(): Calling processAlarm on app %s\n", alarmApp->getName());
+            Serial.printf("Launcher::rtcAlarmFired(): Calling processAlarm on app %s\n", alarmApp->getName());
             alarmApp->processAlarm();
             alarmApp = nullptr;
         }
@@ -256,10 +267,14 @@ class Launcher : public App {
     }
 
     static void showApp(void * app) {
+        Serial.println("showApp(void * app)...");
         showApp((App*) app);
     }
     static void showApp(App* app) {
         Serial.printf("About to show app %s\n", app->getName());
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());        
         if (app->state == STATE_UNINITALIZED || app->state == STATE_DESTROYED) {
             //Serial.println("setting up myScr");
             app->myScr = lv_obj_create(NULL, NULL);
@@ -278,7 +293,7 @@ class Launcher : public App {
         }
 
         if (app->state == STATE_CREATED || app->state==STATE_HIDDEN) {
-            //Serial.println("  show...");
+            Serial.println("  show...");
             if (app->show()) {
                 if (activeApp!=nullptr) {
                     Serial.printf("  hiding %s\n", activeApp->getName());
@@ -299,12 +314,20 @@ class Launcher : public App {
         } else if (app->state != STATE_SHOWN) {
             Serial.printf("OOPS: The app %s is in state %d\n", app->getName(), app->state);
         }
+        Serial.println("show end");
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
     }
 
     static void hideApp(void * app) {
         hideApp((App*)app);
     }
     static void hideApp(App* app) {
+        Serial.printf("Launcher::hideApp(%s)\n", app->getName());
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
         Serial.printf("Request to hide app %s\n", app->getName());
         if (app->state == STATE_SHOWN) {
             if (app->isWatch()) {
@@ -333,23 +356,29 @@ class Launcher : public App {
                     nextApp = lastApp!=nullptr ? lastApp : rootLauncher;
                     break;
                 }
-                activeApp=nullptr;                
+                activeApp=nullptr;
+                Serial.printf("async show app %s\n",nextApp->getName());
                 lv_async_call(showApp, nextApp);
             } else {
                 Serial.printf("app->hide() failed on app %s, about to destroy\n", app->getName());
                 app->state = STATE_ERROR;
                 app->destroy();
-                activeApp=nullptr;                
+                activeApp=nullptr;
+                Serial.printf("async show rootLauncher %s\n",rootLauncher->getName());
                 lv_async_call(showApp, rootLauncher);
             }
         } else {
             Serial.printf("app->hide() on %s not in STATE_SHOWN\n", app->getName());
         }
+        Serial.println("hide end");
+        if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
+        if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
+        if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
     }
 
     // Toggle between Watch and any App
     static void buttonPressed() {
-        //Serial.printf("Button pressed, active App is %s of type %d",activeApp->getName(), activeApp->getType());
+        Serial.printf("Button pressed, active App is %s of type %d",activeApp->getName(), activeApp->getType());
         if (activeApp->getType()==TYPE_WATCH) {
             //Serial.println("   it's a watch!");
             if (lastApp!=nullptr && lastApp->isWatch()) {
