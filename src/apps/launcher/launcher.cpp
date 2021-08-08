@@ -113,3 +113,4 @@ App* Launcher::lastWatch = nullptr;
 App* Launcher::lastApp = nullptr;
 App* Launcher::sleepyApp = nullptr;
 App* Launcher::alarmApp = nullptr;
+bool Launcher::aboutToSleep = false;

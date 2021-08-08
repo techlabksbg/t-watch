@@ -206,8 +206,10 @@ class Launcher : public App {
     static App* lastApp;
     static App* sleepyApp;
     static App* alarmApp;
+    static bool aboutToSleep;
 
     static void goToSleep() {
+        aboutToSleep = true;
         if (activeApp!=nullptr && activeApp->state==STATE_SHOWN && !activeApp->isLauncher()) {
             Serial.printf("goToSleep(): Putting app %s to sleep\n", activeApp->getName());
             sleepyApp = activeApp;
@@ -220,6 +222,7 @@ class Launcher : public App {
         if (activeApp!=nullptr) Serial.printf("activeApp=%s\n", activeApp->getName());
         if (sleepyApp!=nullptr) Serial.printf("sleepyApp=%s\n", sleepyApp->getName());
         if (lastApp!=nullptr) Serial.printf("lastApp=%s\n", lastApp->getName());
+        aboutToSleep = false;
     }
     static void wakeUp() {
         Serial.println("Launcher::wakeUp()");
@@ -357,8 +360,10 @@ class Launcher : public App {
                     break;
                 }
                 activeApp=nullptr;
-                Serial.printf("async show app %s\n",nextApp->getName());
-                lv_async_call(showApp, nextApp);
+                if (!aboutToSleep) {
+                    Serial.printf("async show app %s\n",nextApp->getName());
+                    lv_async_call(showApp, nextApp);
+                }
             } else {
                 Serial.printf("app->hide() failed on app %s, about to destroy\n", app->getName());
                 app->state = STATE_ERROR;
