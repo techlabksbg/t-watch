@@ -12,11 +12,11 @@ DynamicJsonDocument* configJson = nullptr;
 
 
 void applyJsonConfig() {
-    Serial.println("Applying config");    
+    //Serial.println("Applying config");    
     if (configJson->containsKey("bl")) {
-        Serial.println("Key bl exists");
+        //Serial.println("Key bl exists");
         if ((*configJson)["bl"].is<int>()) {
-            Serial.println("is int");
+            Serial.println("adjusting Backlight to saved value");
             uint8_t pwm = (*configJson)["bl"];
             ttgo->bl->adjust(pwm);
         }
@@ -37,8 +37,8 @@ void loadJsonConfig() {
             file.close();
             if (error) {
                 Serial.println("error deserializing config.json");
-            } else {
-                serializeJsonPretty(*configJson, Serial);
+            //} else {  // this would display all stored wifi passwords (and possibly future passwords)
+            //    serializeJsonPretty(*configJson, Serial);
             }
         }
     }
