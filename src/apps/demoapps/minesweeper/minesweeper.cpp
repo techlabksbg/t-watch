@@ -143,6 +143,46 @@ void Minesweeper::removeButtons() {
     }
 }
 
+void Minesweeper::newGame() {
+    gameState = INIT;
+    initFeld();
+    for (int y=0; y<size; y++) {
+        for (int x=0; x<size; x++) {
+            setButton(x,y);
+        }
+    }
+    gameState = PLAYING;
+}
+
+void Minesweeper::boom() {
+    if (gameState == LOST) {
+        newGame();
+    } else {
+        gameState = LOST;
+        ttgo->motor->onec();
+        // Callback in 1s
+        lv_task_create([](lv_task_t* task) {
+            ((Minesweeper*) (task->user_data))->boom();
+            lv_task_del(task);
+        }, 1000, LV_TASK_PRIO_LOWEST,  this);
+    }
+}
+
+void Minesweeper::winner() {
+    if (gameState == WON) {
+        styles.hideSpinner();
+        newGame();
+    }else {
+        gameState = WON;
+        // Callback in 1s
+        styles.showSpinner(myScr, "Winner!");
+        lv_task_create([](lv_task_t* task) {
+            ((Minesweeper*) (task->user_data))->winner();
+            lv_task_del(task);
+        }, 2000, LV_TASK_PRIO_LOWEST,  this);
+    }
+}
+
 void Minesweeper::setButton(int x, int y) {
     int i = y*size+x;
     int v = feld[x][y];
@@ -160,6 +200,19 @@ void Minesweeper::setButton(int x, int y) {
             lv_label_set_text(label, " ");
             //lv_btn_set_state(buttons[i], LV_BTN_STATE_RELEASED);   
         }
+    }
+    bool won = true;
+    for (int y=0; y<size; y++) {
+        for (int x=0; x<size; x++) {
+            if ((feld[x][y])==9) { // unmarked mine
+                won = false;
+                break;
+            }
+        }
+        if (!won) break;
+    }
+    if (won) {
+        winner();
     }
 }
 
@@ -215,7 +268,7 @@ void Minesweeper::uncover(int x, int y) {
                                             uncover(a,b);
                                         } else {
                                             if (feld[a][b]==9) {
-                                                ttgo->motor->onec();
+                                                boom();
                                             } else {
                                                 feld[a][b]|=16;
                                                 setButton(a,b);
@@ -233,6 +286,7 @@ void Minesweeper::uncover(int x, int y) {
 }
 
 void Minesweeper::buttonClicked(lv_obj_t* button, bool shortClick) {
+    if (gameState!=PLAYING) return; // not currently playing.
     int i=0;
     for(;(buttons[i]!=button);i++);
     int x = i%size;
@@ -259,7 +313,7 @@ void Minesweeper::buttonClicked(lv_obj_t* button, bool shortClick) {
             uncover(x,y);
         } else {
             if (feld[x][y]==9) {
-                ttgo->motor->onec();
+                boom();
             }
             feld[x][y]|=16;
             setButton(x,y);
@@ -268,7 +322,9 @@ void Minesweeper::buttonClicked(lv_obj_t* button, bool shortClick) {
 }
 
 bool Minesweeper::show() {
+    gameState=INIT;
     buildButtons();
+    gameState=PLAYING;
     return true;
 }
 bool Minesweeper::hide() {
