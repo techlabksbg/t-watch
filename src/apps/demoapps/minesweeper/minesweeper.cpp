@@ -53,6 +53,20 @@ void Minesweeper::initStyles() {
     lv_style_set_pad_left(&shownStyle, LV_STATE_DEFAULT, 0);
     lv_style_set_pad_right(&shownStyle, LV_STATE_DEFAULT, 0);
 
+    
+    lv_style_init(&highlightStyle);
+    lv_style_set_bg_color(&highlightStyle, LV_STATE_DEFAULT,  LV_COLOR_MAKE(250,140,100));
+    lv_style_set_shadow_width(&highlightStyle, LV_STATE_DEFAULT, 2);
+    lv_style_set_shadow_color(&highlightStyle, LV_STATE_DEFAULT, LV_COLOR_MAKE(20,80,20));
+    lv_style_set_shadow_ofs_x(&highlightStyle, LV_STATE_DEFAULT, 1);
+    lv_style_set_shadow_ofs_y(&highlightStyle, LV_STATE_DEFAULT, 1);
+    lv_style_set_border_width(&highlightStyle, LV_STATE_DEFAULT, 1);
+    lv_style_set_pad_top(&highlightStyle, LV_STATE_DEFAULT, 0);
+    lv_style_set_pad_bottom(&highlightStyle, LV_STATE_DEFAULT, 0);
+    lv_style_set_pad_left(&highlightStyle, LV_STATE_DEFAULT, 0);
+    lv_style_set_pad_right(&highlightStyle, LV_STATE_DEFAULT, 0);
+
+
     lv_style_init(&labelStyle);
     lv_style_set_text_color(&labelStyle, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xff, 0xff, 0xff));
     lv_style_set_text_font(&labelStyle, LV_STATE_DEFAULT, &ubuntu_r_28);
@@ -78,8 +92,9 @@ void Minesweeper::dumpFeld() {
 
 void Minesweeper::initFeld(int mines) {
     // All zero
+    Serial.println("initFeld start");
     memset(feld[0],0,size*size);
-    // Place 10 mines
+    // Place mines
     for (int i=0; i<mines;) {
         int x = random(size);
         int y = random(size);
@@ -99,13 +114,14 @@ void Minesweeper::initFeld(int mines) {
             }
         }
     }
+    Serial.println("initFeld()::end");
     dumpFeld();
 }
 
 lv_obj_t* Minesweeper::createButton() {
     lv_obj_t* button = lv_btn_create(page, NULL);
     lv_obj_add_style(button, LV_OBJ_PART_MAIN, &hiddenStyle);
-    lv_obj_set_size(button, 40, 40);
+    lv_obj_set_size(button, 48, 48);
     lv_page_glue_obj(button, true);
     lv_obj_set_user_data(button, this);
     lv_obj_set_event_cb(button, button_cb);
@@ -145,41 +161,56 @@ void Minesweeper::removeButtons() {
 
 void Minesweeper::newGame() {
     gameState = INIT;
+    Serial.println("newGame()::about to initFeld");
     initFeld();
+    Serial.println("newGame()::about to setButton");
     for (int y=0; y<size; y++) {
         for (int x=0; x<size; x++) {
             setButton(x,y);
         }
     }
+    Serial.println("newGame()::end");
     gameState = PLAYING;
 }
 
-void Minesweeper::boom() {
-    if (gameState == LOST) {
+void Minesweeper::boom(int a, int b) {
+    if (a==-1) {
+        Serial.println("boom::LOST newGame()...");
         newGame();
     } else {
-        gameState = LOST;
-        ttgo->motor->onec();
-        // Callback in 1s
-        lv_task_create([](lv_task_t* task) {
-            ((Minesweeper*) (task->user_data))->boom();
-            lv_task_del(task);
-        }, 1000, LV_TASK_PRIO_LOWEST,  this);
+        Serial.printf("Highlighting %d,%d\n",a,b);
+        feld[a][b]|=16;
+        setButton(a,b);
+        lv_obj_add_style(buttons[a+b*size], LV_OBJ_PART_MAIN, &highlightStyle);
+        if (gameState!=LOST) {
+            Serial.println("boom::PLAYING setup callback...");
+            gameState = LOST;
+            ttgo->motor->onec();
+            // Callback in 1s
+            lv_task_create([](lv_task_t* task) {
+                Serial.println("In callback");
+                Minesweeper* that =  (Minesweeper*) (task->user_data);
+                Serial.println("Deleting task");
+                lv_task_del(task);
+                that->boom();
+            }, 1000, LV_TASK_PRIO_LOWEST,  this);
+        }
     }
 }
-
 void Minesweeper::winner() {
     if (gameState == WON) {
+        Serial.println("winner()::WON ");
         styles.hideSpinner();
         newGame();
-    }else {
+    } else {
         gameState = WON;
-        // Callback in 1s
+        // Callback in 4s        
         styles.showSpinner(myScr, "Winner!");
         lv_task_create([](lv_task_t* task) {
-            ((Minesweeper*) (task->user_data))->winner();
+            Minesweeper* that = (Minesweeper*) (task->user_data);
             lv_task_del(task);
-        }, 2000, LV_TASK_PRIO_LOWEST,  this);
+            that->winner();
+        }, 4000, LV_TASK_PRIO_LOWEST,  this);
     }
 }
 
@@ -201,43 +232,23 @@ void Minesweeper::setButton(int x, int y) {
             //lv_btn_set_state(buttons[i], LV_BTN_STATE_RELEASED);   
         }
     }
-    bool won = true;
-    for (int y=0; y<size; y++) {
-        for (int x=0; x<size; x++) {
-            if ((feld[x][y])==9) { // unmarked mine
-                won = false;
-                break;
-            }
-        }
-        if (!won) break;
-    }
-    if (won) {
-        winner();
-    }
-}
-
-void Minesweeper::uncover(int x, int y) {
-    if (feld[x][y]==0) {
-        feld[x][y] = 16;
-        setButton(x,y);
-        for (int a=x-1; a<=x+1; a++) {
-            if (a>=0 && a<size) {
-                for (int b=y-1; b<=y+1; b++) {
-                    if(b>=0 && b<size) {
-                        if ((feld[a][b]&48)==0) {
-                            if (feld[a][b]==0) {
-                                uncover(a,b);
-                            } else {
-                                feld[a][b]|=16;
-                                setButton(a,b);
-                            }
-                        }
-                    }
+    if (gameState!=WON) {
+        bool won = true;
+        for (int y=0; y<size; y++) {
+            for (int x=0; x<size; x++) {
+                if ((feld[x][y])==9) { // unmarked mine
+                    won = false;
+                    break;
                 }
             }
+            if (!won) break;
         }
-        return;
+        if (won) {
+            winner();
+        }
     }
+}
+void Minesweeper::uncoverFilled(int x, int y) {
     if (feld[x][y]&16) {  // Long click on an shown field.
         int v = feld[x][y]&15;
         if (v>0 && v<9) { // really a number field?
@@ -265,10 +276,10 @@ void Minesweeper::uncover(int x, int y) {
                                 if (a!=x || b!=y) {
                                     if ((feld[a][b]&48)==0) { // field is still hidden and not marked
                                         if (feld[a][b]==0) {
-                                            uncover(a,b);
+                                            uncoverZeros(a,b);
                                         } else {
                                             if (feld[a][b]==9) {
-                                                boom();
+                                                boom(a,b);
                                             } else {
                                                 feld[a][b]|=16;
                                                 setButton(a,b);
@@ -284,42 +295,100 @@ void Minesweeper::uncover(int x, int y) {
         }
     }
 }
+void Minesweeper::uncoverZeros(int x, int y) {
+    if (feld[x][y]==0) {
+        feld[x][y] = 16;
+        setButton(x,y);
+        for (int a=x-1; a<=x+1; a++) {
+            if (a>=0 && a<size) {
+                for (int b=y-1; b<=y+1; b++) {
+                    if(b>=0 && b<size) {
+                        if ((feld[a][b]&48)==0) {
+                            if (feld[a][b]==0) {
+                                uncoverZeros(a,b);
+                            } else {
+                                feld[a][b]|=16;
+                                setButton(a,b);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+void Minesweeper::highlightButtons(int x, int y, bool highlight) {
+    for (int a=x-1; a<=x+1; a++) {
+        if (a>=0 && a<size) {
+            for (int b=y-1; b<=y+1; b++) {
+                if(b>=0 && b<size) {
+                    if (a!=x || b!=y) {
+                        int i=a+b*size;
+                        if (highlight) {
+                            lv_obj_add_style(buttons[i], LV_OBJ_PART_MAIN, &highlightStyle);
+                        } else {
+                            setButton(a,b);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-void Minesweeper::buttonClicked(lv_obj_t* button, bool shortClick) {
+void Minesweeper::buttonShortClick(lv_obj_t* button) {
     if (gameState!=PLAYING) return; // not currently playing.
     int i=0;
     for(;(buttons[i]!=button);i++);
     int x = i%size;
     int y = i/size;
-    if (feld[x][y]&16) { // shown field
-        if (shortClick) return; // already shown, nothing to do
-        // long click it is
-        if (feld[x][y]&32) {
+
+    if (feld[x][y]&16) { // click on shown field
+        if (feld[x][y]&32) { // marked field? Unmark it
             feld[x][y]^=48;
             setButton(x,y);
+            return;
         }
-        if ((feld[x][y]&15)>0 && (feld[x][y]&15)<9) { // open number field
+        int v = feld[x][y]&15;  // number field?
+        if (v>0 && v<9) {
             Serial.println("uncover on shown number field");
-            uncover(x,y);
-        }
+            uncoverFilled(x,y);
+            return;
+        } 
         return;
-    } 
-    // field is not shown
-    if (!shortClick) {
-        feld[x][y]^=48;
-        setButton(x,y);
-    } else { // short click
-        if (feld[x][y]==0) {
-            uncover(x,y);
-        } else {
-            if (feld[x][y]==9) {
-                boom();
-            }
-            feld[x][y]|=16;
-            setButton(x,y);
+    }
+    // field is hidden
+    if (feld[x][y]==0) {
+        uncoverZeros(x,y);
+    } else {
+        if (feld[x][y]==9) {
+            boom(x,y);
         }
+        feld[x][y]|=16;
+        setButton(x,y);
     }
 }
+void Minesweeper::buttonLongPressed(lv_obj_t* button) {
+    if (gameState!=PLAYING) return; // not currently playing.
+    int i=0;
+    for(;(buttons[i]!=button);i++);
+    int x = i%size;
+    int y = i/size;
+    if ((feld[x][y]&16)==0) { // hidden field
+        feld[x][y]^=48;
+        setButton(x,y);
+        highlightButtons(x,y,true);
+    }
+}
+void Minesweeper::buttonLeave(lv_obj_t* button) {
+    int i=0;
+    for(;(buttons[i]!=button);i++);
+    int x = i%size;
+    int y = i/size;
+    highlightButtons(x,y,false);
+}
+
+
 
 bool Minesweeper::show() {
     gameState=INIT;

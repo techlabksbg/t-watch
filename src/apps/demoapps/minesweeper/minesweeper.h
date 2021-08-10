@@ -39,15 +39,20 @@ class Minesweeper : public App {
     lv_style_t hiddenStyle;
     lv_style_t shownStyle;
     lv_style_t labelStyle;
+    lv_style_t highlightStyle;
     
 
     void buildButtons();
     void removeButtons();
     lv_obj_t* createButton();
-    void buttonClicked(lv_obj_t* button, bool shortClick);
+    void buttonShortClick(lv_obj_t* button);
+    void buttonLongPressed(lv_obj_t* button);
+    void buttonLeave(lv_obj_t* button);
     void setButton(int x, int y);
-    void uncover(int x, int y);
-    void boom();
+    void highlightButtons(int x, int y, bool highlight);
+    void uncoverZeros(int x, int y);
+    void uncoverFilled(int x, int y);
+    void boom(int a=-1, int b=-1);
     void winner();
     void newGame();
 
@@ -60,11 +65,15 @@ class Minesweeper : public App {
 
     static void button_cb(lv_obj_t* button, lv_event_t event) {
         if (event == LV_EVENT_SHORT_CLICKED) {
-            ((Minesweeper* ) button->user_data)->buttonClicked(button, true);
+            ((Minesweeper* ) button->user_data)->buttonShortClick(button);
             return;
         }
         if (event == LV_EVENT_LONG_PRESSED) {
-            ((Minesweeper* ) button->user_data)->buttonClicked(button, false);
+            ((Minesweeper* ) button->user_data)->buttonLongPressed(button);
+            return;
+        }
+        if (event == LV_EVENT_RELEASED || event==LV_EVENT_LEAVE) {
+            ((Minesweeper* ) button->user_data)->buttonLeave(button);
             return;
         }
     }
