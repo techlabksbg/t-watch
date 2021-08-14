@@ -67,6 +67,12 @@ void loadJsonConfig() {
         (*configJson)["bl"] = 20;  // Backlight
         saveIt=true;
     }
+
+    if (!configJson->containsKey("hostname")) {
+        (*configJson)["hostname"] = "twatch";  // hostname, announced by mdns
+        saveIt=true;
+    }
+
     if (saveIt) {
         saveJsonConfig();
     } 

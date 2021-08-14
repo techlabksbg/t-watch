@@ -11,9 +11,23 @@
 #include "apps/launcher/launcher.h"
 #include "apps/settingapps/wifimanager/wifimanager.h"
 
+loop_cb_t* loop_cb = nullptr;
 
-void os_loop()
-{
+void register_exclusive_loop(loop_cb_t* cb) {
+    loop_cb = cb;
+}
+void release_exclusive_loop(loop_cb_t* cb) {
+    if (loop_cb==cb) {
+        loop_cb = nullptr;
+    }
+}
+
+
+void os_loop() {
+    if (loop_cb!=nullptr) {
+        loop_cb();
+        return;
+    }
     bool  rlst;
     uint8_t data;
     if (xQueueReceive(g_event_queue_handle, &data, 5 / portTICK_RATE_MS) == pdPASS) {
@@ -100,3 +114,4 @@ void os_loop()
         low_energy();
     }
 }
+
