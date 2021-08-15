@@ -25,6 +25,7 @@
 #include "../systemapps/webfiles/webfiles.h"
 #include "../systemapps/credits/credits.h"
 #include "../systemapps/screencast/screencast.h"
+#include "../systemapps/otaapp/otaapp.h"
 #include "../demoapps/simplealarm/simplealarm.h"
 #include "../demoapps/motorapp/motorapp.h"
 #include "../demoapps/webaudio/webaudio.h"
@@ -118,6 +119,7 @@ class Launcher : public App {
     static Launcher* setupSystemLauncher() {
         Launcher* system = new Launcher("System", rootLauncher);
         system->icon = (void*) &systemappsicon;
+        system->registerApp(new OTAApp);
         system->registerApp(new Credits);
         system->registerApp(new WebFiles);
         system->registerApp(new ScreenCast);        

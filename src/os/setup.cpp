@@ -8,6 +8,7 @@
 #include "os.h"
 
 #include "apps/launcher/launcher.h"
+#include "ota.h"
 
 // See https://docs.lvgl.io/latest/en/html/porting/log.html
 // Set Variables in library TTWatch/src/lvgl.conf
@@ -159,6 +160,9 @@ void os_setup() {
 
     ttgo->tft->println("load config");
     loadJsonConfig();
+
+    // watchOTA instance.
+    watchOTA = new WatchOTA();
 
     ttgo->tft->println("start lvgl");
     //Initialize lvgl

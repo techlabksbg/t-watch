@@ -195,7 +195,6 @@ void WifiManager::connect(App* callback) {
                 WiFi.mode(WIFI_STA);
             }
             closeOnConnect = callback;
-            
             WiFi.begin(ssid, password);
         } else {
             Serial.println("Connection already stablished, call calling app if any");
@@ -272,6 +271,8 @@ void WifiManager::connectionEstablished() {
     isOff = false;
     isConnecting = false;
     Serial.println("Wifi connected!");
+    const char* hostname = (*configJson)["hostname"];
+    WiFi.setHostname(hostname);
     bool save = false;
     Serial.println("checking for wifi[known] entry...");
     if (!(*configJson)["wifi"].containsKey("known")) {

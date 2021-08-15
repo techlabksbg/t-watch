@@ -14,18 +14,22 @@
 loop_cb_t* loop_cb = nullptr;
 
 void register_exclusive_loop(loop_cb_t* cb) {
+    Serial.printf("loop: setting loop_cb to %p\n", cb);
     loop_cb = cb;
 }
 void release_exclusive_loop(loop_cb_t* cb) {
     if (loop_cb==cb) {
+        Serial.println("loop: realease exclusive cb");
         loop_cb = nullptr;
     }
 }
 
 
-void os_loop() {
+void os_loop() {    
     if (loop_cb!=nullptr) {
+        Serial.printf("%p",loop_cb);
         loop_cb();
+        Serial.print('.');
         return;
     }
     bool  rlst;

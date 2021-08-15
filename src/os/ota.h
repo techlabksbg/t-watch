@@ -15,7 +15,7 @@ class WatchOTA {
     } type;
 
     // Callback function to get status updates (as char*)
-    typedef void status_cb_t(char *);
+    typedef void status_cb_t(const char *);
     bool start(otaType type, status_cb_t status_cb);
     bool stop();
 
@@ -36,9 +36,15 @@ class WatchOTA {
     void loopArduinoOTA();
     void stopArduinoOTA();
 
+    bool startWebOTA();
+    void loopWebOTA();
+    void stopWebOTA();
+
     static WatchOTA* self;
     static void ota_loop() {
         self->loop();
     }
 
 };
+
+extern WatchOTA* watchOTA;

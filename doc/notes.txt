@@ -17,6 +17,14 @@ https://phosphoricons.com/
 https://fonts.google.com/icons
 
 TODO:
+  - include libraries in credits
+  - setting app to change hostname, update URL
+  - crash when removing an ssid (write to JSON succeeds)
+  - show message before reboot or power off.
+
+
+
+
   - include Latin-1 characters
       https://lvgl.io/tools/fontconverter
       Range: 0x20-0xFF, 61441,61448,61451,61452,61452,61453,61457,61459,61461,61465,
@@ -26,8 +34,7 @@ TODO:
 61674,61683,61724,61732,61787,61931,62016,62017,62018,62019,
 62020,62087,62099,62212,62189,62810,63426,63650
       
-  - crash when removing an ssid (write to JSON succeeds)
-  - show message before reboot or power off.
+ 
 
 IDEAS:
   - screencast save only changed areas
