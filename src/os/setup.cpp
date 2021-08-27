@@ -152,10 +152,17 @@ void os_setup() {
     }, 30, 1, nullptr);
 #endif
 
-    //When the initialization is complete, turn on the backlight
     ttgo->tft->println("set up SPIFFS");
     if (!(spiffs_initialized = SPIFFS.begin())) {
-        Serial.println("SPIFFS init failed!");
+        ttgo->tft->println("Formating SPIFFS");
+        Serial.println("Formating SPIFFS");
+        if (!SPIFFS.format()) {
+            Serial.println("SPIFFS format failed!");
+        } else {
+            if (!SPIFFS.begin()) {
+                Serial.println("SPIFFS mount failed!");
+            }
+        }
     }
 
     ttgo->tft->println("load config");

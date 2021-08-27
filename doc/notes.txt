@@ -21,6 +21,7 @@ TODO:
   - include libraries in credits
   - setting app to change hostname, update URL
   - crash when removing an ssid (write to JSON succeeds)
+  - WiFi-Manage blank after adding SSID...
   - show message before reboot or power off.
 
 
