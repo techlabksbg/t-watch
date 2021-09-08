@@ -56,6 +56,22 @@ bool KSBGLessonWatch::show() {
     return true;
 }
 
+KSBGLessonWatch::lessonTime KSBGLessonWatch::remaining(struct tm info) {
+    struct lessonTime lessons[] = {
+        {7,40}, {8,25}, {8,34}, {9,19}, {9,28}, {10,13}, 
+        {10,30}, {11,15}, {11,24}, {12,9}, {12,14}, {12,59}, {13,4}, {13,49}, 
+        {13,55}, {14,40}, {14,49}, {15,34}, {15,43}, {16,28}, {16,33}, {17,18}, {17,23}, {18,8}
+    };
+    int seconds = info.tm_hour*3600+info.tm_min*60+info.tm_sec;
+    for (int i=0; i<sizeof(lessons)/sizeof(lessonTime); i++) {
+        int secs = lessons[i].hours*3600+lessons[i].minutes*60;
+        if (secs>seconds) {
+            secs -= seconds;
+            return {secs/60,secs%60};
+        }
+    }
+    return {-1,-1}; // Gang go schlofe!
+}
 
 void KSBGLessonWatch::loop() {
     time_t now;

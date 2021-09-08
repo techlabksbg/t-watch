@@ -36,7 +36,15 @@ class KSBGLessonWatch : public App {
     lv_obj_t* timeLabel = nullptr;
     lv_obj_t* remainLabel = nullptr;
 
-    
+    struct lessonTime {
+        int hours;
+        int minutes;
+    };
+
+    lessonTime remaining(struct tm info);
+
+
+
     
 
 };
