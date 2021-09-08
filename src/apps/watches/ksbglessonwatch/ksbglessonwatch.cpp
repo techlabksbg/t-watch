@@ -37,10 +37,14 @@ bool KSBGLessonWatch::create() {
     lv_label_set_align(remainLabel, LV_LABEL_ALIGN_CENTER);
 
     // Align Background on screen
-    lv_obj_align(bg, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+    lv_obj_align(bg, NULL, LV_ALIGN_IN_TOP_MID, 0, 40);
+
+    // Set default labels for alignement
+    lv_label_set_text(remainLabel, "00 : 00");
+    lv_label_set_text(timeLabel, "00 : 00 : 00");
     // Align labels on screen
-    lv_obj_align(timeLabel, NULL, LV_ALIGN_IN_TOP_LEFT, 20, 20);
-    lv_obj_align(remainLabel, NULL, LV_ALIGN_IN_TOP_RIGHT, -20, 20);
+    lv_obj_align(timeLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+    lv_obj_align(remainLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 150);
 
     // All done!
     return true;
@@ -80,11 +84,16 @@ void KSBGLessonWatch::loop() {
     // Getting time
     time(&now);
     localtime_r(&now, &info);
-    strftime(buf, sizeof(buf), "%H\n%M\n%S", &info);
+    strftime(buf, sizeof(buf), "%H : %M : %S", &info);
     //Serial.printf("About to set text to %s\n", buf);
     lv_label_set_text(timeLabel, buf);
-    strftime(buf, sizeof(buf), "%Y\n%m\n%d", &info);
-    lv_label_set_text(remainLabel, buf);
+    lessonTime t = remaining(info);
+    if (t.hours!=-1) {
+        sprintf(buf, "%02d : %02d", t.hours, t.minutes);
+        lv_label_set_text(remainLabel, buf);
+    } else {
+        lv_label_set_text(remainLabel, "Gang go schlofe");
+    }
     //Serial.println("KSBGLessonWatch::loop done.");
 }
 
