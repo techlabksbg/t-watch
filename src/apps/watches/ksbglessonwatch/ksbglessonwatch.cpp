@@ -7,6 +7,12 @@
 LV_IMG_DECLARE(ksbglessonwatchbg);
 
 bool KSBGLessonWatch::create() {
+    // Black background on myScr:
+    static lv_style_t blackBackground;
+    lv_style_init(&blackBackground);
+    lv_style_set_bg_color(&blackBackground, LV_STATE_DEFAULT,  LV_COLOR_MAKE(0,0,0));
+    lv_obj_add_style(myScr,LV_OBJ_PART_MAIN, &blackBackground);
+
     // Define a style for the labels (text)
     static lv_style_t labelStyle;
     lv_style_init(&labelStyle);
