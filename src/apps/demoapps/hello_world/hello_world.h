@@ -13,6 +13,6 @@ class Hello_World : public App
     virtual bool destroy() { return true; }
 
     void *getIcon() { return (void *)&hello_worldicon; }
-    const char *getName() { return "hello_world"; }
+    const char *getName() { return "Hello world"; }
     lv_obj_t *hello_world;
 };
