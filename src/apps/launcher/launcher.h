@@ -37,6 +37,7 @@
 #include "../demoapps/drawing/drawing.h"
 #include "../demoapps/minesweeper/minesweeper.h"
 #include "../demoapps/hello_world/hello_world.h"
+#include "../demoapps/stopwatch/stopwatch.h"
 
 //#include <esp_debug_helpers>
 
@@ -148,6 +149,7 @@ class Launcher : public App {
         demos->registerApp(new ShoppingList);
         demos->registerApp(new Tide);
         demos->registerApp(new Hello_World);
+        demos->registerApp(new Stopwatch);
         return demos;
     }
 
