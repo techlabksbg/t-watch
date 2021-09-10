@@ -2,9 +2,9 @@
 
 #include "../../app.h"
 
-LV_IMG_DECLARE(First_Appicon);
+LV_IMG_DECLARE(hello_worldicon);
 
-class First_app : public App
+class Hello_World : public App
 {
 
     virtual bool create();
@@ -12,7 +12,7 @@ class First_app : public App
     virtual bool hide() { return true; };
     virtual bool destroy() { return true; }
 
-    void *getIcon() { return (void *)&First_Appicon; }
-    const char *getName() { return "First_App"; }
+    void *getIcon() { return (void *)&hello_worldicon; }
+    const char *getName() { return "hello_world"; }
     lv_obj_t *hello_world;
 };

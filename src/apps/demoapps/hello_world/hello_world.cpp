@@ -1,6 +1,6 @@
-#include "First_App.h"
+#include "hello_world.h"
 
-bool First_app::create()
+bool Hello_World::create()
 {
     register_for_swipe_up(myScr);
     lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
@@ -8,12 +8,12 @@ bool First_app::create()
     lv_obj_add_style(hello_world, LV_OBJ_PART_MAIN, &styles.titleLabel);
     lv_label_set_text(hello_world, "Hello World");
 
-    Serial.println("Creating First_App");
+    Serial.println("Creating Hello World");
     return true;
 }
 
-bool First_app::show()
+bool Hello_World::show()
 {
-    Serial.println("Showing First_App");
+    Serial.println("Showing Hello World");
     return true;
 }
