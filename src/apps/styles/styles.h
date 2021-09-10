@@ -6,6 +6,7 @@
 
 #include "../../os/os.h"
 #include "fonts/ubuntu_r.h"
+#include "fonts/ubuntumono.h"
 
 LV_IMG_DECLARE(stdbackground);
 
