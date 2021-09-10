@@ -16,6 +16,7 @@
 
 #include "../watches/techlabwatch/techlabwatch.h"
 #include "../watches/bhfsg/bhfsg.h"
+#include "../watches/ksbglessonwatch/ksbglessonwatch.h"
 #include "../settingapps/brightness/brightness.h"
 #include "../settingapps/timezone/timezone.h"
 #include "../settingapps/wifimanager/wifimanager.h"
@@ -154,6 +155,7 @@ class Launcher : public App {
         watches->icon = (void*) &watchesicon;
         watches->registerApp(new TechLabWatch);
         watches->registerApp(new BhfSGWatch);
+        watches->registerApp(new KSBGLessonWatch);
         return watches;
     }
 
