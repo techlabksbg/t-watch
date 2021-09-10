@@ -34,6 +34,7 @@ class KSBGLessonWatch : public App {
     // GUI elements
     lv_obj_t* bg = nullptr;
     lv_obj_t* timeLabel = nullptr;
+    lv_obj_t* dateLabel = nullptr;
     lv_obj_t* remainLabel = nullptr;
 
     struct lessonTime {

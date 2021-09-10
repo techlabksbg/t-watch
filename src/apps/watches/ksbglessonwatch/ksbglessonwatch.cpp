@@ -17,34 +17,53 @@ bool KSBGLessonWatch::create() {
     static lv_style_t labelStyle;
     lv_style_init(&labelStyle);
     lv_style_set_text_color(&labelStyle, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xc0, 0xff));
-    lv_style_set_text_font(&labelStyle, LV_STATE_DEFAULT, &lv_font_montserrat_32);
+    lv_style_set_text_font(&labelStyle, LV_STATE_DEFAULT, &ubuntumonob32);
+
+    // Define a style for the labels (text)
+    static lv_style_t dateStyle;
+    lv_style_init(&dateStyle);
+    lv_style_set_text_color(&dateStyle, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xc0, 0xff));
+    lv_style_set_text_font(&dateStyle, LV_STATE_DEFAULT, &ubuntumonor32);
+
+    // Define a style for the remaining time
+    static lv_style_t remainStyle;
+    lv_style_init(&remainStyle);
+    lv_style_set_text_color(&remainStyle, LV_OBJ_PART_MAIN, LV_COLOR_MAKE(0xa0, 0xc0, 0xff));
+    lv_style_set_text_font(&remainStyle, LV_STATE_DEFAULT, &ubuntumonob64);
 
     // Define the background
     bg = lv_img_create(myScr, NULL);  /*Create an image object*/
     lv_img_set_src(bg, (void *) &ksbglessonwatchbg);
     
     // Make app terminate, when swiping up
+    register_for_swipe_up(myScr);
     register_for_swipe_up(bg);
 
     // Craeat time an date labels
     timeLabel = lv_label_create(myScr, NULL);
+    dateLabel = lv_label_create(myScr, NULL);
     remainLabel = lv_label_create(myScr, NULL);
     // Apply style
     lv_obj_add_style(timeLabel, LV_OBJ_PART_MAIN, &labelStyle);
-    lv_obj_add_style(remainLabel, LV_OBJ_PART_MAIN, &labelStyle);
+    lv_obj_add_style(dateLabel, LV_OBJ_PART_MAIN, &dateStyle);
+    lv_obj_add_style(remainLabel, LV_OBJ_PART_MAIN, &remainStyle);
+
     // Set text align
     lv_label_set_align(timeLabel, LV_LABEL_ALIGN_CENTER);
+    lv_label_set_align(dateLabel, LV_LABEL_ALIGN_CENTER);
     lv_label_set_align(remainLabel, LV_LABEL_ALIGN_CENTER);
 
     // Align Background on screen
-    lv_obj_align(bg, NULL, LV_ALIGN_IN_TOP_MID, 0, 40);
+    lv_obj_align(bg, NULL, LV_ALIGN_IN_TOP_MID, 0, 65);
 
     // Set default labels for alignement
-    lv_label_set_text(remainLabel, "00 : 00");
-    lv_label_set_text(timeLabel, "00 : 00 : 00");
+    lv_label_set_text(remainLabel, "00:00");
+    lv_label_set_text(timeLabel, "00:00:00");
+    lv_label_set_text(dateLabel, "2020-09-09");
     // Align labels on screen
     lv_obj_align(timeLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
-    lv_obj_align(remainLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 150);
+    lv_obj_align(dateLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 40);
+    lv_obj_align(remainLabel, NULL, LV_ALIGN_IN_TOP_MID, 0, 170);
 
     // All done!
     return true;
@@ -84,15 +103,17 @@ void KSBGLessonWatch::loop() {
     // Getting time
     time(&now);
     localtime_r(&now, &info);
-    strftime(buf, sizeof(buf), "%H : %M : %S", &info);
+    strftime(buf, sizeof(buf), "%H:%M:%S", &info);
     //Serial.printf("About to set text to %s\n", buf);
     lv_label_set_text(timeLabel, buf);
+    strftime(buf, sizeof(buf), "%Y-%m-%d", &info);
+    lv_label_set_text(dateLabel, buf);
     lessonTime t = remaining(info);
     if (t.hours!=-1) {
-        sprintf(buf, "%02d : %02d", t.hours, t.minutes);
+        sprintf(buf, "%02d:%02d", t.hours, t.minutes);
         lv_label_set_text(remainLabel, buf);
     } else {
-        lv_label_set_text(remainLabel, "Gang go schlofe");
+        lv_label_set_text(remainLabel, "--:--");
     }
     //Serial.println("KSBGLessonWatch::loop done.");
 }
