@@ -36,6 +36,7 @@
 #include "../demoapps/tide/tide.h"
 #include "../demoapps/drawing/drawing.h"
 #include "../demoapps/minesweeper/minesweeper.h"
+#include "../demoapps/First_App/First_App.h"
 
 //#include <esp_debug_helpers>
 
@@ -146,6 +147,7 @@ class Launcher : public App {
         demos->registerApp(new MicDemo);
         demos->registerApp(new ShoppingList);
         demos->registerApp(new Tide);
+        demos->registerApp(new First_app);
         return demos;
     }
 
