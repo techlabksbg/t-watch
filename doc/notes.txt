@@ -23,6 +23,7 @@ TODO:
   - crash when removing an ssid (write to JSON succeeds)
   - WiFi-Manage blank after adding SSID...
   - show message before reboot or power off.
+  - investigate TimeDrift and RTC sync...
 
 
 
