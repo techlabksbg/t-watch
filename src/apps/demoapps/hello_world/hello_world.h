@@ -15,4 +15,5 @@ class Hello_World : public App
     void *getIcon() { return (void *)&hello_worldicon; }
     const char *getName() { return "Hello world"; }
     lv_obj_t *hello_world;
+    lv_obj_t *bg;
 };
