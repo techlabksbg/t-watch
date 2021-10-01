@@ -52,7 +52,7 @@ void Stopwatch::loop()
     time_now -= start_stop_t;
     localtime_r(&time_now, &info);
     strftime(buf, sizeof(buf), "%M:%S", &info);
-    if (running)
+    if (state == 1)
     {
         lv_label_set_text(time_passed, buf);
     }
@@ -66,23 +66,47 @@ bool Stopwatch::hide()
 
 void Stopwatch::start_stop_time()
 {
-    if (running)
-    {
-        lv_label_set_text(start_stop_label, "Start");
-    lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
-
-        // lv_label_set_text(start_stop_button, "Start");
-        running = false;
-        return;
-    }
     struct tm info;
-    time(&start_stop_t);
-    localtime_r(&start_stop_t, &info);
-    lv_label_set_text(start_stop_label, "Reset");
-    lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
+    switch (state)
+    {
+    case 0: // resetted (0)
+        time(&start_stop_t);
+        localtime_r(&start_stop_t, &info);
+        lv_label_set_text(start_stop_label, "Stop/Pause");
+        state = 1;
+        break;
+    case 1: // running
+        lv_label_set_text(start_stop_label, "Reset");
+        state = 2;
+        break;
+    case 2: // paused
+        lv_label_set_text(start_stop_label, "Start");
+        time_t reset_time = 0;
+        char buf[64];
+        localtime_r(&reset_time, &info);
+        strftime(buf, sizeof(buf), "%M:%S", &info);
 
-    // lv_label_set_text(start_stop_button, "Stop");
-    running = true;
+        lv_label_set_text(time_passed, buf);
+        state = 0;
+        break;
+    }
+    // if (running)
+    // {
+    //     lv_label_set_text(start_stop_label, "Stop");
+    //     lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
+
+    //     // lv_label_set_text(start_stop_button, "Start");
+    //     running = false;
+    //     return;
+    // }
+    // struct tm info;
+    // time(&start_stop_t);
+    // localtime_r(&start_stop_t, &info);
+    // // lv_label_set_text(start_stop_label, "Reset");
+    // lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
+
+    // // lv_label_set_text(start_stop_button, "Stop");
+    // running = true;
 }
 
 // bool Stopwatch::destroy()
