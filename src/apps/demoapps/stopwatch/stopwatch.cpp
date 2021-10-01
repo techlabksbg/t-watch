@@ -81,6 +81,7 @@ void Stopwatch::loop()
             lv_label_set_text(stop_reset_label, "Stop");
             break;
         case 1: // Paused
+            lv_label_set_text(last_time, buf);
             lv_label_set_text(start_pause_resume_label, "Resume");
             lv_label_set_text(stop_reset_label, "Reset");
             break;
@@ -93,8 +94,9 @@ void Stopwatch::loop()
             localtime_r(&reset_time, &info);
             strftime(buf, sizeof(buf), "%M:%S", &info);
             lv_label_set_text(time_passed, buf);
-            time(&start_stop_t);
-            localtime_r(&start_stop_t, &info);
+            lv_label_set_text(last_time, buf);
+            time(&start_stop_t); // reset time
+            localtime_r(&start_stop_t, &info); // reset time
             lv_label_set_text(start_pause_resume_label, "Start");
             lv_label_set_text(stop_reset_label, "----");
             break;
