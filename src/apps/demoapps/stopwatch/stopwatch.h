@@ -9,7 +9,7 @@ class Stopwatch : public App
 
     virtual bool create();
     virtual bool show();
-    virtual bool hide(); // { return true; };
+    virtual bool hide();
     virtual bool destroy() { return true; }
 
     virtual void loop();

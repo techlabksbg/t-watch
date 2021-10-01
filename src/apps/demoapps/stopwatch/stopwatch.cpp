@@ -6,7 +6,6 @@ bool Stopwatch::create()
     lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
 
     stopwatch = lv_label_create(myScr, NULL);
-    // lv_obj_add_style(stopwatch, LV_OBJ_PART_MAIN, &styles.textLabel);
     lv_obj_add_style(stopwatch, LV_OBJ_PART_MAIN, &styles.titleLabel);
     lv_label_set_text(stopwatch, "Stopwatch");
     lv_label_set_align(stopwatch, LV_LABEL_ALIGN_CENTER);
@@ -28,7 +27,6 @@ bool Stopwatch::create()
         this);
     start_stop_label = lv_obj_get_child(start_stop_button, NULL);
     lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
-    // lv_label_set_text
     lv_obj_align(start_stop_button, myScr, LV_ALIGN_IN_TOP_LEFT, 20, 75);
 
     Serial.println("Creating Stopwatch");
@@ -90,26 +88,4 @@ void Stopwatch::start_stop_time()
         state = 0;
         break;
     }
-    // if (running)
-    // {
-    //     lv_label_set_text(start_stop_label, "Stop");
-    //     lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
-
-    //     // lv_label_set_text(start_stop_button, "Start");
-    //     running = false;
-    //     return;
-    // }
-    // struct tm info;
-    // time(&start_stop_t);
-    // localtime_r(&start_stop_t, &info);
-    // // lv_label_set_text(start_stop_label, "Reset");
-    // lv_label_set_align(start_stop_label, LV_LABEL_ALIGN_CENTER);
-
-    // // lv_label_set_text(start_stop_button, "Stop");
-    // running = true;
 }
-
-// bool Stopwatch::destroy()
-// {
-//     return true;
-// }
