@@ -28,4 +28,7 @@ class Drawing : public App {
     bool drawing = false;
     unsigned long last=0;
 
+    lv_obj_t* label;
+    char * current;
+
 };

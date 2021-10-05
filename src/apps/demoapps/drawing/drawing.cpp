@@ -2,6 +2,11 @@
 
 bool Drawing::create() {
     lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+    current = new char[2];
+    current[0] = 'A';
+    current[1] = 0;
+    label = styles.stdLabel(myScr, current);
+    lv_obj_align(label, myScr, LV_ALIGN_IN_TOP_LEFT, 5,5);
     return true;
 }
 
