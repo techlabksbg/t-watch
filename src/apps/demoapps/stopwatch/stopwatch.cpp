@@ -3,7 +3,7 @@
 bool Stopwatch::create()
 {
     register_for_swipe_up(myScr);
-    lv_obj_add_style(myScr, LV_OBJ_PART_MAIN, &styles.background);
+    lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
 
     stopwatch = lv_label_create(myScr, NULL);
     lv_obj_add_style(stopwatch, LV_OBJ_PART_MAIN, &styles.titleLabel);
