@@ -38,10 +38,11 @@ bool Game2048::create() {
     });
 
     feld = new byte[16];
-    // Bogous initialisation
     for (int i=0; i<16; i++) {
-        feld[i] = i < 14 ? i : 0;
+        feld[i] = 0;
     }
+    feld[rand()%16] = 1;
+    feld[rand()%16] = 1;
     return true;
 }
 
@@ -120,7 +121,8 @@ void Game2048::click(int x, int y) {
     int ax, ay; // Startpunkt 
     // perp: (-vy, vx)
     if (x>y) { // top right
-        if (x>240-y) { // click top (move up)
+        if (x<240-y) { // click top (move up)
+            Serial.println("top");
             vx = 0;
             vy = 1;
             px = 1;
@@ -128,6 +130,7 @@ void Game2048::click(int x, int y) {
             ax = 0;
             ay = 0;
         } else { // click right 
+            Serial.println("right");
             vx = -1;
             vy = 0;
             px = 0;
@@ -136,7 +139,8 @@ void Game2048::click(int x, int y) {
             ay = 0;
         }
     } else { // bottom left
-        if (x>240-y) { // click left
+        if (x<240-y) { // click left
+            Serial.println("left");
             vx = 1;
             vy = 0;
             px = 0;
@@ -144,6 +148,7 @@ void Game2048::click(int x, int y) {
             ax = 0;
             ay = 0;
         } else { // blick bottom
+            Serial.println("bottom");
             vx = 0;
             vy = -1;
             px = 1;
@@ -155,31 +160,72 @@ void Game2048::click(int x, int y) {
     
     for (int row=0; row<4; row++) {
         for (int i=0; i<4; i++) {
-            int bx = row*px;
-            int by = row*py;
+            int bx = ax+row*px;
+            int by = ay+row*py;
+            bool done = true;            
+            //Serial.printf("Start at %d,%d in direction %d,%d\n",bx,by,vx,vy);
             for (int j=0; j<3; j++) {
+                //Serial.printf("  Start test on %d,%d\n",bx,by);
                 if (getFeld(bx,by)==0) { // empty case
+                    //Serial.printf("    Empty at %d,%d, shifting...\n",bx,by);
                     int cx = bx;
                     int cy = by;
-                    for (int k=j+1; j<4; j++) {
+                    for (int k=j+1; k<4; k++) {
                         setFeld(cx,cy, getFeld(cx+vx, cy+vy));
+                        done = done && getFeld(cx,cy)==0;
                         cx += vx;
                         cy += vy;
                     }
+                    //Serial.printf("    Setting 0 on %d,%d\n",cx,cy);
+                    setFeld(cx,cy,0);
                 } else { // Possible join?
                     if (getFeld(bx,by)==getFeld(bx+vx, by+vy)) {
+                        //Serial.printf("  Join on %d,%d and %d,%d\n", bx,by, bx+vx, by+vy);
+                        done = false;
                         setFeld(bx,by, getFeld(bx,by)+1);
-                        setFeld(bx+vx, by+vy, 0);
-                        int cx = bx;
-                        int cy = by;
-                        for (int k=j+1; k<4; k++) {
-                            
+                        int cx = bx+vx;
+                        int cy = by+vy;
+                        //Serial.printf("  Shifting on %d,%d\n",cx,cy);
+                        for (int k=j+1; k<3; k++) {
+                            setFeld(cx,cy, getFeld(cx+vx, cy+vy));
+                            cx += vx;
+                            cy += vy;
                         }
+                        //Serial.printf("    Setting 0 on %d,%d\n",cx,cy);
+                        setFeld(cx,cy, 0);
                     }
                 }
                 bx += vx;
-                by += by;
+                by += vy;
             }
-        }       
+            if (done) break;
+        }
     }
+    int c = 0;
+    for (int i=0; i<16; i++) {
+        if (feld[i]==0) c++;
+    }
+    if (c==0) {
+        for (int i=0; i<16; i++) {
+            feld[i] = 0;
+        }
+        feld[0] = 1;
+    } else {
+        int n = rand()%2+1;
+        if (n>c) n = c;
+        while (n>0) {
+            int cc = 0;
+            int r = rand()%c+1;
+            for (int i=0;i<16; i++) {
+                if (feld[i]==0) cc++;
+                if (cc==r) {
+                    feld[i] = rand()%2+1;
+                    c--;
+                    n--;
+                    break;
+                }
+            }
+        }
+    }
+    showFeld();
 }
