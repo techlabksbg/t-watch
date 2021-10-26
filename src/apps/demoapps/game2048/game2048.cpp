@@ -115,6 +115,71 @@ void Game2048::showFeld() {
 
 void Game2048::click(int x, int y) {
     Serial.printf("Touch at %d, %d\n", x,y);
-    // Do some magic... and rearrange the 'feld' variable
-    // then call showFeld()
+    int vx, vy; // Richtung in der geschoben wird
+    int px, py; // Richtung rechtwinklig dazu
+    int ax, ay; // Startpunkt 
+    // perp: (-vy, vx)
+    if (x>y) { // top right
+        if (x>240-y) { // click top (move up)
+            vx = 0;
+            vy = 1;
+            px = 1;
+            py = 0;
+            ax = 0;
+            ay = 0;
+        } else { // click right 
+            vx = -1;
+            vy = 0;
+            px = 0;
+            py = 1;
+            ax = 3;
+            ay = 0;
+        }
+    } else { // bottom left
+        if (x>240-y) { // click left
+            vx = 1;
+            vy = 0;
+            px = 0;
+            py = 1;
+            ax = 0;
+            ay = 0;
+        } else { // blick bottom
+            vx = 0;
+            vy = -1;
+            px = 1;
+            py = 0;
+            ax = 0;
+            ay = 3;
+        }
+    }
+    
+    for (int row=0; row<4; row++) {
+        for (int i=0; i<4; i++) {
+            int bx = row*px;
+            int by = row*py;
+            for (int j=0; j<3; j++) {
+                if (getFeld(bx,by)==0) { // empty case
+                    int cx = bx;
+                    int cy = by;
+                    for (int k=j+1; j<4; j++) {
+                        setFeld(cx,cy, getFeld(cx+vx, cy+vy));
+                        cx += vx;
+                        cy += vy;
+                    }
+                } else { // Possible join?
+                    if (getFeld(bx,by)==getFeld(bx+vx, by+vy)) {
+                        setFeld(bx,by, getFeld(bx,by)+1);
+                        setFeld(bx+vx, by+vy, 0);
+                        int cx = bx;
+                        int cy = by;
+                        for (int k=j+1; k<4; k++) {
+                            
+                        }
+                    }
+                }
+                bx += vx;
+                by += by;
+            }
+        }       
+    }
 }
