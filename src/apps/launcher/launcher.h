@@ -37,6 +37,7 @@
 #include "../demoapps/tide/tide.h"
 #include "../demoapps/drawing/drawing.h"
 #include "../demoapps/minesweeper/minesweeper.h"
+#include "../demoapps/game2048/game2048.h"
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
 
@@ -140,6 +141,7 @@ class Launcher : public App {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new Minesweeper);
+        demos->registerApp(new Game2048);
         demos->registerApp(new Drawing);
         demos->registerApp(new MotorApp);
         demos->registerApp(new AccelDemo);
