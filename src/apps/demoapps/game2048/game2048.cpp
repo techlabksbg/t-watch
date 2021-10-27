@@ -114,11 +114,16 @@ void Game2048::showFeld() {
     }
 }
 
+bool on(int x, int y) {
+    return x>=0 && x<4 && y>=0 && y<4;
+}
+
 void Game2048::click(int x, int y) {
     Serial.printf("Touch at %d, %d\n", x,y);
     int vx, vy; // Richtung in der geschoben wird
     int px, py; // Richtung rechtwinklig dazu
     int ax, ay; // Startpunkt 
+    bool moved = false;
     // perp: (-vy, vx)
     if (x>y) { // top right
         if (x<240-y) { // click top (move up)
@@ -159,58 +164,62 @@ void Game2048::click(int x, int y) {
     }
     
     for (int row=0; row<4; row++) {
-        for (int i=0; i<4; i++) {
-            int bx = ax+row*px;
-            int by = ay+row*py;
-            bool done = true;            
-            //Serial.printf("Start at %d,%d in direction %d,%d\n",bx,by,vx,vy);
-            for (int j=0; j<3; j++) {
-                //Serial.printf("  Start test on %d,%d\n",bx,by);
-                if (getFeld(bx,by)==0) { // empty case
-                    //Serial.printf("    Empty at %d,%d, shifting...\n",bx,by);
-                    int cx = bx;
-                    int cy = by;
-                    for (int k=j+1; k<4; k++) {
-                        setFeld(cx,cy, getFeld(cx+vx, cy+vy));
-                        done = done && getFeld(cx,cy)==0;
-                        cx += vx;
-                        cy += vy;
-                    }
-                    //Serial.printf("    Setting 0 on %d,%d\n",cx,cy);
-                    setFeld(cx,cy,0);
-                } else { // Possible join?
-                    if (getFeld(bx,by)==getFeld(bx+vx, by+vy)) {
-                        //Serial.printf("  Join on %d,%d and %d,%d\n", bx,by, bx+vx, by+vy);
-                        done = false;
-                        setFeld(bx,by, getFeld(bx,by)+1);
-                        int cx = bx+vx;
-                        int cy = by+vy;
-                        //Serial.printf("  Shifting on %d,%d\n",cx,cy);
-                        for (int k=j+1; k<3; k++) {
-                            setFeld(cx,cy, getFeld(cx+vx, cy+vy));
-                            cx += vx;
-                            cy += vy;
-                        }
-                        //Serial.printf("    Setting 0 on %d,%d\n",cx,cy);
-                        setFeld(cx,cy, 0);
-                    }
+        int bx = ax+row*px;
+        int by = ay+row*py;
+        // Compact everything   
+        int cx = bx;
+        int cy = by;
+        for (int j=0; j<4; j++) {
+            if (getFeld(bx,by)!=0) {
+                bx+=vx;
+                by+=vy;
+            } else if (getFeld(cx,cy)!=0) { // non-empty case
+                if (cx!=bx || cy!=by) { // move it to start
+                    moved = true;
+                    setFeld(bx,by, getFeld(cx,cy));
+                    setFeld(cx,cy, 0);
+                    bx+=vx;
+                    by+=vy;
                 }
-                bx += vx;
-                by += vy;
             }
-            if (done) break;
+            cx+=vx;
+            cy+=vy;
+        }
+        // Combine if any
+        bx = ax+row*px;
+        by = ay+row*py;
+        for (int j=0; j<3; j++) {
+            if (getFeld(bx,by)>0 && getFeld(bx,by)==getFeld(bx+vx, by+vy)) {
+                moved = true;
+                Serial.printf("  Join on %d,%d and %d,%d\n", bx,by, bx+vx, by+vy);
+                setFeld(bx,by, getFeld(bx,by)+1);
+                int cx = bx+vx;
+                int cy = by+vy;
+                //Serial.printf("  Shifting on %d,%d\n",cx,cy);
+                for (int k=j+1; k<3; k++) {
+                    setFeld(cx,cy, getFeld(cx+vx, cy+vy));
+                    cx += vx;
+                    cy += vy;
+                }
+                Serial.printf("    Setting 0 on %d,%d\n",cx,cy);
+                setFeld(cx,cy, 0);
+            }
+            bx += vx;
+            by += vy;
         }
     }
+    // count empty tiles
     int c = 0;
     for (int i=0; i<16; i++) {
         if (feld[i]==0) c++;
     }
+    // No more tiles? Restart!
     if (c==0) {
         for (int i=0; i<16; i++) {
             feld[i] = 0;
         }
         feld[0] = 1;
-    } else {
+    } else if (moved) {  // only if something actually moved, add new tiles
         int n = rand()%2+1;
         if (n>c) n = c;
         while (n>0) {
