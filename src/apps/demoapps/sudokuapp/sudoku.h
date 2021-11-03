@@ -5,7 +5,9 @@
 
 class Sudoku {
     public:
+    // Constructor, creates an empty Sudoku
     Sudoku();
+    // Destructor, frees all allocated memory
     ~Sudoku();
 
     void set(int x, int y, byte value);
