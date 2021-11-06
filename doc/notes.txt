@@ -18,12 +18,14 @@ https://fonts.google.com/icons
 
 TODO:
   - disable interrupts when starting ota (ArduinoOTA.handle() completely takes over when OTA starts)
+  - Offer WEB-OTA (user starts update from tech-lab server)
   - include libraries in credits
   - setting app to change hostname, update URL
   - crash when removing an ssid (write to JSON succeeds)
   - WiFi-Manage blank after adding SSID...
   - show message before reboot or power off.
   - investigate TimeDrift and RTC sync...
+  - store certificates on spiffs (may be offer possibility to download them)
 
 
 
