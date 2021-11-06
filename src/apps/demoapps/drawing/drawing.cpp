@@ -1,4 +1,7 @@
 #include "drawing.h"
+#include "../../../services/services.h"
+#include "../../settingapps/wifimanager/wifimanager.h"
+
 
 #define MAX_PTS 200
 
@@ -9,27 +12,46 @@ bool Drawing::create() {
     current[1] = 0;
     label = styles.stdLabel(myScr, current);
     lv_obj_align(label, myScr, LV_ALIGN_IN_TOP_LEFT, 5,5);
+    // This is not optimal, it should be freed, when the app is not in use...
+    // ... this is however not trivial, since the upload is asynchronous.
+    buffer  = new char[20+MAX_PTS*(5+1+3+1+3+1)];
     return true;
 }
 
 bool Drawing::destroy() {
     delete[] current;
+    delete[] buffer;
     current = nullptr;
     return true;
 }
 
 bool Drawing::show() {
-    pts = new pts_t[MAX_PTS];
-    start_loop(20);
-    drawing = false;
+    if (WiFi.isConnected()) {
+        pts = new pts_t[MAX_PTS];
+        start_loop(20);
+        drawing = false;   
+    } else {
+        // connect to wifi
+        lv_async_call([](void *userdata) {
+            Serial.println("Async connect to WiFi...");
+            wifiManager.connect((App*)userdata);
+        }, this);
+        Serial.println("no connection... async call scheduled");
+    }
     return true;
 }
 
 void Drawing::output_and_increment() {
+    char * bufp = buffer;
     Serial.println(current);
+    sprintf(bufp, "%llx %s\n", ESP.getEfuseMac(), current);
+    while(*bufp) bufp++;
     for (int i=0; i<num_pts; i++) {
-        Serial.printf("%lu %d %d\n", pts[i].time, pts[i].x, pts[i].y);    
+        sprintf(bufp, "%lu %d %d\n", pts[i].time, pts[i].x, pts[i].y);
+        while(*bufp) bufp++;
     }
+
+    httpPost(this, buffer, "http://www.tech-lab.ch/twatch/drawing/upload.php",nullptr);
     num_pts = 0;
     if (current[0]=='Z') {
         current[0]='0';
@@ -40,6 +62,7 @@ void Drawing::output_and_increment() {
     } else {
         current[0]++;
     }
+    delete[] buffer;
     lv_label_set_text(label, current);
 }
 
