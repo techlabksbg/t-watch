@@ -1,0 +1,2 @@
+curl -X POST -H "Content-Type: text/plain" --data-binary @test.data http://www.tech-lab.ch/twatch/drawing/upload.php
+
