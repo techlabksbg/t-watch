@@ -32,10 +32,9 @@ void streamToIP(const char* host);
 
 /**
  * This function submits a string as text/plain in a POST request.
- * It starts the wifi-connection if necessary (herby hidung your app)
+ * It returns true on success, but discards the answer
  * 
- * @param app Pointer to the app (so it gets restarted after establishing WiFi-connection)
  * @param url The URL for the POST-request
  * @param root_ca The root-certificate, mandatory if downloading by https! nullptr otherwise
  */
-void httpPost(App* app, const char * payload, const char * url, const char* root_ca);
+bool httpPost(const char * payload, const char * url, const char* root_ca);

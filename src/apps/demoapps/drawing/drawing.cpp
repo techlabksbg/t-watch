@@ -10,11 +10,13 @@ bool Drawing::create() {
     current = new char[2];
     current[0] = 'A';
     current[1] = 0;
-    label = styles.stdLabel(myScr, current);
-    lv_obj_align(label, myScr, LV_ALIGN_IN_TOP_LEFT, 5,5);
+    label = styles.stdTitle(myScr, current);
+    lv_label_set_text(label, current);
+    lv_obj_align(label, myScr, LV_ALIGN_IN_TOP_LEFT, 2,2);
     // This is not optimal, it should be freed, when the app is not in use...
     // ... this is however not trivial, since the upload is asynchronous.
-    buffer  = new char[20+MAX_PTS*(5+1+3+1+3+1)];
+    bufsize = 20+MAX_PTS*(5+1+3+1+3+1);
+    buffer  = new char[bufsize];
     return true;
 }
 
@@ -25,9 +27,27 @@ bool Drawing::destroy() {
     return true;
 }
 
+void Drawing::increment() {
+    if (current[0]=='Z') {
+        current[0]='0';
+    } else if (current[0]=='9') {
+        current[0] = 'a';
+    } else if (current[0]=='z') {
+        current[0] =  'A';
+    } else {
+        current[0]++;
+    }
+    lv_label_set_text(label, current);
+    lv_obj_align(label, myScr, LV_ALIGN_IN_TOP_LEFT, 2,2);
+}
+
+
 bool Drawing::show() {
     if (WiFi.isConnected()) {
         pts = new pts_t[MAX_PTS];
+        for (int i=0; i<random(62); i++) {
+            increment();
+        }
         start_loop(20);
         drawing = false;   
     } else {
@@ -41,29 +61,24 @@ bool Drawing::show() {
     return true;
 }
 
-void Drawing::output_and_increment() {
+
+void Drawing::output() {
     char * bufp = buffer;
-    Serial.println(current);
+    //Serial.println(current);
     sprintf(bufp, "%llx %s\n", ESP.getEfuseMac(), current);
     while(*bufp) bufp++;
     for (int i=0; i<num_pts; i++) {
         sprintf(bufp, "%lu %d %d\n", pts[i].time, pts[i].x, pts[i].y);
         while(*bufp) bufp++;
     }
-
-    httpPost(this, buffer, "http://www.tech-lab.ch/twatch/drawing/upload.php",nullptr);
+    //Serial.printf("buffer at %p, free buffer %d\n",buffer, (bufp-buffer));
+    if (httpPost(buffer, "http://www.tech-lab.ch/twatch/drawing/upload.php",nullptr)) {
+        Serial.printf("Data for letter %s submitted to server\n",current);
+    };
+    // Serial.println("httpPost has returned");
     num_pts = 0;
-    if (current[0]=='Z') {
-        current[0]='0';
-    } else if (current[0]=='9') {
-        current[0] = 'a';
-    } else if (current[0]=='z') {
-        current[0] =  'A';
-    } else {
-        current[0]++;
-    }
-    delete[] buffer;
-    lv_label_set_text(label, current);
+    increment();
+    
 }
 
 void Drawing::loop() {
@@ -94,7 +109,7 @@ void Drawing::loop() {
     }
     if (!drawing && !finished && millis()-last>500) {
         finished = true;
-        output_and_increment();
+        output();
         lv_obj_invalidate(myScr);
         startms = 0;
 

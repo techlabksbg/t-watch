@@ -41,7 +41,9 @@ class Drawing : public App {
     unsigned long startms = 0;
 
     char * buffer= nullptr;
+    int bufsize = 0;
 
-    void output_and_increment();
+    void output();
+    void increment();
 
 };
