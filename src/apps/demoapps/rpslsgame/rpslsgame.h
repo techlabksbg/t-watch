@@ -34,10 +34,17 @@ class RpslsGame : public App {
     private:
     // image background
     lv_obj_t* bg; 
-
+    // currently active overlay (or nullptr if none)
     Overlay* active = nullptr;
 
+    // Called when clicked on bg
     void click(int x, int y);
+
+    // Labels for the score.
+    lv_obj_t* labels[2];
+    int scores[2];
+    // display the scores
+    void updateLabels();
 
 };
 
