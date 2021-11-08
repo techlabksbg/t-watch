@@ -1,6 +1,8 @@
 #include "timezone.h"
 
 #include "../../../services/services.h"
+#include "../../../os/certs/certs.h"
+
 
 #define TIMEZONES_FILE "/timezones.txt"
 #define BUFSIZE 10000
@@ -155,11 +157,9 @@ bool TimeZone::show() {
     page = styles.stdPage(myScr);
     lv_obj_align(page, myScr, LV_ALIGN_CENTER, 0,0);
 
-    #include "../../certs/ISRG_Root_X1.h"
-    if (downloadToSPIFFS(this, TIMEZONES_FILE, "https://tech-lab.ch/twatch/timezones.txt",root_ca)) {
+    if (downloadToSPIFFS(this, TIMEZONES_FILE, "https://tech-lab.ch/twatch/timezones.txt", ISRG_ROOT_X1)) {
         if (!makeRegionButtons()) return false;
     }
-
     return true;
 }
 

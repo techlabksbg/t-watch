@@ -6,6 +6,7 @@
 
 #include "spiffsaudio.h"
 #include "../../../services/services.h"
+#include "../../../os/certs/certs.h"
 
 // See https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/examples/BasicUnit/PlayMP3FromSPIFFS/PlayMP3FromSPIFFS.ino
 
@@ -61,8 +62,7 @@ void SpiffsAudio::freeAudioChain() {
 }
 
 bool SpiffsAudio::show() {
-    #include "../../certs/ISRG_Root_X1.h"
-    if (downloadToSPIFFS(this, SPIFFSAUDIO_MP3FILE, "https://tech-lab.ch/twatch/upchime2.mp3",root_ca)) {
+    if (downloadToSPIFFS(this, SPIFFSAUDIO_MP3FILE, "https://tech-lab.ch/twatch/upchime2.mp3", ISRG_ROOT_X1)) {
         buildAudioChain();
     }
     return true;
