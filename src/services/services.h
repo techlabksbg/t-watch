@@ -28,3 +28,13 @@ bool downloadToSPIFFS(App* app, const char * filename, const char * url, const c
  * @param host Hostname or IP address.
  */
 void streamToIP(const char* host);
+
+
+/**
+ * This function submits a string as text/plain in a POST request.
+ * It returns true on success, but discards the answer
+ * 
+ * @param url The URL for the POST-request
+ * @param root_ca The root-certificate, mandatory if downloading by https! nullptr otherwise
+ */
+bool httpPost(const char * payload, const char * url, const char* root_ca);

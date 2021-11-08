@@ -40,6 +40,10 @@ class Drawing : public App {
     int num_pts = 0;
     unsigned long startms = 0;
 
-    void output_and_increment();
+    char * buffer= nullptr;
+    int bufsize = 0;
+
+    void output();
+    void increment();
 
 };
