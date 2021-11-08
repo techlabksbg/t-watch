@@ -1,7 +1,7 @@
 #include "drawing.h"
 #include "../../../services/services.h"
 #include "../../settingapps/wifimanager/wifimanager.h"
-
+#include "../../../os/certs/certs.h"
 
 #define MAX_PTS 200
 
@@ -72,7 +72,7 @@ void Drawing::output() {
         while(*bufp) bufp++;
     }
     //Serial.printf("buffer at %p, free buffer %d\n",buffer, (bufp-buffer));
-    if (httpPost(buffer, "http://www.tech-lab.ch/twatch/drawing/upload.php",nullptr)) {
+    if (httpPost(buffer, "https://www.tech-lab.ch/twatch/drawing/upload.php",ISRG_ROOT_X1)) {
         Serial.printf("Data for letter %s submitted to server\n",current);
     };
     // Serial.println("httpPost has returned");
