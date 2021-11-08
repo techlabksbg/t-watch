@@ -39,6 +39,7 @@
 #include "../demoapps/minesweeper/minesweeper.h"
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
+#include "../demoapps/rpslsgame/rpslsgame.h"
 
 //#include <esp_debug_helpers>
 
@@ -140,6 +141,7 @@ class Launcher : public App {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
         demos->registerApp(new Minesweeper);
+        demos->registerApp(new RpslsGame);
         demos->registerApp(new Drawing);
         demos->registerApp(new MotorApp);
         demos->registerApp(new AccelDemo);
