@@ -24,6 +24,7 @@ class OTAApp : public App {
 
     private:
 
+    lv_obj_t* webUpdateButton;
     lv_obj_t* arduinoButton;
     lv_obj_t* infoLabel;
 

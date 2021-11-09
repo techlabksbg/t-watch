@@ -1,10 +1,13 @@
 #include "ota.h"
 
 #include "ArduinoOTA.h"
+#include "HttpsOTAUpdate.h"
+
 #include "Update.h"
 #include <SPIFFS.h>
 #include "jsonconfig.h"
 #include "loop.h"
+#include "certs/certs.h"
 
 void WatchOTA::loop() {
     if (type == ARDUINO_SERVER) {
@@ -198,15 +201,55 @@ void downloadTask2(lv_task_t *data) {
 }
 
 
+void HttpEvent(HttpEvent_t *event) {
+    switch(event->event_id) {
+        case HTTP_EVENT_ERROR:
+            Serial.println("Http Event Error");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            Serial.println("Http Event On Connected");
+            break;
+        case HTTP_EVENT_HEADER_SENT:
+            Serial.println("Http Event Header Sent");
+            break;
+        case HTTP_EVENT_ON_HEADER:
+            Serial.printf("Http Event On Header, key=%s, value=%s\n", event->header_key, event->header_value);
+            break;
+        case HTTP_EVENT_ON_DATA:
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            Serial.println("Http Event On Finish");
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            Serial.println("Http Event Disconnected");
+            break;
+    }
+}
+
+
 bool WatchOTA::startWebOTA() {
-    
+    disableCore0WDT();
+    HttpsOTA.onHttpEvent(HttpEvent);
+    Serial.println("Starting HttpsOTA...");
+    HttpsOTA.begin("https://tech-lab.ch/twatch/firmware.bin", ISRG_ROOT_X1);
+    Serial.println("   HttpsOTA started...");
     return true;
 }
-void WatchOTA::loopWebOTA() {
 
+void WatchOTA::loopWebOTA() {
+    HttpsOTAStatus_t otastatus = HttpsOTA.status();
+    if(otastatus == HTTPS_OTA_SUCCESS) { 
+        Serial.println("Firmware written successfully.");
+        sleep(5);
+        ESP.restart();
+    } else if (otastatus == HTTPS_OTA_FAIL) {
+        Serial.println("Firmware Upgrade Fail");
+    } else if (otastatus == HTTPS_OTA_UPDATING) {
+        Serial.print(".");
+    }
 }
 void WatchOTA::stopWebOTA() {
-
+    enableCore0WDT();
 }
 
 

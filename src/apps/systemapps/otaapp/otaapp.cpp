@@ -4,6 +4,7 @@
 
 #include "otaapp.h"
 #include "../../../os/ota.h"
+#include "../../../os/webota.h"
 #include "../../settingapps/wifimanager/wifimanager.h"
 
 void OTAApp::loop() {
@@ -61,7 +62,24 @@ bool OTAApp::create() {
             wifiManager.connect(self);
         }
     }, this);
-    lv_obj_align(arduinoButton,myScr, LV_ALIGN_CENTER, 0,0);
+    webUpdateButton = styles.stdButton(myScr, "Web Update", [](lv_obj_t *button, lv_event_t event) {
+        if (event != LV_EVENT_SHORT_CLICKED) return;
+        OTAApp* self = (OTAApp*)(button->user_data);
+        if (WiFi.isConnected()) {
+            if (!self->running) {
+                if (watchOTA->start(WatchOTA::WEB_DOWNLOAD, nullptr)) {
+                    self->running = true;
+                    self->showInfo();
+                    self->start_loop(20);
+                } 
+            }
+        } else {
+            wifiManager.connect(self);
+        }
+    }, this);
+
+    lv_obj_align(webUpdateButton,myScr, LV_ALIGN_CENTER, 0,-50);
+    lv_obj_align(arduinoButton,webUpdateButton, LV_ALIGN_OUT_BOTTOM_MID, 0,0);
     lv_obj_align(infoLabel,arduinoButton, LV_ALIGN_OUT_BOTTOM_MID, 0,0);
     return true;
 }
