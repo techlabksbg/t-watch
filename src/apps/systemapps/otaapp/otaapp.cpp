@@ -16,19 +16,24 @@ void OTAApp::loop() {
             watchOTA->stop();
             running = false;
             stop_loop();
-            showInfo();
+            showInfo("");
         }
     } else {
         stop_loop();
     }
 }
 
-void OTAApp::showInfo() {
+void OTAApp::showInfo(const char * msg) {
     lv_obj_t * label = lv_obj_get_child(arduinoButton, NULL);
     if (running) {
-        lv_label_set_text(label, "Stop OTA");
-        sprintf(buffer, "%s\n%s", WiFi.getHostname(), WiFi.localIP().toString().c_str());
-        lv_label_set_text(infoLabel, buffer);
+        if (status == SERVER) {
+            lv_label_set_text(label, "Stop OTA");
+            sprintf(buffer, "%s\n%s", WiFi.getHostname(), WiFi.localIP().toString().c_str());
+            lv_label_set_text(infoLabel, buffer);
+        } else if (status == CLIENT) {
+            Serial.print(msg);
+            lv_label_set_text(infoLabel, msg);
+        }
     } else {
         lv_label_set_text(label, "Start OTA");
         lv_label_set_text(infoLabel, "not running");
@@ -49,12 +54,12 @@ bool OTAApp::create() {
             if (!self->running) {
                 if (watchOTA->start(WatchOTA::ARDUINO_SERVER, nullptr)) {
                     self->running = true;
-                    self->showInfo();
+                    self->showInfo("Starting Update...");
                     self->start_loop(20);
                 }
             } else {
                 self->running = false;
-                self->showInfo();
+                self->showInfo("Aborting Update...");
                 self->stop_loop();
                 watchOTA->stop();
             }
@@ -67,10 +72,13 @@ bool OTAApp::create() {
         OTAApp* self = (OTAApp*)(button->user_data);
         if (WiFi.isConnected()) {
             if (!self->running) {
-                if (watchOTA->start(WatchOTA::WEB_DOWNLOAD, nullptr)) {
+                if (watchOTA->start(WatchOTA::WEB_DOWNLOAD, [self](const char * msg){                    
+                    self->showInfo(msg);
+                })) {
+                    self->status = CLIENT;
                     self->running = true;
-                    self->showInfo();
-                    self->start_loop(20);
+                    self->showInfo("Web Update");
+                    self->start_loop(50);
                 } 
             }
         } else {

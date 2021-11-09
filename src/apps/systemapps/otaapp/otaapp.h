@@ -28,7 +28,8 @@ class OTAApp : public App {
     lv_obj_t* arduinoButton;
     lv_obj_t* infoLabel;
 
-    void showInfo();
+    void showInfo(const char * msg);
     char* buffer =  nullptr;
     bool running = false;
+    enum {NONE, SERVER, CLIENT} status = NONE;
 };

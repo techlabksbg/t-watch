@@ -125,31 +125,26 @@ void WatchOTA::loopArduinoOTA() {
 // See https://github.com/husarnet/arduino-esp32/blob/master/libraries/ArduinoOTA/examples/OTAWebUpdater/OTAWebUpdater.ino
 // And services/downloadtospiffs.cpp
 
-#include "HTTPClient.h"
 
+#define DOWNLOAD_BUF (4096)
 
-#define DOWNLOAD_BUF (512)
+bool WatchOTA::startWebOTA() {
+    d = new DownloadTaskData;
+    d->url = "https://tech-lab.ch/twatch/firmware.bin";
+    d->root_ca = ISRG_ROOT_X1;
+    return true;
+}
 
-typedef struct {
-    const char* filename;
-    const char* url;
-    const char* root_ca; 
-    HTTPClient* client=nullptr;
-    WiFiClient* stream=nullptr;
-    char* buf=nullptr;
-    int bytesSent;
-    int bytesReceived;
-    bool start = true;
-} DownloadTaskData;
-
-void downloadTask2(lv_task_t *data) {
+void WatchOTA::loopWebOTA() {
+    static unsigned long startms;
     bool error = false;
-    DownloadTaskData* d = (DownloadTaskData*) data->user_data;
-    if (d->start) {
-        d->start = false;
+    if (d->status == DownloadTaskData::START) {
+        d->status = DownloadTaskData::DOWNLOADING;
         d->buf = new char[DOWNLOAD_BUF];
         d->client = new HTTPClient;
         Serial.println("OTA from url: Starting web request");
+        status_cb("Contacting Server");
+        startms = millis();
         if (d->url[4]=='s') {
             if (d->root_ca==nullptr) {
                 Serial.println("ERROR: Missing root certificate for https!");
@@ -172,7 +167,7 @@ void downloadTask2(lv_task_t *data) {
             Serial.printf("About to get %d bytes\n", d->bytesSent);
             d->stream = &(d->client->getStream());
             d->bytesReceived = 0;
-            if (!Update.begin(UPDATE_SIZE_UNKNOWN)) {
+            if (!Update.begin(d->bytesSent)) {
                 error = true;
             }
         }
@@ -185,71 +180,30 @@ void downloadTask2(lv_task_t *data) {
                 error=true;
             }
             d->bytesReceived+=num;
-            Serial.printf("Downloaded %d of %d bytes\n", d->bytesReceived, d->bytesSent);
+            Serial.printf("Downloaded %d of %d bytes\r", d->bytesReceived, d->bytesSent);
+            sprintf(d->buf, "%d%% complete.", d->bytesReceived*100/d->bytesSent);
+            status_cb(d->buf);
         }
     }
     // Finished, so clean up
     if (error || d->bytesReceived == d->bytesSent) {
+        Serial.printf("\nStopping after %ld ms with BUFSIZE of %d\n",millis()-startms, DOWNLOAD_BUF);
+        Update.end();
         if (d->client!=nullptr) {
             d->client->end();
             delete d->client;
         }
         delete[] d->buf;
-        delete d;
-        lv_task_del(data);
+        d->status = error ? DownloadTaskData::FAIL : DownloadTaskData::DONE;
+        if (!error) {
+            ESP.restart();
+        }
     }
+
 }
 
-
-void HttpEvent(HttpEvent_t *event) {
-    switch(event->event_id) {
-        case HTTP_EVENT_ERROR:
-            Serial.println("Http Event Error");
-            break;
-        case HTTP_EVENT_ON_CONNECTED:
-            Serial.println("Http Event On Connected");
-            break;
-        case HTTP_EVENT_HEADER_SENT:
-            Serial.println("Http Event Header Sent");
-            break;
-        case HTTP_EVENT_ON_HEADER:
-            Serial.printf("Http Event On Header, key=%s, value=%s\n", event->header_key, event->header_value);
-            break;
-        case HTTP_EVENT_ON_DATA:
-            break;
-        case HTTP_EVENT_ON_FINISH:
-            Serial.println("Http Event On Finish");
-            break;
-        case HTTP_EVENT_DISCONNECTED:
-            Serial.println("Http Event Disconnected");
-            break;
-    }
-}
-
-
-bool WatchOTA::startWebOTA() {
-    disableCore0WDT();
-    HttpsOTA.onHttpEvent(HttpEvent);
-    Serial.println("Starting HttpsOTA...");
-    HttpsOTA.begin("https://tech-lab.ch/twatch/firmware.bin", ISRG_ROOT_X1);
-    Serial.println("   HttpsOTA started...");
-    return true;
-}
-
-void WatchOTA::loopWebOTA() {
-    HttpsOTAStatus_t otastatus = HttpsOTA.status();
-    if(otastatus == HTTPS_OTA_SUCCESS) { 
-        Serial.println("Firmware written successfully.");
-        sleep(5);
-        ESP.restart();
-    } else if (otastatus == HTTPS_OTA_FAIL) {
-        Serial.println("Firmware Upgrade Fail");
-    } else if (otastatus == HTTPS_OTA_UPDATING) {
-        Serial.print(".");
-    }
-}
 void WatchOTA::stopWebOTA() {
-    enableCore0WDT();
+
 }
 
 
