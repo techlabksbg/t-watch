@@ -4,7 +4,6 @@
 
 #include "otaapp.h"
 #include "../../../os/ota.h"
-#include "../../../os/webota.h"
 #include "../../settingapps/wifimanager/wifimanager.h"
 
 void OTAApp::loop() {
