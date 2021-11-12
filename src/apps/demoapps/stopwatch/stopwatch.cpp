@@ -1,3 +1,7 @@
+/**
+ * @author Philipp Kündig
+ */
+
 #include "stopwatch.h"
 
 bool Stopwatch::create()
