@@ -1,3 +1,7 @@
+/**
+ * @author Philipp Kündig
+ */
+
 #pragma once
 
 #include "../../app.h"
