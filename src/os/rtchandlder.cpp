@@ -16,6 +16,10 @@ void RTCHandler::time(time_t* now) {
     }
 }
 
+// set new startpoint for drift 
+// and update statistics
+// Precondition: System time is now correct, rtc is still off.
+// Postcondition: rtc is also correct
 void RTCHandler::syncedNow() {
     time_t now;
     struct tm* timeinfo;
@@ -35,7 +39,5 @@ void RTCHandler::syncedNow() {
     if (rtcdiff > 600 && rtcdiff!=realdiff) {
         double driftEst = ((double)(now-lastSync))/(rtctime-lastSync);
     }
-
-    
 
 }
