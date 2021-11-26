@@ -151,6 +151,7 @@ class Launcher : public App {
         demos->registerApp(new Tide);
         demos->registerApp(new Hello_World);
         demos->registerApp(new Stopwatch);
+        demos->registerApp(new WaterMinder);
         return demos;
     }
 
