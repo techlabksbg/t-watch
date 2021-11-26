@@ -3,6 +3,15 @@
  */
 
 #pragma once
+#define SPIFFSAUDIO_MP3FILE "/4d.mp3"
+
+#include <SPIFFS.h>
+
+#include "AudioOutputI2S.h"
+#include "AudioFileSourceSPIFFS.h"
+#include "AudioFileSourceID3.h"
+#include "AudioGeneratorMP3.h"
+#include "AudioOutputI2S.h"
 
 #include "../../app.h"
 
@@ -22,15 +31,24 @@ class Metronome : public App
     const char *getName() { return "Metronome"; }
 
 private:
+    AudioOutputI2S *audioOutput = nullptr;
+    AudioFileSourceSPIFFS *audioSource = nullptr;
+    AudioFileSourceID3 *audioID3 = nullptr;
+    AudioGeneratorMP3 *audioMp3 = nullptr;
+    AudioOutputI2S *audioI2S = nullptr;
+
+    void buildAudioChain();
+    void play_tone();
+
     lv_obj_t *metronome, *slider, *metronome_speed_label;
     // time_t beg_t;
     void set_labels(int speed)
     {
-        static char buf[12];
-        snprintf(buf, 12, "%ubpm", speed);
+        static char buf[8];
+        snprintf(buf, 8, "%u bpm", speed);
         lv_label_set_text(metronome_speed_label, buf);
+        int wait_time = (60000 / (float)speed) + 0.5;
         stop_loop();
-        int wait_time = (60000/(float)speed)+0.5;
         start_loop(wait_time);
         // time(&beg_t);
         lv_obj_align(metronome_speed_label, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);

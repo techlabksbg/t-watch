@@ -1,8 +1,8 @@
 /**
  * @author Philipp Kündig
  */
-
 #include "metronome.h"
+#include "../../../services/services.h"
 
 bool Metronome::create()
 {
@@ -33,66 +33,100 @@ bool Metronome::create()
 bool Metronome::show()
 {
     Serial.println("Showing Metronome");
-    // loop();
-    // start_loop(6/(80*100));
-    start_loop(60000/80);
+    int wait_time = (60000 / (float)80) + 0.5;
+    start_loop(wait_time);
     lv_obj_set_event_cb(slider, slider_cb);
     return true;
 }
+void Metronome::buildAudioChain()
+{
+    if (audioSource == nullptr)
+    {
+        Serial.println("Building audio chain...");
+        ttgo->enableLDO3();
+        ttgo->enableAudio();
+        audioSource = new AudioFileSourceSPIFFS();
+        audioID3 = new AudioFileSourceID3(audioSource);
+        audioI2S = new AudioOutputI2S();
+        //External DAC decoding
+        audioI2S->SetPinout(TWATCH_DAC_IIS_BCK, TWATCH_DAC_IIS_WS, TWATCH_DAC_IIS_DOUT);
+        audioMp3 = new AudioGeneratorMP3();
+        //audioMp3->begin(audioID3, audioI2S);
+        Serial.println("Audiochain done.");
+    }
+}
+
+void Metronome::play_tone()
+{
+    if (audioMp3 == nullptr)
+    {
+        buildAudioChain();
+    }
+    if (audioMp3 != nullptr)
+    {
+        if (audioMp3->isRunning() && !audioMp3->loop())
+        {
+            audioSource->close();
+            audioMp3->stop();
+        }
+        else if (!audioMp3->isRunning() && SPIFFS.exists(SPIFFSAUDIO_MP3FILE))
+        {
+            audioSource->open(SPIFFSAUDIO_MP3FILE);
+            audioMp3->begin(audioID3, audioI2S);
+            // start_loop(5);
+        }
+    }
+}
+
+// void Metronome::loop()
+// {
+//     if (audioMp3 != nullptr)
+//     {
+//         if (audioMp3->isRunning())
+//         {
+//             if (!audioMp3->loop())
+//             {
+//                 audioSource->close();
+//                 audioMp3->stop();
+//                 stop_loop();
+//             }
+//         }
+//     }
+// }
 
 void Metronome::loop()
 {
     Serial.println("beep");
-    // time_t time_now;
-    // struct tm info;
-    // char buf[64];
-    // time(&time_now);
-    // time_now -= beg_t;
-    // localtime_r(&time_now, &info);
-    // strftime(buf, sizeof(buf), "%M:%S", &info);
-    
-    // if (state == 0)
+    // if (audioMp3 != nullptr)
     // {
-    //     lv_label_set_text(time_passed, buf);
-    // }
-    // if (state != last_state)
-    // {
-    //     switch (state)
+    //     if (audioMp3->isRunning())
     //     {
-    //     case 0: // Running
-    //         if (last_state == 3)
+    //         if (!audioMp3->loop())
     //         {
-    //             time(&start_stop_t);               // reset time
-    //             localtime_r(&start_stop_t, &info); // reset time
+    //             audioSource->close();
+    //             audioMp3->stop();
+    //             stop_loop();
     //         }
-    //         lv_label_set_text(start_pause_resume_label, "Pause");
-    //         lv_label_set_text(stop_reset_label, "Stop");
-    //         break;
-    //     case 1: // Paused
-    //         lv_label_set_text(last_time, buf);
-    //         lv_label_set_text(start_pause_resume_label, "Resume");
-    //         lv_label_set_text(stop_reset_label, "Reset");
-    //         break;
-    //     case 2: // Stopped
-    //         lv_label_set_text(start_pause_resume_label, "Resume");
-    //         lv_label_set_text(stop_reset_label, "Reset");
-    //         break;
-    //     case 3: // Resetted
-    //         time_t reset_time = 0;
-    //         localtime_r(&reset_time, &info);
-    //         strftime(buf, sizeof(buf), "%M:%S", &info);
-    //         lv_label_set_text(time_passed, buf);
-    //         lv_label_set_text(last_time, buf);
-    //         lv_label_set_text(start_pause_resume_label, "Start");
-    //         lv_label_set_text(stop_reset_label, "----");
-    //         break;
     //     }
     // }
-    // last_state = state;
+    play_tone();
+    // Serial.println("after beep");
 }
 
 bool Metronome::hide()
 {
+    if (audioMp3 != nullptr)
+    {
+        if (audioMp3->isRunning())
+        {
+            if (!audioMp3->loop())
+            {
+                audioSource->close();
+                audioMp3->stop();
+                // stop_loop();
+            }
+        }
+    }
     stop_loop();
     return true;
 }
