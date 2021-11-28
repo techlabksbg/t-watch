@@ -39,6 +39,7 @@
 #include "../demoapps/minesweeper/minesweeper.h"
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
+#include "../demoapps/WaterMinder/WaterMinder.h"
 
 //#include <esp_debug_helpers>
 
