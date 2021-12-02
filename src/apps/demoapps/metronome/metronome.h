@@ -37,6 +37,10 @@ private:
     AudioGeneratorMP3 *audioMp3 = nullptr;
     AudioOutputI2S *audioI2S = nullptr;
 
+    useconds_t file_lenght = 180;
+
+    bool is_running = false;
+
     void buildAudioChain();
     void play_tone();
 

@@ -12,7 +12,7 @@ bool Metronome::create()
     slider = lv_slider_create(myScr, NULL);
     lv_obj_set_width(slider, 200);
     lv_obj_align(slider, myScr, LV_ALIGN_CENTER, 0, 0);
-    lv_slider_set_range(slider, 20, 250);
+    lv_slider_set_range(slider, 20, 300); // mp3 files all 180ms long
     lv_slider_set_value(slider, 80, LV_ANIM_ON);
     lv_obj_set_user_data(slider, this);
 
@@ -66,6 +66,7 @@ void Metronome::play_tone()
     {
         if (audioMp3->isRunning() && !audioMp3->loop())
         {
+            is_running = false;
             audioSource->close();
             audioMp3->stop();
         }
@@ -73,6 +74,8 @@ void Metronome::play_tone()
         {
             audioSource->open(SPIFFSAUDIO_MP3FILE);
             audioMp3->begin(audioID3, audioI2S);
+            usleep(180);
+            is_running = true;
             // start_loop(5);
         }
     }
@@ -97,19 +100,12 @@ void Metronome::play_tone()
 void Metronome::loop()
 {
     Serial.println("beep");
-    // if (audioMp3 != nullptr)
-    // {
-    //     if (audioMp3->isRunning())
-    //     {
-    //         if (!audioMp3->loop())
-    //         {
-    //             audioSource->close();
-    //             audioMp3->stop();
-    //             stop_loop();
-    //         }
-    //     }
-    // }
     play_tone();
+    while (is_running)
+    {
+        play_tone();
+    }
+
     // Serial.println("after beep");
 }
 
