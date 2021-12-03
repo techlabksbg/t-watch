@@ -3,7 +3,6 @@
  */
 
 #pragma once
-#define SPIFFSAUDIO_MP3FILE "/4d.mp3"
 
 #include <SPIFFS.h>
 
@@ -40,12 +39,23 @@ private:
     useconds_t file_lenght = 180;
 
     bool is_running = false;
+    bool is_quarter = false;
+    int loop_count = 0;
 
+    const char *audiofile[2] = {"/4d.mp3", "/4c#.mp3"};
     void buildAudioChain();
     void play_tone();
 
-    lv_obj_t *metronome, *slider, *metronome_speed_label;
-    // time_t beg_t;
+    lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note;
+
+    static void quarter_note_cb(lv_obj_t *obj, lv_event_t event)
+    {
+        if (event == LV_EVENT_VALUE_CHANGED)
+        {
+            ((Metronome *)lv_obj_get_user_data(obj))->is_quarter = !((Metronome *)lv_obj_get_user_data(obj))->is_quarter;
+        }
+    }
+
     void set_labels(int speed)
     {
         static char buf[8];
@@ -54,16 +64,15 @@ private:
         int wait_time = (60000 / (float)speed) + 0.5;
         stop_loop();
         start_loop(wait_time);
-        // time(&beg_t);
         lv_obj_align(metronome_speed_label, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);
     }
+
     static void slider_cb(lv_obj_t *obj, lv_event_t event)
     {
         if (event == LV_EVENT_VALUE_CHANGED)
         {
             int speed_label = lv_slider_get_value(obj);
-            Metronome *speed = (Metronome *)lv_obj_get_user_data(obj);
-            speed->set_labels(speed_label);
+            ((Metronome *)lv_obj_get_user_data(obj))->set_labels(speed_label);
         }
     }
 };

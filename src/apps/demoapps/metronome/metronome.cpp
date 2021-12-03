@@ -26,6 +26,12 @@ bool Metronome::create()
     lv_label_set_align(metronome, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(metronome, NULL, LV_ALIGN_IN_TOP_LEFT, 20, 20);
 
+    quarter_note = lv_checkbox_create(myScr, NULL);
+    lv_checkbox_set_text(quarter_note, "Quarter Notes");
+    lv_obj_set_event_cb(quarter_note, quarter_note_cb);
+    lv_obj_align(quarter_note, NULL, LV_ALIGN_CENTER, 0, 40);
+    lv_obj_set_user_data(quarter_note, this);
+
     Serial.println("Creating Metronome");
     return true;
 }
@@ -33,8 +39,6 @@ bool Metronome::create()
 bool Metronome::show()
 {
     Serial.println("Showing Metronome");
-    int wait_time = (60000 / (float)80) + 0.5;
-    start_loop(wait_time);
     lv_obj_set_event_cb(slider, slider_cb);
     return true;
 }
@@ -51,16 +55,20 @@ void Metronome::buildAudioChain()
         //External DAC decoding
         audioI2S->SetPinout(TWATCH_DAC_IIS_BCK, TWATCH_DAC_IIS_WS, TWATCH_DAC_IIS_DOUT);
         audioMp3 = new AudioGeneratorMP3();
-        //audioMp3->begin(audioID3, audioI2S);
         Serial.println("Audiochain done.");
     }
 }
 
 void Metronome::play_tone()
 {
+    int choose_file = 1;
     if (audioMp3 == nullptr)
     {
         buildAudioChain();
+    }
+    if (is_quarter && loop_count == 4)
+    {
+        choose_file = 0;
     }
     if (audioMp3 != nullptr)
     {
@@ -70,13 +78,17 @@ void Metronome::play_tone()
             audioSource->close();
             audioMp3->stop();
         }
-        else if (!audioMp3->isRunning() && SPIFFS.exists(SPIFFSAUDIO_MP3FILE))
+        else if (!audioMp3->isRunning() && SPIFFS.exists(audiofile[choose_file]))
         {
-            audioSource->open(SPIFFSAUDIO_MP3FILE);
+            if (loop_count == 4)
+            {
+                loop_count = 0;
+            }
+            audioSource->open(audiofile[choose_file]);
             audioMp3->begin(audioID3, audioI2S);
             usleep(180);
             is_running = true;
-            // start_loop(5);
+            loop_count++;
         }
     }
 }
@@ -99,14 +111,11 @@ void Metronome::play_tone()
 
 void Metronome::loop()
 {
-    Serial.println("beep");
     play_tone();
     while (is_running)
     {
         play_tone();
     }
-
-    // Serial.println("after beep");
 }
 
 bool Metronome::hide()
@@ -119,7 +128,6 @@ bool Metronome::hide()
             {
                 audioSource->close();
                 audioMp3->stop();
-                // stop_loop();
             }
         }
     }
