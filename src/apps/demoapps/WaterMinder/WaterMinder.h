@@ -1,5 +1,5 @@
 /**
- * @author Jirayu Ruh
+ * @author JirR02
  */
 
 #pragma once
@@ -20,8 +20,4 @@ class WaterMinder : public App {
     void* getIcon() { return (void*) &WaterMindericon; }
     const char * getName() { return "WaterMinder"; }
 
-    static void event_handler(lv_obj_t * obj, lv_event_t event) {        
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ttgo->motor->onec();
-    }
 };
