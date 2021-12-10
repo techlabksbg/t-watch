@@ -31,10 +31,3 @@ bool WaterMinder::create()
 
     return true;
 }
-
-void WaterMinder::loop()
-{
-    if (state == 1)
-    lv_label_set_text(Counter, "Drank 1 Bottle")
-
-}
