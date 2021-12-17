@@ -20,8 +20,13 @@ class WaterMinder : public App {
     void* getIcon() { return (void*) &WaterMindericon; }
     const char * getName() { return "WaterMinder"; }
 
-    std::string Drank = "Drank";
-    std::string Bottles = "Bottles";
+private:
+    std::string Drank = "#ffffff Drank ";
+    std::string Bottles = "#ffffff Bottle(s) ";
     std::string OutputText;
-    int AmountOfBottles = 0;
+    std::string AmountOfBottles = "#ffffff 0";
+
+    void Add_Water_Bottle();
+
+    lv_obj_t *Counter;
 };
