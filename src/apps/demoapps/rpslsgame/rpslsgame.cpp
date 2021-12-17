@@ -3,10 +3,17 @@
  */
 
 #include "rpslsgame.h"
+#include "esp_bt_main.h"
 
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
 
 
 bool RpslsGame::create() {
+    for (int i=0; i<2; i++) {
+        scores[i] = 0;
+    }
     return true;
 }
 bool RpslsGame::show() {
@@ -25,17 +32,45 @@ bool RpslsGame::show() {
         }
         if (event == LV_EVENT_CLICKED) {
             Serial.println("clicked in CB");
-            ((RpslsGame*)(lv_obj_get_user_data(bg)))->click(x,y);
+            ((RpslsGame*)(lv_obj_get_user_data(bg)))->click(x,y,false);
+        }
+        if (event==LV_EVENT_LONG_PRESSED) {
+             Serial.println("Long-pressed in CB");
+            ((RpslsGame*)(lv_obj_get_user_data(bg)))->click(x,y,true);
         }
     });
 
     for (int i=0; i<2; i++) {
-        scores[i] = 0;
         labels[i] = styles.stdTitle(bg, "0");
    
     }
     updateLabels();
+    SerialBT = new BluetoothSerial;
+    start_loop(100);
     return true;
+}
+
+void RpslsGame::loop() {
+    switch (zustand) {
+        case INIT:
+            SerialBT->begin("RpslsClient", true);
+            if (SerialBT->connect("RpslsServer")) {
+                zustand = CONNECTED_AS_CLIENT;
+                Serial.println("Connected as client to Server");
+            } else {
+                SerialBT->end();
+                SerialBT->begin("RpslsServer");
+                zustand = WAITING_FOR_CLIENT;
+                Serial.println("No server, serving myself and waiting for Client");
+            }
+            break;
+        case WAITING_FOR_CLIENT:
+            if (SerialBT->connected()) {
+                zustand = CONNECTED_AS_SERVER;
+                Serial.println("Connected as Server");
+            }
+            break;
+    }
 }
 
 void RpslsGame::updateLabels() {
@@ -45,14 +80,57 @@ void RpslsGame::updateLabels() {
     }
 }
 
-void RpslsGame::click(int x, int y) {
+void RpslsGame::click(int x, int y, bool long_pressed) {
+    int player_1 = 0;
+    int cx [] = {119, 199, 149, 89, 39};
+    int cy [] = {30, 95,209,209, 85};
+
     if (active!=nullptr) {
         delete active;
         active = nullptr;
     }
-    Serial.printf("click at %d,%d\n", x,y);
-    active = new Overlay(bg,x,y,40, LV_COLOR_MAKE(250,100,50));
-    scores[random(2)]++;
+    if (long_pressed && abs (x-119) <20 && abs(y-119) <20 ){
+       scores[0]=0;
+       scores[1]=0;
+    }
+    else if (! long_pressed) {
+        if ((x-119)*(x-119)+(y-30)*(y-30)<(23*23)) {
+            player_1 = 0;
+        }
+        if ((x-199)*(x-199)+(y-95)*(y-95)<(23*23)) {
+            player_1 = 1;
+        }
+        if ((x-149)*(x-149)+(y-209)*(y-209)<(23*23)) {
+            player_1 = 2;
+        }
+        if ((x-89)*(x-89)+(y-209)*(y-209)<(23*23)) {
+            player_1 = 3;
+        }
+        if ((x-39)*(x-39)+(y-95)*(y-95)<(23*23)) {
+            player_1 = 4;
+        }
+        int computer = random(5);
+        Serial.println (computer);
+
+        Serial.println (player_1);
+
+        int dif = (computer + 5 - player_1)%5;
+
+        if (dif == 0){
+            Serial.println ("draw");
+        }else {
+            if (dif == 1|| dif ==3){
+                scores[1] ++ ;        
+            }else{
+                scores[0] ++ ;
+            }
+        }
+        active = new Overlay(bg,cx[computer],cy[computer],40, LV_COLOR_MAKE(250,100,50));
+    }
+       
+        
+   
+    
     updateLabels();
 }
 
@@ -86,7 +164,12 @@ bool RpslsGame::hide() {
         active = nullptr;
     }
     lv_obj_del(bg);
+    SerialBT->end();
+    zustand = INIT;
+    delete SerialBT;
+    stop_loop();
     return true;
+    
 }
 bool RpslsGame::destroy() {
     return true;
