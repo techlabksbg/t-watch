@@ -21,13 +21,18 @@ bool WaterMinder::create()
     lv_label_set_text(Counter, "#ffffff Drank 0 Bottles");
     lv_obj_align(Counter, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -40);
 
-    /**
-    Button in Progress
-    */
+    lv_obj_t* motorButton = styles.stdButton(bg, "Brr...", motor_button_cb);
+    lv_obj_align(motorButton, myScr, LV_ALIGN_CENTER, 0,0);
 
     lv_obj_t* LabelCounterButton = lv_label_create(myScr, NULL);
     lv_label_set_text(LabelCounterButton, "+ 1 Bottle");
     lv_obj_align(LabelCounterButton, NULL, LV_ALIGN_CENTER, 0, 0);
 
     return true;
-}
+};
+void motor_button_cb(lv_obj_t *obj, lv_event_t event) {        
+        if (event != LV_EVENT_SHORT_CLICKED) return;
+        AmountOfBottles++;
+        OutputText = Drank + Bottles;
+        lv_label_set_text(LabelCounterButton, OutputText);
+};

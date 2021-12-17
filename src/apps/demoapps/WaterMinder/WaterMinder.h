@@ -20,4 +20,8 @@ class WaterMinder : public App {
     void* getIcon() { return (void*) &WaterMindericon; }
     const char * getName() { return "WaterMinder"; }
 
+    std::string Drank = "Drank";
+    std::string Bottles = "Bottles";
+    std::string OutputText;
+    int AmountOfBottles = 0;
 };
