@@ -13,12 +13,12 @@ bool Metronome::create()
     lv_obj_set_width(slider, 200);
     lv_obj_align(slider, myScr, LV_ALIGN_CENTER, 0, 0);
     lv_slider_set_range(slider, 20, 300); // mp3 files all 180ms long
-    lv_slider_set_value(slider, 80, LV_ANIM_ON);
+    lv_slider_set_value(slider, speed_init, LV_ANIM_ON);
     lv_obj_set_user_data(slider, this);
 
     metronome_speed_label = lv_label_create(myScr, NULL);
     lv_obj_add_style(metronome_speed_label, LV_OBJ_PART_MAIN, &styles.textLabel);
-    set_labels(80);
+    set_labels(speed_init);
 
     metronome = lv_label_create(myScr, NULL);
     lv_obj_add_style(metronome, LV_OBJ_PART_MAIN, &styles.titleLabel);
@@ -40,6 +40,8 @@ bool Metronome::show()
 {
     Serial.println("Showing Metronome");
     lv_obj_set_event_cb(slider, slider_cb);
+    start_loop(5);
+    time_last = millis();
     return true;
 }
 void Metronome::buildAudioChain()
@@ -56,6 +58,33 @@ void Metronome::buildAudioChain()
         audioI2S->SetPinout(TWATCH_DAC_IIS_BCK, TWATCH_DAC_IIS_WS, TWATCH_DAC_IIS_DOUT);
         audioMp3 = new AudioGeneratorMP3();
         Serial.println("Audiochain done.");
+    }
+}
+
+void Metronome::freeAudioChain()
+{
+    if (audioMp3 != nullptr)
+    {
+        Serial.println("SpiffsAudio::hide() tearing down audio chain...");
+        if (audioMp3->isRunning())
+        {
+            Serial.println("Stopping mp3");
+            audioMp3->stop();
+        }
+        Serial.println("delete audioMP3");
+        delete audioMp3;
+        audioMp3 = nullptr;
+        Serial.println("delete audioI2S");
+        delete audioI2S;
+        audioI2S = nullptr;
+        Serial.println("delete audioID3");
+        delete audioID3;
+        audioID3 = nullptr;
+        Serial.println("delete audioSource");
+        delete audioSource;
+        audioSource = nullptr;
+        Serial.println("Tear down done, disabling hardware...");
+        ttgo->disableAudio();
     }
 }
 
@@ -77,6 +106,7 @@ void Metronome::play_tone()
             is_running = false;
             audioSource->close();
             audioMp3->stop();
+            state = 0;
         }
         else if (!audioMp3->isRunning() && SPIFFS.exists(audiofile[choose_file]))
         {
@@ -86,33 +116,25 @@ void Metronome::play_tone()
             }
             audioSource->open(audiofile[choose_file]);
             audioMp3->begin(audioID3, audioI2S);
-            usleep(180);
             is_running = true;
             loop_count++;
         }
     }
 }
 
-// void Metronome::loop()
-// {
-//     if (audioMp3 != nullptr)
-//     {
-//         if (audioMp3->isRunning())
-//         {
-//             if (!audioMp3->loop())
-//             {
-//                 audioSource->close();
-//                 audioMp3->stop();
-//                 stop_loop();
-//             }
-//         }
-//     }
-// }
-
 void Metronome::loop()
 {
-    play_tone();
-    while (is_running)
+    time = millis(); // overflow not managed; overflow at ~49 days
+    if (state == 0)
+    {
+        if (time - time_last > wait_time)
+        {
+            play_tone();
+            state = 1;
+            time_last = time;
+        }
+    }
+    else if (state == 1)
     {
         play_tone();
     }
@@ -120,17 +142,7 @@ void Metronome::loop()
 
 bool Metronome::hide()
 {
-    if (audioMp3 != nullptr)
-    {
-        if (audioMp3->isRunning())
-        {
-            if (!audioMp3->loop())
-            {
-                audioSource->close();
-                audioMp3->stop();
-            }
-        }
-    }
     stop_loop();
+    freeAudioChain();
     return true;
 }

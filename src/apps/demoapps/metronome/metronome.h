@@ -41,9 +41,14 @@ private:
     bool is_running = false;
     bool is_quarter = false;
     int loop_count = 0;
+    int time, time_last;
+    int speed_init = 80;
+    int wait_time = (60000 / (float)speed_init) + 0.5;
+    int state = 0; // 0 = waiting for time to pass; 1 = playing a tone
 
     const char *audiofile[2] = {"/4d.mp3", "/4c#.mp3"};
     void buildAudioChain();
+    void freeAudioChain();
     void play_tone();
 
     lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note;
@@ -61,9 +66,9 @@ private:
         static char buf[8];
         snprintf(buf, 8, "%u bpm", speed);
         lv_label_set_text(metronome_speed_label, buf);
-        int wait_time = (60000 / (float)speed) + 0.5;
-        stop_loop();
-        start_loop(wait_time);
+        wait_time = (60000 / (float)speed) + 0.5;
+        // stop_loop();
+        // start_loop(wait_time);
         lv_obj_align(metronome_speed_label, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);
     }
 
