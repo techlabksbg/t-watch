@@ -9,7 +9,6 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-
 bool RpslsGame::create() {
     for (int i=0; i<2; i++) {
         scores[i] = 0;
