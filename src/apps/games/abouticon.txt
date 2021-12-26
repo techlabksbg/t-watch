@@ -1,0 +1,13 @@
+gamesicon.png
+
+White shadow added by Ivo Blöchliger
+
+From: https://openmoji.org/library/#search=game&emoji=1F3AE
+
+CC-BY-SA 4.0
+
+Unicode	1F3AE
+🎮
+Author	Lisa Schulz
+Category	activities
+Subcategory	game
