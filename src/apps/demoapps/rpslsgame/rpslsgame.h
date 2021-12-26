@@ -20,6 +20,7 @@ class RpslsGame : public App {
     virtual bool hide();
     virtual bool destroy();
     virtual void loop();
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
 
     virtual void* getIcon() { return (void*)&rpslsgameicon; }
     virtual const char * getName() {return "Rock, Scissors,...";}
@@ -38,7 +39,13 @@ class RpslsGame : public App {
     lv_obj_t* bg; 
     // currently active overlay (or nullptr if none)
     Overlay* active = nullptr;
+    // Server/Client buttons
+    lv_obj_t* serverBT;
+    lv_obj_t* clientBT;
+    lv_obj_t* soloBT;
 
+
+    void startGame();
     // Called when clicked on bg
     void click(int x, int y, bool long_pressed);
     // Labels for the score.
@@ -48,6 +55,6 @@ class RpslsGame : public App {
     void updateLabels();
     //BluetoothSerial * SerialBT; 
 
-    enum {INIT, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
+    enum {INIT, HAN_STYLE, WAITING_FOR_SERVER, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
 
 };

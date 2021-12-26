@@ -24,56 +24,93 @@ bool RpslsGame::create() {
     }
     return true;
 }
-bool RpslsGame::show() {
-    bg = lv_img_create(myScr, NULL);  /*Create an image object*/
-    lv_img_set_src(bg, (void *) &rpslsgamebg);
-    lv_obj_align(bg, NULL, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_set_user_data(bg, this);
-    // React on clicks for this image
-    lv_obj_set_click(bg, true);
-    // Setup callback to click.
-    lv_obj_set_event_cb(bg, [](lv_obj_t* bg, lv_event_t event) {
-        static uint16_t x,y;
+
+void RpslsGame::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    static uint16_t x,y;
+    if (obj==bg) {
         if (event == LV_EVENT_PRESSED) {
             ttgo->touch->getPoint(x,y);
             return;
         }
         if (event == LV_EVENT_CLICKED) {
-            Serial.println("clicked in CB");
-            ((RpslsGame*)(lv_obj_get_user_data(bg)))->click(x,y,false);
+            click(x,y,false);
         }
         if (event==LV_EVENT_LONG_PRESSED) {
-             Serial.println("Long-pressed in CB");
-            ((RpslsGame*)(lv_obj_get_user_data(bg)))->click(x,y,true);
+            click(x,y,true);
         }
-    });
+    }
+    if (obj==serverBT || obj==clientBT || obj==soloBT) {
+        if (event == LV_EVENT_CLICKED) {
+            if (obj==serverBT) {
+                SerialBT.begin("RpslsServer");
+                zustand = WAITING_FOR_CLIENT;
+                start_loop(100);
+            }
+            if (obj==clientBT) {
+                SerialBT.begin("RpslsClient", true);
+                if (SerialBT.connect("RpslsServer")) {
+                    zustand = CONNECTED_AS_CLIENT;
+                    Serial.println("Connected as client to Server");
+                } else {
+                    zustand = WAITING_FOR_SERVER;
+                }
+                start_loop(100);
+            }
+            if (obj==soloBT) {
+                zustand = HAN_STYLE;
+            }
+            lv_obj_del(serverBT);
+            lv_obj_del(clientBT);
+            lv_obj_del(soloBT);
+            serverBT = nullptr;
+            clientBT = nullptr;
+            soloBT = nullptr;
+            startGame();
+        }
+    }
+}
 
+void RpslsGame::startGame() {
+    // React on clicks for this image
+    lv_obj_set_click(bg, true);
+    // Setup callback to click.
+    register_lv_event_callback<RpslsGame>(bg);
     for (int i=0; i<2; i++) {
         labels[i] = styles.stdTitle(bg, "0");
-   
     }
     updateLabels();
-    /*Serial.println("bluedroid init...");
-    
-    Serial.println("BluetoothSerial init");
-    SerialBT = new BluetoothSerial(); */
     start_loop(100);
+}
+
+bool RpslsGame::show() {
+    bg = lv_img_create(myScr, NULL);  /*Create an image object*/
+    lv_img_set_src(bg, (void *) &rpslsgamebg);
+    lv_obj_align(bg, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_user_data(bg, this);
+
+    serverBT = styles.stdButton(bg, "Server");
+    clientBT = styles.stdButton(bg, "Client");
+    soloBT = styles.stdButton(bg, "Solo");
+
+    lv_obj_align(serverBT, bg, LV_ALIGN_IN_TOP_MID, 0, 50);
+    lv_obj_align(clientBT, bg, LV_ALIGN_IN_TOP_MID, 0, 100);
+    lv_obj_align(soloBT, bg, LV_ALIGN_IN_TOP_MID, 0, 150);
+
+    register_lv_event_callback<RpslsGame>(serverBT);
+    register_lv_event_callback<RpslsGame>(clientBT);
+    register_lv_event_callback<RpslsGame>(soloBT);
+    
     return true;
 }
 
 void RpslsGame::loop() {
     switch (zustand) {
         case INIT:
-            Serial.println("SerialBT.begin()");
-            SerialBT.begin("RpslsClient", true);
-            if (SerialBT.connect("RpslsServer")) {
+        case HAN_STYLE:
+            break;
+        case WAITING_FOR_SERVER:
+            if (SerialBT.connected(100)) {
                 zustand = CONNECTED_AS_CLIENT;
-                Serial.println("Connected as client to Server");
-            } else {
-                SerialBT.end();
-                SerialBT.begin("RpslsServer");
-                zustand = WAITING_FOR_CLIENT;
-                Serial.println("No server, serving myself and waiting for Client");
             }
             break;
         case WAITING_FOR_CLIENT:
@@ -83,12 +120,18 @@ void RpslsGame::loop() {
             }
             break;
         case CONNECTED_AS_SERVER:
+            if (!SerialBT.hasClient()) {
+                hide_myself();
+            }
             if (SerialBT.available()) {
                 String msg  = SerialBT.readString();
                 Serial.printf("Server got >>%s<< of len=%d\n", msg.c_str(), msg.length());
             }
             break;
         case CONNECTED_AS_CLIENT:
+            if (!SerialBT.connected(10)) {
+                hide_myself();
+            }
             if (SerialBT.available()) {
                 String msg  = SerialBT.readString();
                 Serial.printf("Client got >>%s<< of len=%d\n", msg.c_str(), msg.length());
@@ -128,28 +171,21 @@ void RpslsGame::click(int x, int y, bool long_pressed) {
         if (player_1!=-1) {
             int computer = random(5);
             Serial.printf("computer=%d\n", computer);
-
             Serial.printf("player=%d\n", player_1);
-
             SerialBT.printf("%d\r\n", player_1);
-
-            int dif = (computer + 5 - player_1)%5;
-
-            if (dif == 0){
+            int diff = (computer + 5 - player_1)%5;
+            if (diff == 0){
                 Serial.println ("draw");
-            }else {
-                if (dif == 1|| dif ==3){
-                    scores[1] ++ ;        
-                }else{
-                    scores[0] ++ ;
+            } else {
+                if (diff == 1|| diff ==3){
+                    scores[1]++ ;        
+                } else {
+                    scores[0]++ ;
                 }
             }
             active = new Overlay(bg,cx[computer],cy[computer],40, LV_COLOR_MAKE(250,100,50));
         }
     }
-       
-        
-   
     
     updateLabels();
 }
