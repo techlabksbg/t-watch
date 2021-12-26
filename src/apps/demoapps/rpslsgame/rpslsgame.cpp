@@ -16,7 +16,7 @@ BluetoothSerial SerialBT;
 #endif
 
 bool RpslsGame::create() {
-    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
+    //ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
 //    log_e("esp_bluedroid_init");
 //    esp_bluedroid_init();
     for (int i=0; i<2; i++) {
@@ -77,9 +77,21 @@ void RpslsGame::loop() {
             }
             break;
         case WAITING_FOR_CLIENT:
-            if (SerialBT.connected()) {
+            if (SerialBT.hasClient()) {
                 zustand = CONNECTED_AS_SERVER;
                 Serial.println("Connected as Server");
+            }
+            break;
+        case CONNECTED_AS_SERVER:
+            if (SerialBT.available()) {
+                String msg  = SerialBT.readString();
+                Serial.printf("Server got >>%s<< of len=%d\n", msg.c_str(), msg.length());
+            }
+            break;
+        case CONNECTED_AS_CLIENT:
+            if (SerialBT.available()) {
+                String msg  = SerialBT.readString();
+                Serial.printf("Client got >>%s<< of len=%d\n", msg.c_str(), msg.length());
             }
             break;
     }
@@ -94,8 +106,8 @@ void RpslsGame::updateLabels() {
 
 void RpslsGame::click(int x, int y, bool long_pressed) {
     int player_1 = 0;
-    int cx [] = {119, 199, 149, 89, 39};
-    int cy [] = {30, 95,209,209, 85};
+    int cx [] = {119, 204, 170, 70, 36};
+    int cy [] = {38, 99, 200, 200, 99};
 
     if (active!=nullptr) {
         delete active;
@@ -106,38 +118,34 @@ void RpslsGame::click(int x, int y, bool long_pressed) {
        scores[1]=0;
     }
     else if (! long_pressed) {
-        if ((x-119)*(x-119)+(y-30)*(y-30)<(23*23)) {
-            player_1 = 0;
-        }
-        if ((x-199)*(x-199)+(y-95)*(y-95)<(23*23)) {
-            player_1 = 1;
-        }
-        if ((x-149)*(x-149)+(y-209)*(y-209)<(23*23)) {
-            player_1 = 2;
-        }
-        if ((x-89)*(x-89)+(y-209)*(y-209)<(23*23)) {
-            player_1 = 3;
-        }
-        if ((x-39)*(x-39)+(y-95)*(y-95)<(23*23)) {
-            player_1 = 4;
-        }
-        int computer = random(5);
-        Serial.println (computer);
-
-        Serial.println (player_1);
-
-        int dif = (computer + 5 - player_1)%5;
-
-        if (dif == 0){
-            Serial.println ("draw");
-        }else {
-            if (dif == 1|| dif ==3){
-                scores[1] ++ ;        
-            }else{
-                scores[0] ++ ;
+        player_1=-1;
+        for (int i=0; i<5; i++) {
+            if ((x-cx[i])*(x-cx[i])+ (y-cy[i])*(y-cy[i])<23*23) {
+                player_1 = i;
+                break;
             }
         }
-        active = new Overlay(bg,cx[computer],cy[computer],40, LV_COLOR_MAKE(250,100,50));
+        if (player_1!=-1) {
+            int computer = random(5);
+            Serial.printf("computer=%d\n", computer);
+
+            Serial.printf("player=%d\n", player_1);
+
+            SerialBT.printf("%d\r\n", player_1);
+
+            int dif = (computer + 5 - player_1)%5;
+
+            if (dif == 0){
+                Serial.println ("draw");
+            }else {
+                if (dif == 1|| dif ==3){
+                    scores[1] ++ ;        
+                }else{
+                    scores[0] ++ ;
+                }
+            }
+            active = new Overlay(bg,cx[computer],cy[computer],40, LV_COLOR_MAKE(250,100,50));
+        }
     }
        
         

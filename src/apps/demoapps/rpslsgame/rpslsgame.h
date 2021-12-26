@@ -48,6 +48,6 @@ class RpslsGame : public App {
     void updateLabels();
     //BluetoothSerial * SerialBT; 
 
-    enum {INIT, LOOK_FOR_SERVER, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
+    enum {INIT, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
 
 };

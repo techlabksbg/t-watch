@@ -42,6 +42,18 @@ class App {
     virtual void* getIcon() = 0;
     virtual const char * getName() = 0;
 
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event) {}
+
+    template<class T> void register_event_callback(lv_obj_t* obj) {
+        static_assert(std::is_base_of<App,T>::value, "class T not derived from App");
+        lv_obj_set_user_data(obj, this);
+        lv_obj_reg
+    }
+
+    template<class T> static void bla(lv_obj_t* obj, lv_event_t event) {
+        ((T*)(lv_obj_get_user_data(obj)))->
+    }
+
     app_state_t state = STATE_UNINITALIZED;
     app_type_t appType = TYPE_NORMAL;
     
