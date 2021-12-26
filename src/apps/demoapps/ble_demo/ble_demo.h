@@ -8,11 +8,10 @@
 
 LV_IMG_DECLARE(ble_demoicon);
 
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
+#include "../../../services/bleLink.h"
 
-class BLE_Demo : public App {
+
+class BLE_Demo : public App, public BLE_Link_Callbacks {
 
     virtual bool create();
     virtual bool show();
@@ -25,6 +24,8 @@ class BLE_Demo : public App {
     
     virtual void loop();
 
+    virtual void bleLinkNotify();
+
     private:
     lv_obj_t* btn1=nullptr;
     lv_obj_t* btn2=nullptr;
@@ -36,9 +37,6 @@ class BLE_Demo : public App {
     void setup_BLE_Client();
     void setup_BLE_Server(bool first);
 
-    BLECharacteristic* bleCharacteristic;
-    BLEDescriptor* bleDescriptor;
-    BLEServer* bleServer;
-    BLEService* bleService;
+    BLE_Link* bleLink = nullptr;
     
 };
