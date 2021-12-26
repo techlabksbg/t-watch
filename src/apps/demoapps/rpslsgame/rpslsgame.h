@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../../app.h"
-#include "BluetoothSerial.h"
+//#include "BluetoothSerial.h"
 
 LV_IMG_DECLARE(rpslsgameicon);
 LV_IMG_DECLARE(rpslsgamebg);
@@ -46,7 +46,7 @@ class RpslsGame : public App {
     int scores[2];
     // display the scores
     void updateLabels();
-    BluetoothSerial * SerialBT; 
+    //BluetoothSerial * SerialBT; 
 
     enum {INIT, LOOK_FOR_SERVER, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
 

@@ -40,7 +40,6 @@
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
 #include "../demoapps/rpslsgame/rpslsgame.h"
-#include "../demoapps/ble_demo/ble_demo.h"
 
 //#include <esp_debug_helpers>
 
@@ -141,7 +140,6 @@ class Launcher : public App {
     static Launcher* setupDemoLauncher() {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
-        demos->registerApp(new BLE_Demo);
         demos->registerApp(new Minesweeper);
         demos->registerApp(new RpslsGame);
         demos->registerApp(new Drawing);

@@ -4,12 +4,21 @@
 
 #include "rpslsgame.h"
 #include "esp_bt_main.h"
+#include "BluetoothSerial.h"
+
+#include "esp_bt.h"
+
+
+BluetoothSerial SerialBT;
 
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
 bool RpslsGame::create() {
+    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
+//    log_e("esp_bluedroid_init");
+//    esp_bluedroid_init();
     for (int i=0; i<2; i++) {
         scores[i] = 0;
     }
@@ -44,7 +53,10 @@ bool RpslsGame::show() {
    
     }
     updateLabels();
-    SerialBT = new BluetoothSerial;
+    /*Serial.println("bluedroid init...");
+    
+    Serial.println("BluetoothSerial init");
+    SerialBT = new BluetoothSerial(); */
     start_loop(100);
     return true;
 }
@@ -52,19 +64,20 @@ bool RpslsGame::show() {
 void RpslsGame::loop() {
     switch (zustand) {
         case INIT:
-            SerialBT->begin("RpslsClient", true);
-            if (SerialBT->connect("RpslsServer")) {
+            Serial.println("SerialBT.begin()");
+            SerialBT.begin("RpslsClient", true);
+            if (SerialBT.connect("RpslsServer")) {
                 zustand = CONNECTED_AS_CLIENT;
                 Serial.println("Connected as client to Server");
             } else {
-                SerialBT->end();
-                SerialBT->begin("RpslsServer");
+                SerialBT.end();
+                SerialBT.begin("RpslsServer");
                 zustand = WAITING_FOR_CLIENT;
                 Serial.println("No server, serving myself and waiting for Client");
             }
             break;
         case WAITING_FOR_CLIENT:
-            if (SerialBT->connected()) {
+            if (SerialBT.connected()) {
                 zustand = CONNECTED_AS_SERVER;
                 Serial.println("Connected as Server");
             }
@@ -163,9 +176,8 @@ bool RpslsGame::hide() {
         active = nullptr;
     }
     lv_obj_del(bg);
-    SerialBT->end();
+    SerialBT.end();
     zustand = INIT;
-    delete SerialBT;
     stop_loop();
     return true;
     
