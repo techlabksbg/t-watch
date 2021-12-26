@@ -8,7 +8,9 @@
 
 LV_IMG_DECLARE(ble_demoicon);
 
-
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
 
 class BLE_Demo : public App {
 
@@ -32,7 +34,7 @@ class BLE_Demo : public App {
     static void buttonClickedStatic(lv_obj_t* obj, lv_event_t event);
 
     void setup_BLE_Client();
-    void setup_BLE_Server();
+    void setup_BLE_Server(bool first);
 
     BLECharacteristic* bleCharacteristic;
     BLEDescriptor* bleDescriptor;
