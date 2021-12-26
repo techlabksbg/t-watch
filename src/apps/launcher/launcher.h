@@ -50,6 +50,7 @@ LV_IMG_DECLARE(settingsicon);
 LV_IMG_DECLARE(demoappsicon);
 LV_IMG_DECLARE(systemappsicon);
 LV_IMG_DECLARE(watchesicon);
+LV_IMG_DECLARE(gamesicon);
 
 class Launcher : public App {
     public:
@@ -141,9 +142,6 @@ class Launcher : public App {
     static Launcher* setupDemoLauncher() {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
-        demos->registerApp(new Minesweeper);
-        demos->registerApp(new SudokuApp);
-        demos->registerApp(new Game2048);
         demos->registerApp(new Drawing);
         demos->registerApp(new MotorApp);
         demos->registerApp(new AccelDemo);
@@ -157,6 +155,21 @@ class Launcher : public App {
         demos->registerApp(new Stopwatch);
         return demos;
     }
+
+    /**
+     * Build the games launcher
+     */
+    static Launcher* setupGamesLauncher() {
+        Launcher* games = new Launcher("Games", rootLauncher);
+        games->icon = (void*) &gamesicon;
+        games->registerApp(new Minesweeper);
+        games->registerApp(new SudokuApp);
+        games->registerApp(new Game2048);
+        return games;
+    }
+
+    
+
 
     static Launcher* setupWatchesLauncher() {
         Launcher* watches = new Launcher("Watches", rootLauncher);
@@ -176,10 +189,11 @@ class Launcher : public App {
         App::hide_cb = &hideApp;
         App::show_cb = &showApp;
         App::setAlarm_cb = &setAlarm;
+        Launcher::rootLauncher->registerApp(setupWatchesLauncher());
+        Launcher::rootLauncher->registerApp(setupDemoLauncher());
+        Launcher::rootLauncher->registerApp(setupGamesLauncher());
         Launcher::rootLauncher->registerApp(setupSettingsLauncher());
         Launcher::rootLauncher->registerApp(setupSystemLauncher());
-        Launcher::rootLauncher->registerApp(setupDemoLauncher());
-        Launcher::rootLauncher->registerApp(setupWatchesLauncher());
         
         Serial.println("Launcher::setup() complete");
         if (configJson->containsKey("alarmApp")) {
