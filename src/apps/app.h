@@ -44,14 +44,15 @@ class App {
 
     virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event) {}
 
-    template<class T> void register_event_callback(lv_obj_t* obj) {
+    template<class T> void register_lv_event_callback(lv_obj_t* obj) {
         static_assert(std::is_base_of<App,T>::value, "class T not derived from App");
         lv_obj_set_user_data(obj, this);
-        lv_obj_reg
+        lv_obj_set_event_cb(obj, generic_lv_event_callback<T>);
     }
 
-    template<class T> static void bla(lv_obj_t* obj, lv_event_t event) {
-        ((T*)(lv_obj_get_user_data(obj)))->
+    template<class T> static void generic_lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+        static_assert(std::is_base_of<App,T>::value, "class T not derived from App");
+        ((T*)(lv_obj_get_user_data(obj)))->lv_event_callback(obj, event);
     }
 
     app_state_t state = STATE_UNINITALIZED;
