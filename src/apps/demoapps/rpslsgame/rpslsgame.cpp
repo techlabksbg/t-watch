@@ -74,7 +74,7 @@ void RpslsGame::startGame() {
     // React on clicks for this image
     lv_obj_set_click(bg, true);
     // Setup callback to click.
-    register_lv_event_callback<RpslsGame>(bg);
+    register_lv_event_callback(bg);
     for (int i=0; i<2; i++) {
         labels[i] = styles.stdTitle(bg, "0");
     }
@@ -96,9 +96,9 @@ bool RpslsGame::show() {
     lv_obj_align(clientBT, bg, LV_ALIGN_IN_TOP_MID, 0, 100);
     lv_obj_align(soloBT, bg, LV_ALIGN_IN_TOP_MID, 0, 150);
 
-    register_lv_event_callback<RpslsGame>(serverBT);
-    register_lv_event_callback<RpslsGame>(clientBT);
-    register_lv_event_callback<RpslsGame>(soloBT);
+    register_lv_event_callback(serverBT);
+    register_lv_event_callback(clientBT);
+    register_lv_event_callback(soloBT);
     
     return true;
 }
