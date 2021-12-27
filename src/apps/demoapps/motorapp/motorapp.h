@@ -19,8 +19,9 @@ class MotorApp : public App {
     void* getIcon() { return (void*) &motorappicon; }
     const char * getName() { return "MotorTest"; }
 
-    static void motor_button_cb(lv_obj_t *obj, lv_event_t event) {        
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ttgo->motor->onec();
-    }
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
+
+    private:
+    lv_obj_t* motorButton = nullptr;
+    
 };
