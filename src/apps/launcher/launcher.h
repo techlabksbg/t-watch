@@ -36,11 +36,11 @@
 #include "../demoapps/shoppinglist/shoppinglist.h"
 #include "../demoapps/tide/tide.h"
 #include "../demoapps/drawing/drawing.h"
-#include "../demoapps/minesweeper/minesweeper.h"
-#include "../demoapps/game2048/game2048.h"
+#include "../games/minesweeper/minesweeper.h"
+#include "../games/game2048/game2048.h"
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
-#include "../demoapps/sudokuapp/sudokuapp.h"
+#include "../games/sudokuapp/sudokuapp.h"
 
 //#include <esp_debug_helpers>
 
