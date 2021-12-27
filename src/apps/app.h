@@ -42,17 +42,18 @@ class App {
     virtual void* getIcon() = 0;
     virtual const char * getName() = 0;
 
+    // Imlement this method to get direct callbacks from lv_events
     virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event) {}
-
-    template<class T> void register_lv_event_callback(lv_obj_t* obj) {
-        static_assert(std::is_base_of<App,T>::value, "class T not derived from App");
+    // Register lv_objs for callback
+    void register_lv_event_callback(lv_obj_t* obj, bool makeClickable=true) {
         lv_obj_set_user_data(obj, this);
-        lv_obj_set_event_cb(obj, generic_lv_event_callback<T>);
+        if (makeClickable) lv_obj_set_click(obj, true);
+        lv_obj_set_event_cb(obj, generic_lv_event_callback);
     }
-
-    template<class T> static void generic_lv_event_callback(lv_obj_t* obj, lv_event_t event) {
-        static_assert(std::is_base_of<App,T>::value, "class T not derived from App");
-        ((T*)(lv_obj_get_user_data(obj)))->lv_event_callback(obj, event);
+    
+    // Generic callback for lv_events, calling virtual instance method.
+    static void generic_lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+        ((App*)(lv_obj_get_user_data(obj)))->lv_event_callback(obj, event);
     }
 
     app_state_t state = STATE_UNINITALIZED;
