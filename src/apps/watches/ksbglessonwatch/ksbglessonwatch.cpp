@@ -101,7 +101,7 @@ void KSBGLessonWatch::loop() {
     struct tm  info;
     char buf[64];
     // Getting time
-    time(&now);
+    rtcHandler->time(&now);
     localtime_r(&now, &info);
     strftime(buf, sizeof(buf), "%H:%M:%S", &info);
     //Serial.printf("About to set text to %s\n", buf);

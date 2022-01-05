@@ -52,7 +52,7 @@ void BhfSGWatch::loop() {
     //Serial.println("loop");
     static struct tm last {0,0,0,0};
     struct tm  info;
-    time(&now);
+    rtcHandler->time(&now);
     localtime_r(&now, &info);
     int diff = info.tm_hour ^ last.tm_hour;
     //Serial.printf("hour diff=%d\n", diff);

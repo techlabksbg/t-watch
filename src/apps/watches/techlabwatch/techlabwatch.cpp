@@ -56,7 +56,8 @@ void TechLabWatch::loop() {
     struct tm  info;
     char buf[64];
     // Getting time
-    time(&now);
+    //Serial.println("TechLabWatch::loop() :: rtcHandler->time(&now);");
+    rtcHandler->time(&now);
     localtime_r(&now, &info);
     strftime(buf, sizeof(buf), "%H\n%M\n%S", &info);
     //Serial.printf("About to set text to %s\n", buf);
