@@ -13,9 +13,11 @@ class RTCHandler {
     // and update statistics
     // Precondition: System time is now correct, rtc is still off.
     // Postcondition: rtc is also correct
-    void syncedNow();
+    void sys2rtc();
 
     private:
     double drift=1.0;
     time_t lastSync = 0;
 };
+
+extern RTCHandler* rtcHandler;
