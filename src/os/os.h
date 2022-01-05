@@ -60,4 +60,5 @@ extern bool spiffs_initialized;
 #include "jsonconfig.h"
 #include "setup.h"
 #include "loop.h"
+#include "rtchandler.h"
 //#include "systemgui/systemgui.h"
