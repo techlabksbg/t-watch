@@ -4,6 +4,14 @@
 
 #include "brightness.h"
 
+int percent2pwm(int p) {
+    return p*p*254/10000+1;
+}
+int pwm2percent(int p) {
+    return (int)(sqrt(p/255.0)*100);
+}
+
+
 bool Brightness::create() {
     lv_obj_t* bg = styles.stdBgImage(myScr);
 
@@ -28,7 +36,7 @@ bool Brightness::create() {
 bool Brightness::show() {
     // Enable gui-callbacks
     register_for_swipe_up(myScr);
-    lv_obj_set_event_cb(slider, slider_cb);
+    register_lv_event_callback(slider);
     return true;
 }
 
@@ -53,3 +61,23 @@ bool Brightness::destroy() {
     return true;
 }
 
+
+void Brightness::setLabels(int percent) {
+    static char buf[12];
+    snprintf(buf, 12, "%u%%", percent);
+    lv_label_set_text(percentLabel, buf);
+    snprintf(buf, 12, "%.3f PWM", pwm/255.0);
+    lv_label_set_text(pwmLabel, buf);
+    lv_obj_align(percentLabel, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);
+    lv_obj_align(pwmLabel, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 30);
+}
+
+
+void Brightness::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    if (event == LV_EVENT_VALUE_CHANGED && obj==slider) {
+        int percent = lv_slider_get_value(obj);
+        pwm = percent2pwm(percent);
+        setLabels(percent);
+        ttgo->bl->adjust(pwm);
+    }
+}
