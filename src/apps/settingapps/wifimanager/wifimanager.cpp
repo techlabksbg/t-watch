@@ -308,8 +308,8 @@ void WifiManager::connectionEstablished() {
     // NTP sync
     if (WiFi.isConnected()) {
         sntp_set_time_sync_notification_cb([](timeval *tv) {
-            Serial.println("ntp callback, syncing to rtc");
-            ttgo->rtc->syncToRtc();
+            Serial.println("ntp callback, setting rtc to sys");
+            rtcHandler->sys2rtc();
         });
         Serial.println("NTP sync start.");
         configTzTime((*configJson)["tz"], "pool.ntp.org");
