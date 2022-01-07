@@ -32,6 +32,12 @@ bool Metronome::create()
     lv_obj_align(quarter_note, NULL, LV_ALIGN_CENTER, 0, 40);
     lv_obj_set_user_data(quarter_note, this);
 
+    mute = lv_checkbox_create(myScr, NULL);
+    lv_checkbox_set_text(mute, "Mute");
+    lv_obj_set_event_cb(mute, mute_cb);
+    lv_obj_align(mute, NULL, LV_ALIGN_CENTER, 0, 70);
+    lv_obj_set_user_data(mute, this);
+
     Serial.println("Creating Metronome");
     return true;
 }
@@ -40,6 +46,7 @@ bool Metronome::show()
 {
     Serial.println("Showing Metronome");
     lv_obj_set_event_cb(slider, slider_cb);
+    lv_obj_add_state(mute, LV_STATE_CHECKED);
     start_loop(5);
     time_last = millis();
     return true;
@@ -103,21 +110,53 @@ void Metronome::play_tone()
     {
         if (audioMp3->isRunning() && !audioMp3->loop())
         {
-            is_running = false;
             audioSource->close();
             audioMp3->stop();
             state = 0;
         }
-        else if (!audioMp3->isRunning() && SPIFFS.exists(audiofile[choose_file]))
+        else if (!audioMp3->isRunning())// && SPIFFS.exists(audiofile[choose_file]))
         {
-            if (loop_count == 4)
+            if (!is_mute)
             {
-                loop_count = 0;
+                if (!SPIFFS.exists(audiofile[choose_file]))
+                {
+                    return;
+                }
+                if (loop_count == 4)
+                {
+                    loop_count = 0;
+                }
+                audioSource->open(audiofile[choose_file]);
+                audioMp3->begin(audioID3, audioI2S);
+                loop_count++;
             }
-            audioSource->open(audiofile[choose_file]);
-            audioMp3->begin(audioID3, audioI2S);
-            is_running = true;
-            loop_count++;
+            else
+            {
+                if (state == 0)
+                {
+                    if (is_quarter && loop_count == 4)
+                    {
+                        lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLUE);
+                    }
+                    else
+                    {
+                        lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+                    }
+                    if (loop_count == 4)
+                    {
+                        loop_count = 0;
+                    }
+                    loop_count++;
+                }
+                else if (state == 1)
+                {
+                    if (millis() - time_last > white_time)
+                    {
+                        lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+                        state = 0;
+                    }
+                }
+            }
         }
     }
 }

@@ -38,12 +38,13 @@ private:
 
     useconds_t file_lenght = 180;
 
-    bool is_running = false;
     bool is_quarter = false;
+    bool is_mute = true;
     int loop_count = 0;
     int time, time_last;
     int speed_init = 80;
     int wait_time = (60000 / (float)speed_init) + 0.5;
+    int white_time = 10;
     int state = 0; // 0 = waiting for time to pass; 1 = playing a tone
 
     const char *audiofile[2] = {"/4d.mp3", "/4c#.mp3"};
@@ -51,7 +52,15 @@ private:
     void freeAudioChain();
     void play_tone();
 
-    lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note;
+    lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note, *mute;
+
+    static void mute_cb(lv_obj_t *obj, lv_event_t event)
+    {
+        if (event == LV_EVENT_VALUE_CHANGED)
+        {
+            ((Metronome *)lv_obj_get_user_data(obj))->is_mute = !((Metronome *)lv_obj_get_user_data(obj))->is_mute;
+        }
+    }
 
     static void quarter_note_cb(lv_obj_t *obj, lv_event_t event)
     {
@@ -67,8 +76,6 @@ private:
         snprintf(buf, 8, "%u bpm", speed);
         lv_label_set_text(metronome_speed_label, buf);
         wait_time = (60000 / (float)speed) + 0.5;
-        // stop_loop();
-        // start_loop(wait_time);
         lv_obj_align(metronome_speed_label, slider, LV_ALIGN_OUT_TOP_MID, 0, -30);
     }
 
