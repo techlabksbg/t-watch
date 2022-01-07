@@ -55,7 +55,7 @@ void loadJsonConfig() {
     if (!(*configJson)["wifi"].containsKey("known")) {
         (*configJson)["wifi"]["known"] = JsonObject();
         (*configJson)["wifi"]["known"]["tech-lab"] = "tech-lab";
-        (*configJson)["wifi"]["known"]["Zabli"] = "74899316356034642314";
+        (*configJson)["wifi"]["known"]["stopbuepf"] = "stopbuepf";
         saveIt=true;
     }
     if (!(*configJson)["wifi"].containsKey("last")) {
