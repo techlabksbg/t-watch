@@ -32,7 +32,7 @@ bool WaterMinder::create()
     lv_label_set_recolor(Counter, true);
     lv_label_set_text(Counter, "#ffffff Drank 0 Bottles");
     lv_obj_align(Counter, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -40);
-    lv_obj_set_sty
+    lv_obj_set_style
     
     lv_obj_align(motorButton, myScr, LV_ALIGN_CENTER, 0,0);
 
