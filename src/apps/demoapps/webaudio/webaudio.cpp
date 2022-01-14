@@ -13,21 +13,22 @@ bool WebAudio::create() {
     lv_obj_t* bg = styles.stdBgImage(myScr);
     register_for_swipe_up(bg);
     lv_obj_add_style(bg, LV_OBJ_PART_MAIN, &styles.background);
-    connectButton = styles.stdButton(bg, "Connect", [](lv_obj_t *button, lv_event_t event) {
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ((WebAudio*)(button->user_data))->button_pressed();
-    }, this);
-    buttonLabel = lv_obj_get_child(connectButton, NULL);
+    connectButton = styles.stdButton(bg, "Connect");
+    register_lv_event_callback(connectButton);
+    
+    buttonLabel = lv_obj_get_child(connectButton, nullptr);
     lv_obj_align(connectButton, myScr, LV_ALIGN_CENTER, 0,0);
 
     return true;
 }
 
-void WebAudio::button_pressed() {
-    if (strcmp(lv_label_get_text(buttonLabel), "Quit")==0) {
-        hide_myself();
-    } else {
-        wifiManager.connect(this);
+void WebAudio::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    if (obj==connectButton && event==LV_EVENT_SHORT_CLICKED) {
+        if (strcmp(lv_label_get_text(buttonLabel), "Quit")==0) {
+            hide_myself();
+        } else {
+            wifiManager.connect(this);
+        }
     }
 }
 

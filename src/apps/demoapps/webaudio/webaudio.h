@@ -24,6 +24,8 @@ class WebAudio : public App {
     virtual bool show();
     virtual bool hide();
     virtual bool destroy() { return true;}
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
+
     
     void* getIcon() { return (void*) &webaudioicon; }
     const char * getName() { return "WebAudio"; }
@@ -31,8 +33,6 @@ class WebAudio : public App {
     virtual void loop();
    
     private:
-
-    void button_pressed();
 
     lv_obj_t* connectButton = nullptr;
     lv_obj_t* buttonLabel = nullptr;
