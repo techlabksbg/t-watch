@@ -23,8 +23,8 @@ TODO:
   - crash when removing an ssid (write to JSON succeeds)
   - WiFi-Manage blank after adding SSID...
   - show message before reboot or power off.
-  - investigate TimeDrift and RTC sync...
   - store certificates on spiffs (may be offer possibility to download them)
+  - Watch with battery and memory info
 
 
 
@@ -43,7 +43,7 @@ TODO:
  
 
 IDEAS:
-  - screencast save only changed areas
+  - screencast save only changed areas, use tcp, configurable IP
 
 Convert a dump to images:
 ffmpeg -vcodec rawvideo -f rawvideo -pix_fmt rgb565 -s 240x240 -i test.raw -f image2 -vcodec png 'out%02d'.png
