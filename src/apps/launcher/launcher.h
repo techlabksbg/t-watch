@@ -43,6 +43,7 @@
 #include "../games/sudokuapp/sudokuapp.h"
 #include "../demoapps/metronome/metronome.h"
 #include "../demoapps/rpslsgame/rpslsgame.h"
+#include "../demoapps/WaterMinder/WaterMinder.h"
 
 //#include <esp_debug_helpers>
 
@@ -156,6 +157,7 @@ class Launcher : public App {
         demos->registerApp(new Hello_World);
         demos->registerApp(new Stopwatch);
         demos->registerApp(new Metronome);
+        demos->registerApp(new WaterMinder);
         return demos;
     }
 

@@ -1,10 +1,11 @@
 /**
- * @author Jirayu Ruh
+ * @author JirR02
  */
 
 #pragma once
 
 #include "../../app.h"
+#include <string.h>
 
 LV_IMG_DECLARE(WaterMindericon);
 LV_IMG_DECLARE(WaterBottle)
@@ -20,8 +21,16 @@ class WaterMinder : public App {
     void* getIcon() { return (void*) &WaterMindericon; }
     const char * getName() { return "WaterMinder"; }
 
-    static void event_handler(lv_obj_t * obj, lv_event_t event) {        
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ttgo->motor->onec();
-    }
+private:
+    String Drank;
+    String Bottles;
+    String OutputText;
+    int AmountOfBottlesInt = 0;
+    int AmountOfBottlesGoal = 4;
+
+    void Add_Water_Bottle();
+    void Remove_Water_Bottle();
+
+    lv_obj_t *Counter;
+    lv_obj_t *Goal;
 };
