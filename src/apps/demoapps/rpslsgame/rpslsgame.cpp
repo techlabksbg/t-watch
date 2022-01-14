@@ -126,6 +126,7 @@ void RpslsGame::loop() {
             if (SerialBT.available()) {
                 String msg  = SerialBT.readString();
                 Serial.printf("Server got >>%s<< of len=%d\n", msg.c_str(), msg.length());
+                GameEvent(msg.toInt(), 1);
             }
             break;
         case CONNECTED_AS_CLIENT:
@@ -135,6 +136,7 @@ void RpslsGame::loop() {
             if (SerialBT.available()) {
                 String msg  = SerialBT.readString();
                 Serial.printf("Client got >>%s<< of len=%d\n", msg.c_str(), msg.length());
+                GameEvent(msg.toInt(), 1);
             }
             break;
     }
@@ -165,31 +167,64 @@ void RpslsGame::click(int x, int y, bool long_pressed) {
         for (int i=0; i<5; i++) {
             if ((x-cx[i])*(x-cx[i])+ (y-cy[i])*(y-cy[i])<23*23) {
                 player_1 = i;
+                GameEvent(i,0);
                 break;
             }
         }
-        if (player_1!=-1) {
+        if (player_1!=-1 && zustand == HAN_STYLE) {
             int computer = random(5);
             Serial.printf("computer=%d\n", computer);
             Serial.printf("player=%d\n", player_1);
+            GameEvent(computer,1);
+        }
+        else if (player_1 != -1){
             SerialBT.printf("%d\r\n", player_1);
-            int diff = (computer + 5 - player_1)%5;
-            if (diff == 0){
-                Serial.println ("draw");
-            } else {
-                if (diff == 1|| diff ==3){
-                    scores[1]++ ;        
-                } else {
-                    scores[0]++ ;
-                }
-            }
-            active = new Overlay(bg,cx[computer],cy[computer],40, LV_COLOR_MAKE(250,100,50));
         }
     }
     
     updateLabels();
 }
 
+void RpslsGame::GameEvent(int Auswahl, int wer){
+    Serial.printf("GameEvent(Auswahl=%d, wer=%d), meins=%d, deins=%d\n",Auswahl, wer, meine_Auswahl, seine_Auswahl);
+    if (active!=nullptr) {
+            delete active;
+            active = nullptr;
+        }
+    if (wer == 0){
+        if (meine_Auswahl ==-1){
+            meine_Auswahl = Auswahl;
+        }
+    }
+    else{
+        if (seine_Auswahl == -1){
+            seine_Auswahl = Auswahl;
+        } 
+    }
+    
+    if (meine_Auswahl != -1 && seine_Auswahl != -1) {
+        int diff = (seine_Auswahl + 5 - meine_Auswahl)%5;
+        if (diff == 0){
+            Serial.println ("draw");
+        } else {
+            if (diff == 1|| diff ==3){
+                scores[1]++ ;   
+                Serial.println("You WIN");
+            } else {
+                scores[0]++ ;
+                Serial.println("YOU LOSE");
+            }
+        }
+        updateLabels();
+        int cx [] = {119, 204, 170, 70, 36};
+        int cy [] = {38, 99, 200, 200, 99};
+        
+        active = new Overlay(bg,cx[seine_Auswahl],cy[seine_Auswahl],40, LV_COLOR_MAKE(250,100,50));
+        meine_Auswahl = -1;
+        seine_Auswahl = -1;
+
+    }
+}
 RpslsGame::Overlay::~Overlay() {
     lv_obj_del(overlay);
     delete style;

@@ -43,7 +43,8 @@ class RpslsGame : public App {
     lv_obj_t* serverBT;
     lv_obj_t* clientBT;
     lv_obj_t* soloBT;
-
+    int meine_Auswahl = -1;
+    int seine_Auswahl = -1;
 
     void startGame();
     // Called when clicked on bg
@@ -54,6 +55,7 @@ class RpslsGame : public App {
     // display the scores
     void updateLabels();
     //BluetoothSerial * SerialBT; 
+    void GameEvent(int Auswahl,int wer);
 
     enum {INIT, HAN_STYLE, WAITING_FOR_SERVER, WAITING_FOR_CLIENT, CONNECTED_AS_SERVER, CONNECTED_AS_CLIENT} zustand = INIT;
 
