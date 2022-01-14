@@ -3,6 +3,7 @@
  */
 
 #include "WaterMinder.h"
+#include <string.h>
 
 bool WaterMinder::create()
 {
@@ -14,13 +15,9 @@ bool WaterMinder::create()
 
     lv_obj_t *WaterbottleImage = lv_img_create(myScr, NULL);
     lv_img_set_src(WaterbottleImage, &WaterBottle);
-    lv_obj_align(WaterbottleImage, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+    lv_obj_align(WaterbottleImage, NULL, LV_ALIGN_IN_TOP_MID, 0, 5);
 
-    lv_obj_t* LabelCounterButton = lv_label_create(myScr, NULL);
-    lv_label_set_text(LabelCounterButton, "+ 1 Bottle");
-    lv_obj_align(LabelCounterButton, NULL, LV_ALIGN_CENTER, 0, 0);
-
-    lv_obj_t *motorButton = styles.stdButton(
+    lv_obj_t *AddButton = styles.stdButton(
         myScr, "+ 1 Bottle", [](lv_obj_t *button, lv_event_t event)
         {
         if (event != LV_EVENT_SHORT_CLICKED)
@@ -28,24 +25,65 @@ bool WaterMinder::create()
         ((WaterMinder *)(button->user_data))->Add_Water_Bottle();
         },
         this);
+
+    lv_obj_t *RemoveButton = styles.stdButton(
+        myScr, "- 1 Bottle", [](lv_obj_t *button, lv_event_t event)
+        {
+        if (event != LV_EVENT_SHORT_CLICKED)
+            return;
+        ((WaterMinder *)(button->user_data))->Remove_Water_Bottle();
+        },
+        this);
+
     Counter = lv_label_create(myScr, NULL);
-    lv_label_set_recolor(Counter, true);
-    lv_label_set_text(Counter, "#ffffff Drank 0 Bottles");
-    lv_obj_align(Counter, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -40);
-    lv_obj_set_style
+    lv_obj_add_style(Counter, LV_OBJ_PART_MAIN, &styles.textLabel);
+    lv_label_set_text(Counter, "Drank 0 Bottle(s)");
+    lv_obj_align(Counter, NULL, LV_ALIGN_IN_BOTTOM_MID, 0,-30);
+
+    Goal = lv_label_create(myScr, NULL);
+    lv_obj_add_style(Goal, LV_OBJ_PART_MAIN, &styles.textLabel);
+    lv_label_set_text(Goal, "Goal: Drink 4 Bottles");
+    lv_obj_align(Goal, NULL, LV_ALIGN_IN_BOTTOM_MID, 0,-5);
     
-    lv_obj_align(motorButton, myScr, LV_ALIGN_CENTER, 0,0);
+    lv_obj_align(AddButton, myScr, LV_ALIGN_CENTER, 0,-15);
+    lv_obj_align(RemoveButton, myScr, LV_ALIGN_CENTER, 0,35);
 
     return true;
 }
 
 void WaterMinder::Add_Water_Bottle()
 {
-    std::string Drank = "#ffffff Drank ";
-    std::string Bottles = "#ffffff Bottle(s)";
-    std::string OutputText;
-    std::string AmountOfBottles = "#ffffff 0";
+    String Drank = "Drank ";
+    String Bottles = " Bottle(s) ";
 
-    OutputText = Drank + AmountOfBottles + Bottles;
+    AmountOfBottlesInt = AmountOfBottlesInt + 1;
+
+    OutputText = Drank + AmountOfBottlesInt + Bottles;
     lv_label_set_text(Counter, OutputText.c_str());
+
+    if(AmountOfBottlesInt == AmountOfBottlesGoal)
+    {
+       lv_label_set_text(Goal, "Goal reached!");
+    }
+}
+
+void WaterMinder::Remove_Water_Bottle()
+{
+    String Drank = "Drank ";
+    String Bottles = " Bottle(s) ";
+
+    AmountOfBottlesInt = AmountOfBottlesInt - 1;
+
+    if(AmountOfBottlesInt < 0)
+    {
+        AmountOfBottlesInt = 0;
+    }
+
+    OutputText = Drank + AmountOfBottlesInt + Bottles;
+    lv_label_set_text(Counter, OutputText.c_str());
+
+    if(AmountOfBottlesInt < AmountOfBottlesGoal)
+    {
+        lv_label_set_text(Goal, "Goal: Drink 4 Bottles");
+    }   
 }

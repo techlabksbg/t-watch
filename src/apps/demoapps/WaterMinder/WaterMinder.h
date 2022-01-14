@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../app.h"
+#include <string.h>
 
 LV_IMG_DECLARE(WaterMindericon);
 LV_IMG_DECLARE(WaterBottle)
@@ -21,12 +22,15 @@ class WaterMinder : public App {
     const char * getName() { return "WaterMinder"; }
 
 private:
-    std::string Drank = "#ffffff Drank ";
-    std::string Bottles = "#ffffff Bottle(s) ";
-    std::string OutputText;
-    std::string AmountOfBottles = "#ffffff 0";
+    String Drank;
+    String Bottles;
+    String OutputText;
+    int AmountOfBottlesInt = 0;
+    int AmountOfBottlesGoal = 4;
 
     void Add_Water_Bottle();
+    void Remove_Water_Bottle();
 
     lv_obj_t *Counter;
+    lv_obj_t *Goal;
 };
