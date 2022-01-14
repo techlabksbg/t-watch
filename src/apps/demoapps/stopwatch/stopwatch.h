@@ -15,6 +15,7 @@ class Stopwatch : public App
     virtual bool show();
     virtual bool hide();
     virtual bool destroy() { return true; }
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
 
     virtual void loop();
 

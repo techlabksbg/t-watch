@@ -27,26 +27,16 @@ bool Stopwatch::create()
     lv_label_set_align(last_time, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(last_time, NULL, LV_ALIGN_IN_TOP_LEFT, 150, 50);
 
-    start_pause_resume_button = styles.stdButton(
-        myScr, "Start", [](lv_obj_t *button, lv_event_t event)
-        {
-            if (event != LV_EVENT_SHORT_CLICKED)
-                return;
-            ((Stopwatch *)(button->user_data))->start_pause_resume_time();
-        },
-        this);
+    start_pause_resume_button = styles.stdButton(myScr, "Start");
+    register_lv_event_callback(start_pause_resume_button);
+
     start_pause_resume_label = lv_obj_get_child(start_pause_resume_button, NULL);
     lv_label_set_align(start_pause_resume_label, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(start_pause_resume_button, myScr, LV_ALIGN_IN_TOP_LEFT, 20, 75);
 
-    stop_reset_button = styles.stdButton(
-        myScr, "Start", [](lv_obj_t *button, lv_event_t event)
-        {
-            if (event != LV_EVENT_SHORT_CLICKED)
-                return;
-            ((Stopwatch *)(button->user_data))->stop_reset_time();
-        },
-        this);
+    stop_reset_button = styles.stdButton(myScr, "Start");
+    register_lv_event_callback(stop_reset_button);
+
     stop_reset_label = lv_obj_get_child(stop_reset_button, NULL);
     lv_label_set_align(stop_reset_label, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(stop_reset_button, myScr, LV_ALIGN_IN_TOP_LEFT, 20, 125);
@@ -116,6 +106,15 @@ bool Stopwatch::hide()
 {
     stop_loop();
     return true;
+}
+
+void Stopwatch::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    if (obj==start_pause_resume_button && event == LV_EVENT_SHORT_CLICKED) {
+        start_pause_resume_time();
+    }
+    if (obj == stop_reset_button && event == LV_EVENT_SHORT_CLICKED) {
+        stop_reset_time();
+    }
 }
 
 void Stopwatch::start_pause_resume_time()
