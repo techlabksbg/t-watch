@@ -16,6 +16,8 @@ class Game2048 : public App {
     virtual bool hide();
     virtual bool destroy();
     virtual bool processDoubleTap() { return true; } // Do not terminate App on double Tap
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
+
     
     void* getIcon() { return (void*) &game2048icon; }
     const char * getName() { return "2048"; }

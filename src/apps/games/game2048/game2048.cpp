@@ -25,17 +25,8 @@ lv_color_t Game2048::colors[] = {
 bool Game2048::create() {
     // General background to black
     lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
-    // Set up and register callback
-    lv_obj_set_click(myScr, true);
-    lv_obj_set_user_data(myScr, this);
-    lv_obj_set_event_cb(myScr, [](lv_obj_t *obj, lv_event_t event) {
-        static uint16_t x,y;
-        if (event==LV_EVENT_PRESSING) { // This is a race condition... 
-            ttgo->touch->getPoint(x,y);
-        }
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        ((Game2048*)(obj->user_data))->click(x,y);
-    });
+    // register callback
+    register_lv_event_callback(myScr, true);
 
     feld = new byte[16];
     for (int i=0; i<16; i++) {
@@ -44,6 +35,15 @@ bool Game2048::create() {
     feld[rand()%16] = 1;
     feld[rand()%16] = 1;
     return true;
+}
+
+void Game2048::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    static uint16_t x,y;
+    if (event==LV_EVENT_PRESSING) { // This is a race condition... 
+        ttgo->touch->getPoint(x,y);
+    }
+    if (event != LV_EVENT_SHORT_CLICKED) return;
+    click(x,y);
 }
 
 void Game2048::createObjs() {
