@@ -41,6 +41,7 @@
 #include "../demoapps/hello_world/hello_world.h"
 #include "../demoapps/stopwatch/stopwatch.h"
 #include "../games/sudokuapp/sudokuapp.h"
+#include "../demoapps/metronome/metronome.h"
 
 //#include <esp_debug_helpers>
 
@@ -153,6 +154,7 @@ class Launcher : public App {
         demos->registerApp(new Tide);
         demos->registerApp(new Hello_World);
         demos->registerApp(new Stopwatch);
+        demos->registerApp(new Metronome);
         return demos;
     }
 
