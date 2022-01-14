@@ -46,50 +46,59 @@ bool OTAApp::create() {
     styles.stdBgImage(myScr);
     infoLabel = styles.stdLabel(myScr, "not running");
     lv_label_set_align(infoLabel, LV_ALIGN_CENTER);
-    arduinoButton = styles.stdButton(myScr, "Start OTA", [](lv_obj_t *button, lv_event_t event) {
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        OTAApp* self = (OTAApp*)(button->user_data);
-        if (WiFi.isConnected()) {
-            if (!self->running) {
-                if (watchOTA->start(WatchOTA::ARDUINO_SERVER, nullptr)) {
-                    self->running = true;
-                    self->showInfo("Starting Update...");
-                    self->start_loop(20);
-                }
-            } else {
-                self->running = false;
-                self->showInfo("Aborting Update...");
-                self->stop_loop();
-                watchOTA->stop();
-            }
-        } else {
-            wifiManager.connect(self);
-        }
-    }, this);
-    webUpdateButton = styles.stdButton(myScr, "Web Update", [](lv_obj_t *button, lv_event_t event) {
-        if (event != LV_EVENT_SHORT_CLICKED) return;
-        OTAApp* self = (OTAApp*)(button->user_data);
-        if (WiFi.isConnected()) {
-            if (!self->running) {
-                if (watchOTA->start(WatchOTA::WEB_DOWNLOAD, [self](const char * msg){                    
-                    self->showInfo(msg);
-                })) {
-                    self->status = CLIENT;
-                    self->running = true;
-                    self->showInfo("Web Update");
-                    self->start_loop(50);
-                } 
-            }
-        } else {
-            wifiManager.connect(self);
-        }
-    }, this);
+
+    arduinoButton = styles.stdButton(myScr, "Start OTA");
+    register_lv_event_callback(arduinoButton);
+
+    webUpdateButton = styles.stdButton(myScr, "Web Update");
+    register_lv_event_callback(webUpdateButton);
 
     lv_obj_align(webUpdateButton,myScr, LV_ALIGN_CENTER, 0,-50);
     lv_obj_align(arduinoButton,webUpdateButton, LV_ALIGN_OUT_BOTTOM_MID, 0,0);
     lv_obj_align(infoLabel,arduinoButton, LV_ALIGN_OUT_BOTTOM_MID, 0,0);
     return true;
 }
+
+
+void OTAApp::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    if (event==LV_EVENT_SHORT_CLICKED) {
+        if (obj==arduinoButton) {
+            if (WiFi.isConnected()) {
+                if (running) {
+                    if (watchOTA->start(WatchOTA::ARDUINO_SERVER, nullptr)) {
+                        running = true;
+                        showInfo("Starting Update...");
+                        start_loop(20);
+                    }
+                } else {
+                    running = false;
+                    showInfo("Aborting Update...");
+                    stop_loop();
+                    watchOTA->stop();
+                }
+            } else {
+                wifiManager.connect(this);
+            }
+        }
+        if (obj == webUpdateButton) {
+            if (WiFi.isConnected()) {
+                if (!running) {
+                    if (watchOTA->start(WatchOTA::WEB_DOWNLOAD, [this](const char * msg){                    
+                        showInfo(msg);
+                    })) {
+                        status = CLIENT;
+                        running = true;
+                        showInfo("Web Update");
+                        start_loop(50);
+                    }
+                }
+            } else {
+                wifiManager.connect(this);
+            }
+        }
+    }
+}
+
 bool OTAApp::show() {
     return true;
 }

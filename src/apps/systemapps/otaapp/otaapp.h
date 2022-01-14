@@ -17,6 +17,8 @@ class OTAApp : public App {
     virtual bool hide();
     virtual bool destroy();
     virtual void loop();
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
+
 
     
     void* getIcon() { return (void*) &otaappicon; }
