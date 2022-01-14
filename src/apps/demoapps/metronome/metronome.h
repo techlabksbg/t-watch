@@ -40,11 +40,13 @@ private:
 
     bool is_quarter = false;
     bool is_mute = true;
+    bool is_motor = false;
+    bool is_black_bg = true;
     int loop_count = 0;
     int time, time_last;
     int speed_init = 80;
     int wait_time = (60000 / (float)speed_init) + 0.5;
-    int white_time = 10;
+    int pulse_time = 50;
     int state = 0; // 0 = waiting for time to pass; 1 = playing a tone
 
     const char *audiofile[2] = {"/4d.mp3", "/4c#.mp3"};
@@ -52,13 +54,21 @@ private:
     void freeAudioChain();
     void play_tone();
 
-    lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note, *mute;
+    lv_obj_t *metronome, *slider, *metronome_speed_label, *quarter_note, *mute, *motor;
 
     static void mute_cb(lv_obj_t *obj, lv_event_t event)
     {
         if (event == LV_EVENT_VALUE_CHANGED)
         {
             ((Metronome *)lv_obj_get_user_data(obj))->is_mute = !((Metronome *)lv_obj_get_user_data(obj))->is_mute;
+        }
+    }
+
+    static void motor_cb(lv_obj_t *obj, lv_event_t event)
+    {
+        if (event == LV_EVENT_VALUE_CHANGED)
+        {
+            ((Metronome *)lv_obj_get_user_data(obj))->is_motor = !((Metronome *)lv_obj_get_user_data(obj))->is_motor;
         }
     }
 
