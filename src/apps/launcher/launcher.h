@@ -144,8 +144,6 @@ class Launcher : public App {
     static Launcher* setupDemoLauncher() {
         Launcher* demos = new Launcher("Demos", rootLauncher);
         demos->icon = (void*) &demoappsicon;
-        demos->registerApp(new Minesweeper);
-        demos->registerApp(new RpslsGame);
         demos->registerApp(new Drawing);
         demos->registerApp(new MotorApp);
         demos->registerApp(new AccelDemo);
@@ -170,6 +168,7 @@ class Launcher : public App {
         games->registerApp(new Minesweeper);
         games->registerApp(new SudokuApp);
         games->registerApp(new Game2048);
+        games->registerApp(new RpslsGame);
         return games;
     }
 
