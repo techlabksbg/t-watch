@@ -25,6 +25,7 @@ TODO:
   - show message before reboot or power off.
   - store certificates on spiffs (may be offer possibility to download them)
   - Watch with battery and memory info
+  - IR-example is still missing ;-)
 
 
 
