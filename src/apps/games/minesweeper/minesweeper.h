@@ -17,6 +17,8 @@ class Minesweeper : public App {
     virtual bool hide();
     virtual bool destroy();
     virtual bool processDoubleTap() { return true; } // Do not terminate App on double Tap
+    virtual void lv_event_callback(lv_obj_t* obj, lv_event_t event);
+
     
     void* getIcon() { return (void*) &minesweepericon; }
     const char * getName() { return "Minesweeper"; }
@@ -63,20 +65,6 @@ class Minesweeper : public App {
         WON
     } gameState;
 
-    static void button_cb(lv_obj_t* button, lv_event_t event) {
-        if (event == LV_EVENT_SHORT_CLICKED) {
-            ((Minesweeper* ) button->user_data)->buttonShortClick(button);
-            return;
-        }
-        if (event == LV_EVENT_LONG_PRESSED) {
-            ((Minesweeper* ) button->user_data)->buttonLongPressed(button);
-            return;
-        }
-        if (event == LV_EVENT_RELEASED || event==LV_EVENT_LEAVE) {
-            ((Minesweeper* ) button->user_data)->buttonLeave(button);
-            return;
-        }
-    }
-
+    
     static const char* staticLabels[];
 };

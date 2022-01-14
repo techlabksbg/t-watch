@@ -123,13 +123,29 @@ lv_obj_t* Minesweeper::createButton() {
     lv_obj_add_style(button, LV_OBJ_PART_MAIN, &hiddenStyle);
     lv_obj_set_size(button, 48, 48);
     lv_page_glue_obj(button, true);
-    lv_obj_set_user_data(button, this);
-    lv_obj_set_event_cb(button, button_cb);
+    register_lv_event_callback(button);
+
     lv_obj_t* label = lv_label_create(button,NULL);
     lv_label_set_text(label, " ");
     lv_obj_add_style(label, LV_OBJ_PART_MAIN, &labelStyle);
     return button;
 }
+
+void Minesweeper::lv_event_callback(lv_obj_t* obj, lv_event_t event) {
+    if (event == LV_EVENT_SHORT_CLICKED) {
+        buttonShortClick(obj);
+        return;
+    }
+    if (event == LV_EVENT_LONG_PRESSED) {
+        buttonLongPressed(obj);
+        return;
+    }
+    if (event == LV_EVENT_RELEASED || event==LV_EVENT_LEAVE) {
+        buttonLeave(obj);
+        return;
+    }
+}
+
 
 void Minesweeper::buildButtons() {
     if (buttons[0]!=nullptr) return;
