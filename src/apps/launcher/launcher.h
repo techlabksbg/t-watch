@@ -42,7 +42,7 @@
 #include "../demoapps/stopwatch/stopwatch.h"
 #include "../games/sudokuapp/sudokuapp.h"
 #include "../demoapps/metronome/metronome.h"
-#include "../demoapps/rpslsgame/rpslsgame.h"
+//#include "../demoapps/rpslsgame/rpslsgame.h"
 #include "../demoapps/WaterMinder/WaterMinder.h"
 
 //#include <esp_debug_helpers>
@@ -170,7 +170,7 @@ class Launcher : public App {
         games->registerApp(new Minesweeper);
         games->registerApp(new SudokuApp);
         games->registerApp(new Game2048);
-        games->registerApp(new RpslsGame);
+        //games->registerApp(new RpslsGame);
         return games;
     }
 

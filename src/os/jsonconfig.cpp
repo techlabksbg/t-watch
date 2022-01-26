@@ -56,6 +56,7 @@ void loadJsonConfig() {
         (*configJson)["wifi"]["known"] = JsonObject();
         (*configJson)["wifi"]["known"]["tech-lab"] = "tech-lab";
         (*configJson)["wifi"]["known"]["stopbuepf"] = "stopbuepf";
+        (*configJson)["wifi"]["known"]["h21"] = "mobilehotspot";
         saveIt=true;
     }
     if (!(*configJson)["wifi"].containsKey("last")) {
