@@ -52,7 +52,7 @@ extern EventGroupHandle_t g_event_group;
 extern bool lenergy;
 extern TTGOClass *ttgo;
 extern bool spiffs_initialized;
-#define CONFIGJSONSIZE 65535
+#define CONFIGJSONSIZE 4096
 
 #include "network.h"
 #include "low_energy.h"
