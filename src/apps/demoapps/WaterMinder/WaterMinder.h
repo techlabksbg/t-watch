@@ -13,9 +13,9 @@ LV_IMG_DECLARE(WaterBottle)
 
 class WaterMinder : public App {
 
-    virtual bool create();
-    virtual bool show() { return true;};
-    virtual bool hide() { return true;};
+    virtual bool create() { return true;};
+    virtual bool show();
+    virtual bool hide(); 
     virtual bool destroy() { return true;}
     
     void* getIcon() { return (void*) &WaterMindericon; }
@@ -30,7 +30,10 @@ private:
 
     void Add_Water_Bottle();
     void Remove_Water_Bottle();
+    void displayInfo();
 
     lv_obj_t *Counter;
     lv_obj_t *Goal;
+    lv_obj_t *AddButton;
+    lv_obj_t *RemoveButton;
 };
