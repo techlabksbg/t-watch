@@ -98,17 +98,17 @@ KSBGLessonWatch::lessonTime KSBGLessonWatch::remaining(struct tm info) {
 
 void KSBGLessonWatch::loop() {
     time_t now;
-    struct tm  info;
+    struct tm  *info;
     char buf[64];
     // Getting time
     rtcHandler->time(&now);
-    localtime_r(&now, &info);
-    strftime(buf, sizeof(buf), "%H:%M:%S", &info);
+    info = localtime(&now);
+    strftime(buf, sizeof(buf), "%H:%M:%S", info);
     //Serial.printf("About to set text to %s\n", buf);
     lv_label_set_text(timeLabel, buf);
-    strftime(buf, sizeof(buf), "%Y-%m-%d", &info);
+    strftime(buf, sizeof(buf), "%Y-%m-%d", info);
     lv_label_set_text(dateLabel, buf);
-    lessonTime t = remaining(info);
+    lessonTime t = remaining(*info);
     if (t.hours!=-1) {
         sprintf(buf, "%02d:%02d", t.hours, t.minutes);
         lv_label_set_text(remainLabel, buf);

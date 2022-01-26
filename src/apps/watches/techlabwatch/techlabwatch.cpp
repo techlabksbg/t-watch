@@ -53,16 +53,16 @@ bool TechLabWatch::show() {
 
 void TechLabWatch::loop() {
     time_t now;
-    struct tm  info;
+    struct tm  *info;
     char buf[64];
     // Getting time
     //Serial.println("TechLabWatch::loop() :: rtcHandler->time(&now);");
     rtcHandler->time(&now);
-    localtime_r(&now, &info);
-    strftime(buf, sizeof(buf), "%H\n%M\n%S", &info);
+    info = localtime(&now);
+    strftime(buf, sizeof(buf), "%H\n%M\n%S", info);
     //Serial.printf("About to set text to %s\n", buf);
     lv_label_set_text(timeLabel, buf);
-    strftime(buf, sizeof(buf), "%Y\n%m\n%d", &info);
+    strftime(buf, sizeof(buf), "%Y\n%m\n%d", info);
     lv_label_set_text(dateLabel, buf);
     //Serial.println("TechLabWatch::loop done.");
 }

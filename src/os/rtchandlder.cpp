@@ -22,7 +22,7 @@ RTCHandler::RTCHandler() {
 
 void RTCHandler::time(time_t* now) {
     // Set system time to RTC time
-    ttgo->rtc->syncToRtc();
+    ttgo->rtc->syncToSystem();  // Change system time from RTC time
     // Get system time
     ::time(now);  // Call function from the base namespace, not the RTCHandler::time
     if (lastSync>0) {
@@ -44,12 +44,15 @@ void RTCHandler::sys2rtc() {
     Serial.println("Get current RTC time");
     RTC_Date rtcnow = ttgo->rtc->getDateTime();
     timeinfo  = localtime(&now);   // returns a pointer to statically allocated struct in localtime, shared with other functions, see https://en.cppreference.com/w/cpp/chrono/c/localtime
+    Serial.printf("System time now is %s\n", asctime(timeinfo));
     timeinfo->tm_sec = rtcnow.second;
     timeinfo->tm_min = rtcnow.minute;
     timeinfo->tm_hour = rtcnow.hour;
     timeinfo->tm_mday = rtcnow.day;
     timeinfo->tm_mon = rtcnow.month-1;
     timeinfo->tm_year = rtcnow.year-1900;
+
+    Serial.printf("RTC time now is %s\n", asctime(timeinfo));
     time_t rtctime = mktime(timeinfo);
 
     time_t rtcdiff = (rtctime-lastSync);
@@ -72,7 +75,9 @@ void RTCHandler::sys2rtc() {
         Serial.printf("Storing lastRTCsync=%ld\n", now);
     }
     lastSync = now;
-    ttgo->rtc->syncToSystem(); // Set RTC to system time
+    Serial.println("Setting RTC to system time");
+    ttgo->rtc->syncToRtc(); // Change RTC time from system time
+
 }
 
 RTCHandler* rtcHandler;
