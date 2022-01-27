@@ -21,13 +21,19 @@ RTCHandler::RTCHandler() {
 }
 
 void RTCHandler::time(time_t* now) {
+    RTC_Date r = ttgo->rtc->getDateTime();
+    Serial.printf("RTC is now %d-%02d-%02d %02d:%02d:%02d\n", r.year, r.month, r.day, r.hour, r.minute, r.second);
+    ::time(now);
+    Serial.printf("System (UTC) is now: %sSystem (local) %s", asctime(gmtime(now)), asctime(localtime(now)));
     // Set system time to RTC time
     ttgo->rtc->syncToSystem();  // Change system time from RTC time
     // Get system time
     ::time(now);  // Call function from the base namespace, not the RTCHandler::time
+    Serial.printf("System (UTC) after sync from RTC: %sSystem (local) %s", asctime(gmtime(now)), asctime(localtime(now)));
     if (lastSync>0) {
         //Serial.println("correcting time");
         *now = (*now-lastSync)*drift+lastSync;
+        Serial.printf("System (UTC) after drift correction: %sSystem (local) %s", asctime(gmtime(now)), asctime(localtime(now)));
     } else {
         //Serial.println("no time correction for now");
     }
@@ -43,16 +49,18 @@ void RTCHandler::sys2rtc() {
     ::time(&now);
     Serial.println("Get current RTC time");
     RTC_Date rtcnow = ttgo->rtc->getDateTime();
-    timeinfo  = localtime(&now);   // returns a pointer to statically allocated struct in localtime, shared with other functions, see https://en.cppreference.com/w/cpp/chrono/c/localtime
-    Serial.printf("System time now is %s\n", asctime(timeinfo));
+    // use gmtime here!
+    timeinfo  = gmtime(&now);   // returns a pointer to statically allocated struct in gmtime, shared with other functions, see https://en.cppreference.com/w/cpp/chrono/c/localtime
+    Serial.printf("System time in UTC now is %s", asctime(timeinfo));
     timeinfo->tm_sec = rtcnow.second;
     timeinfo->tm_min = rtcnow.minute;
     timeinfo->tm_hour = rtcnow.hour;
     timeinfo->tm_mday = rtcnow.day;
     timeinfo->tm_mon = rtcnow.month-1;
     timeinfo->tm_year = rtcnow.year-1900;
+    mktime(timeinfo);
 
-    Serial.printf("RTC time now is %s\n", asctime(timeinfo));
+    Serial.printf("RTC time now is %s", asctime(timeinfo));
     time_t rtctime = mktime(timeinfo);
 
     time_t rtcdiff = (rtctime-lastSync);
