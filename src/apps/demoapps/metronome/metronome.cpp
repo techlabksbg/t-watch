@@ -14,7 +14,7 @@ bool Metronome::create()
     lv_obj_align(slider, myScr, LV_ALIGN_CENTER, 0, 0);
     lv_slider_set_range(slider, 20, 300); // mp3 files all 180ms long
     lv_slider_set_value(slider, speed_init, LV_ANIM_ON);
-    lv_obj_set_user_data(slider, this);
+    register_lv_event_callback(slider);
 
     metronome_speed_label = lv_label_create(myScr, NULL);
     lv_obj_add_style(metronome_speed_label, LV_OBJ_PART_MAIN, &styles.textLabel);
@@ -28,22 +28,19 @@ bool Metronome::create()
 
     quarter_note = lv_checkbox_create(myScr, NULL);
     lv_checkbox_set_text(quarter_note, "Quarter Notes");
-    lv_obj_set_event_cb(quarter_note, quarter_note_cb);
     lv_obj_align(quarter_note, NULL, LV_ALIGN_IN_LEFT_MID, 0, 40);
-    lv_obj_set_user_data(quarter_note, this);
+    register_lv_event_callback(quarter_note);
 
     mute = lv_checkbox_create(myScr, NULL);
     lv_obj_add_state(mute, LV_STATE_CHECKED);
     lv_checkbox_set_text(mute, "Mute");
-    lv_obj_set_event_cb(mute, mute_cb);
     lv_obj_align(mute, NULL, LV_ALIGN_IN_LEFT_MID, 0, 70);
-    lv_obj_set_user_data(mute, this);
+    register_lv_event_callback(mute);
 
     motor = lv_checkbox_create(myScr, NULL);
     lv_checkbox_set_text(motor, "Vibrate");
-    lv_obj_set_event_cb(motor, motor_cb);
     lv_obj_align(motor, NULL, LV_ALIGN_IN_LEFT_MID, 0, 100);
-    lv_obj_set_user_data(motor, this);
+    register_lv_event_callback(motor);
 
     Serial.println("Creating Metronome");
     return true;
@@ -52,11 +49,37 @@ bool Metronome::create()
 bool Metronome::show()
 {
     Serial.println("Showing Metronome");
-    lv_obj_set_event_cb(slider, slider_cb);
     start_loop(5);
     time_last = millis();
     return true;
 }
+
+void Metronome::lv_event_callback(lv_obj_t *obj, lv_event_t event)
+{
+    if (event == LV_EVENT_VALUE_CHANGED)
+    {
+        if (obj == slider)
+        {
+            set_labels(lv_slider_get_value(obj));
+        }
+    }
+    else if (event == LV_EVENT_SHORT_CLICKED)
+    {
+        if (obj == quarter_note)
+        {
+            is_quarter = !is_quarter;
+        }
+        else if (obj == mute)
+        {
+            is_mute = !is_mute;
+        }
+        else if (obj == motor)
+        {
+            is_motor = !is_motor;
+        }
+    }
+}
+
 void Metronome::buildAudioChain()
 {
     if (audioSource == nullptr)
@@ -135,7 +158,14 @@ void Metronome::play_tone()
                 }
                 if (is_motor)
                 {
-                    ttgo->motor->onec(10);
+                    if (is_quarter && loop_count == 4)
+                    {
+                        ttgo->motor->onec(50);
+                    }
+                    else
+                    {
+                        ttgo->motor->onec(10);
+                    }
                 }
                 if (loop_count == 4)
                 {
@@ -153,14 +183,18 @@ void Metronome::play_tone()
                     if (is_quarter && loop_count == 4)
                     {
                         lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLUE);
+                        if (is_motor)
+                        {
+                            ttgo->motor->onec(50);
+                        }
                     }
                     else
                     {
                         lv_obj_set_style_local_bg_color(myScr, LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-                    }
-                    if (is_motor)
-                    {
-                        ttgo->motor->onec(10);
+                        if (is_motor)
+                        {
+                            ttgo->motor->onec(10);
+                        }
                     }
                     if (loop_count == 4)
                     {
