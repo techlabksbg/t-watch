@@ -56,6 +56,7 @@ bool Metronome::show()
 
 void Metronome::lv_event_callback(lv_obj_t *obj, lv_event_t event)
 {
+    Serial.println("Callback!");
     if (event == LV_EVENT_VALUE_CHANGED)
     {
         if (obj == slider)
@@ -108,18 +109,31 @@ void Metronome::freeAudioChain()
             audioMp3->stop();
         }
         Serial.println("delete audioMP3");
-        delete audioMp3;
-        audioMp3 = nullptr;
+        delay(1);
+        if (audioMp3!=nullptr) {
+            delete audioMp3;
+            audioMp3 = nullptr;
+        }
         Serial.println("delete audioI2S");
-        delete audioI2S;
-        audioI2S = nullptr;
+        delay(1);
+        if (audioI2S!=nullptr) {
+            delete audioI2S;
+            audioI2S = nullptr;
+        }
         Serial.println("delete audioID3");
-        delete audioID3;
-        audioID3 = nullptr;
+        delay(1);
+        if (audioID3!=nullptr) {
+            delete audioID3;
+            audioID3 = nullptr;
+        }
         Serial.println("delete audioSource");
-        delete audioSource;
-        audioSource = nullptr;
+        delay(1);
+        if (audioSource!=nullptr) {
+            delete audioSource;
+            audioSource = nullptr;
+        }
         Serial.println("Tear down done, disabling hardware...");
+        delay(1);
         ttgo->disableAudio();
     }
 }
