@@ -52,19 +52,12 @@ bool TechLabWatch::show() {
 
 
 void TechLabWatch::loop() {
-    time_t now;
-    struct tm  *info;
+    RTC_Date r = ttgo->rtc->getDateTime();
     char buf[64];
-    // Getting time
-    //Serial.println("TechLabWatch::loop() :: rtcHandler->time(&now);");
-    rtcHandler->time(&now);
-    info = localtime(&now);
-    strftime(buf, sizeof(buf), "%H\n%M\n%S", info);
-    //Serial.printf("About to set text to %s\n", buf);
+    snprintf(buf, sizeof(buf), "%02d\n%02d\n%02d", r.hour, r.minute, r.second);
     lv_label_set_text(timeLabel, buf);
-    strftime(buf, sizeof(buf), "%Y\n%m\n%d", info);
+    snprintf(buf, sizeof(buf), "%4d\n%02d\n%02d", r.year, r.month, r.day);
     lv_label_set_text(dateLabel, buf);
-    //Serial.println("TechLabWatch::loop done.");
 }
 
 bool TechLabWatch::hide() {

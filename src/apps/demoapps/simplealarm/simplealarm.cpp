@@ -53,13 +53,9 @@ bool SimpleAlarm::show() {
         hours = alarm.hour;
         minutes = alarm.minute;
     } else {
-        time_t now;
-        struct tm  info;
-        time(&now);
-        localtime_r(&now, &info);
-
-        minutes = info.tm_min+1;
-        hours = (info.tm_hour+(minutes>59 ? 1 :0)) % 24;
+        RTC_Date r = ttgo->rtc->getDateTime();
+        minutes = r.minute+1;
+        hours = (r.hour+(minutes>59 ? 1 :0)) % 24;
         minutes = minutes % 60;
 
     }

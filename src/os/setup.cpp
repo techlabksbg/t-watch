@@ -168,8 +168,8 @@ void os_setup() {
     ttgo->tft->println("load config");
     loadJsonConfig();
 
-    ttgo->tft->println("starting rtc handler");
-    rtcHandler = new RTCHandler();
+    //ttgo->tft->println("starting rtc handler");
+    //rtcHandler = new RTCHandler();
 
 
 

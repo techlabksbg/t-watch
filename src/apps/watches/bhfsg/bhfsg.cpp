@@ -48,24 +48,20 @@ bool BhfSGWatch::create() {
 }
 
 void BhfSGWatch::loop() {
-    time_t now;
-    //Serial.println("loop");
-    static struct tm last {0,0,0,0};
-    struct tm  *info;
-    rtcHandler->time(&now);
-    info = localtime(&now);
-    int diff = info->tm_hour ^ last.tm_hour;
+    RTC_Date r = ttgo->rtc->getDateTime();
+    static struct RTC_Date last {0,0,0,0,0,0};
+    int diff = r.hour ^ last.hour;
     //Serial.printf("hour diff=%d\n", diff);
     if (diff) {
         for (int j=0; j<5; j++) {
             if ((diff >> j) & 1) {
-                lv_img_set_src(imgs[0][4-j], imgsrcs[0][(info->tm_hour >> j)&1]);
+                lv_img_set_src(imgs[0][4-j], imgsrcs[0][(r.hour >> j)&1]);
             }
         }
     }
     for (int i=1; i<3; i++) {
-        diff = (i==1) ? info->tm_min ^ last.tm_min : info->tm_sec ^ last.tm_sec;
-        int v = (i==1) ? info->tm_min : info->tm_sec;
+        diff = (i==1) ? r.minute ^ last.minute : r.second ^ last.second;
+        int v = (i==1) ? r.minute : r.second;
         //Serial.printf("t=%d diff=%d (for v=%d)\n",i,diff,v);
         if(diff) {
             for (int j=0; j<6; j++) {
@@ -75,7 +71,7 @@ void BhfSGWatch::loop() {
             }
         }
     }
-    last = *info;
+    last = r;
 }
 
 bool BhfSGWatch::show() {

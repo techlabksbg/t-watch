@@ -309,9 +309,13 @@ void WifiManager::connectionEstablished() {
     if (WiFi.isConnected()) {
         sntp_set_time_sync_notification_cb([](timeval *tv) {
             Serial.println("ntp callback, setting rtc to sys");
-            rtcHandler->sys2rtc();
+            ttgo->rtc->syncToRtc(); // Change RTC time from system time
+            RTC_Date r = ttgo->rtc->getDateTime();
+            Serial.printf("RTC is now %d-%02d-%02d %02d:%02d:%02d\n", r.year, r.month, r.day, r.hour, r.minute, r.second);            
         });
-        Serial.println("NTP sync start.");
+        Serial.print("NTP sync start on pool.ntp.org with tz ");
+        const char* tz = (*configJson)["tz"];
+        Serial.println(tz);
         configTzTime((*configJson)["tz"], "pool.ntp.org");
     }
 }

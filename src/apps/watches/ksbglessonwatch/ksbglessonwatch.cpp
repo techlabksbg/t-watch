@@ -79,13 +79,13 @@ bool KSBGLessonWatch::show() {
     return true;
 }
 
-KSBGLessonWatch::lessonTime KSBGLessonWatch::remaining(struct tm info) {
+KSBGLessonWatch::lessonTime KSBGLessonWatch::remaining(RTC_Date r) {
     struct lessonTime lessons[] = {
         {7,40}, {8,25}, {8,34}, {9,19}, {9,28}, {10,13}, 
         {10,30}, {11,15}, {11,24}, {12,9}, {12,14}, {12,59}, {13,4}, {13,49}, 
         {13,55}, {14,40}, {14,49}, {15,34}, {15,43}, {16,28}, {16,33}, {17,18}, {17,23}, {18,8}
     };
-    int seconds = info.tm_hour*3600+info.tm_min*60+info.tm_sec;
+    int seconds = r.hour*3600+r.minute*60+r.second;
     for (int i=0; i<sizeof(lessons)/sizeof(lessonTime); i++) {
         int secs = lessons[i].hours*3600+lessons[i].minutes*60;
         if (secs>seconds) {
@@ -97,25 +97,19 @@ KSBGLessonWatch::lessonTime KSBGLessonWatch::remaining(struct tm info) {
 }
 
 void KSBGLessonWatch::loop() {
-    time_t now;
-    struct tm  *info;
+    RTC_Date r = ttgo->rtc->getDateTime();
     char buf[64];
-    // Getting time
-    rtcHandler->time(&now);
-    info = localtime(&now);
-    strftime(buf, sizeof(buf), "%H:%M:%S", info);
-    //Serial.printf("About to set text to %s\n", buf);
+    snprintf(buf, sizeof(buf), "%02d:%02d:%02d", r.hour, r.minute, r.second);
     lv_label_set_text(timeLabel, buf);
-    strftime(buf, sizeof(buf), "%Y-%m-%d", info);
+    snprintf(buf, sizeof(buf), "%4d-%02d-%02d", r.year, r.month, r.day);
     lv_label_set_text(dateLabel, buf);
-    lessonTime t = remaining(*info);
+    lessonTime t = remaining(r);
     if (t.hours!=-1) {
         sprintf(buf, "%02d:%02d", t.hours, t.minutes);
         lv_label_set_text(remainLabel, buf);
     } else {
         lv_label_set_text(remainLabel, "--:--");
     }
-    //Serial.println("KSBGLessonWatch::loop done.");
 }
 
 bool KSBGLessonWatch::hide() {

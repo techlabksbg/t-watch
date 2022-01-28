@@ -42,7 +42,7 @@ class KSBGLessonWatch : public App {
         int minutes;
     };
 
-    lessonTime remaining(struct tm info);
+    lessonTime remaining(RTC_Date r);
 
 
 
