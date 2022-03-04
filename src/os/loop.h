@@ -20,3 +20,6 @@ void register_exclusive_loop(loop_cb_t* loop_cb);
  * @param loop_cb Must match the callback from the register_exclusive_loop call
  */
 void release_exclusive_loop(loop_cb_t* loop_cb);
+
+
+extern bool do_not_sleep;

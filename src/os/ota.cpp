@@ -136,6 +136,7 @@ bool WatchOTA::startWebOTA() {
 }
 
 void WatchOTA::loopWebOTA() {
+    do_not_sleep = true;
     static unsigned long startms;
     bool error = false;
     if (d->status == DownloadTaskData::START) {
@@ -203,7 +204,7 @@ void WatchOTA::loopWebOTA() {
 }
 
 void WatchOTA::stopWebOTA() {
-
+    do_not_sleep = false;
 }
 
 

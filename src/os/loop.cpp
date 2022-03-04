@@ -13,6 +13,8 @@
 
 loop_cb_t* loop_cb = nullptr;
 
+bool do_not_sleep = false;
+
 void register_exclusive_loop(loop_cb_t* cb) {
     Serial.printf("loop: setting loop_cb to %p\n", cb);
     loop_cb = cb;
@@ -112,7 +114,8 @@ void os_loop() {
     }
     // No screen Timeout when plugged in.
     if (ttgo->bl->isOn() && (lv_disp_get_inactive_time(NULL) < DEFAULT_SCREEN_TIMEOUT || 
-        (ttgo->power->isVBUSPlug() && lv_disp_get_inactive_time(NULL) < (DEFAULT_SCREEN_TIMEOUT)*10))) {
+        (ttgo->power->isVBUSPlug() && lv_disp_get_inactive_time(NULL) < (DEFAULT_SCREEN_TIMEOUT)*10)) ||
+        do_not_sleep) {
         lv_task_handler();
     } else if (ttgo->bl->isOn()) {
         low_energy();
